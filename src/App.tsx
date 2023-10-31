@@ -1,21 +1,53 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
+import Footer from "./components/Footer";
+import Menu from "./components/Menu";
+import Navbar from "./components/Navbar";
 import Expenses from "./pages/Expenses";
 import Home from "./pages/Home";
+import Login from "./pages/Login";
 import Stores from "./pages/Stores";
+import "./styles/global.scss";
 
 const App = () => {
+  const Layout = () => {
+    return (
+      <div className="main">
+        <Navbar />
+        <div className="container">
+          <div className="menu-container">
+            <Menu />
+          </div>
+          <div className="content-container">
+            <Outlet />
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  };
+
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Home />,
+      element: <Layout />,
+      children: [
+        {
+          path: "/",
+          element: <Home />,
+        },
+        {
+          path: "/stores",
+          element: <Stores />,
+        },
+        {
+          path: "/expenses",
+          element: <Expenses />,
+        },
+      ],
     },
     {
-      path: "/stores",
-      element: <Stores />,
-    },
-    {
-      path: "/expenses",
-      element: <Expenses />,
+      path: "/login",
+      element: <Login />,
     },
   ]);
 
