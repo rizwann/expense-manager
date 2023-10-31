@@ -16,11 +16,11 @@ a {
   font-family: "Inter", sans-serif;
   background-color: $main-bg;
   color: $main-color;
+  min-height: 100vh;
 }
 
 .container {
   display: flex;
-  height: 100vh;
 }
 
 .menu-container {

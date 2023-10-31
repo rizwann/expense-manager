@@ -1,3 +1,15 @@
+export interface Expense {
+  store: string;
+  cost: number;
+  category: string;
+  description: string;
+  user: string; // User id who added the expense
+  houseCode: string; // House id to which the expense is assigned
+  date: Date;
+  _id: string;
+  img: string;
+}
+
 export const menu = [
   {
     id: 1,
@@ -43,75 +55,136 @@ export const menu = [
   },
 ];
 
-//   export const topDealUsers = [
-//     {
-//       id: 1,
-//       img: "https://images.pexels.com/photos/8405873/pexels-photo-8405873.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
-//       username: "Elva McDonald",
-//       email: "elva@gmail.com",
-//       amount: "3.668",
-//     },
-//     {
-//       id: 2,
-//       img: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=1600",
-//       username: "Linnie Nelson",
-//       email: "linnie@gmail.com",
-//       amount: "3.256",
-//     },
-//     {
-//       id: 3,
-//       img: "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=1600",
-//       username: "Brent Reeves",
-//       email: "brent@gmail.com",
-//       amount: "2.998",
-//     },
-//     {
-//       id: 4,
-//       img: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=1600",
-//       username: "Adeline Watson",
-//       email: "adeline@gmail.com",
-//       amount: "2.512",
-//     },
-//     {
-//       id: 5,
-//       img: "https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=1600",
-//       username: "Juan Harrington",
-//       email: "juan@gmail.com",
-//       amount: "2.134",
-//     },
-//     {
-//       id: 6,
-//       img: "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=1600",
-//       username: "Augusta McGee",
-//       email: "augusta@gmail.com",
-//       amount: "1.932",
-//     },
-//     {
-//       id: 7,
-//       img: "https://images.pexels.com/photos/874158/pexels-photo-874158.jpeg?auto=compress&cs=tinysrgb&w=1600",
-//       username: "Angel Thomas",
-//       email: "angel@gmail.com",
-//       amount: "1.560",
-//     },
-//   ];
+export const dummyExpenses: Expense[] = [
+  {
+    store: "Grocery Store A",
+    cost: 50.25,
+    category: "Groceries",
+    description: "Weekly grocery shopping",
+    user: "user123",
+    houseCode: "house456",
+    date: new Date("2023-10-15"),
+    _id: "expense1",
+    img: "https://picsum.photos/200/300",
+  },
+  {
+    store: "Restaurant XYZ",
+    cost: 30.5,
+    category: "Dining Out",
+    description: "Dinner with friends",
+    user: "user456",
+    houseCode: "house789",
+    date: new Date("2023-10-18"),
+    _id: "expense2",
+    img: "https://picsum.photos/200/300",
+  },
+  {
+    store: "Electronics Store B",
+    cost: 200.0,
+    category: "Electronics",
+    description: "New headphones purchase",
+    user: "user789",
+    houseCode: "house123",
+    date: new Date("2023-10-20"),
+    _id: "expense3",
+    img: "https://picsum.photos/200/300",
+  },
+  {
+    store: "Clothing Store C",
+    cost: 75.99,
+    category: "Clothing",
+    description: "Shopping for winter clothes",
+    user: "user123",
+    houseCode: "house456",
+    date: new Date("2023-10-22"),
+    _id: "expense4",
+    img: "https://picsum.photos/200/300",
+  },
+  {
+    store: "Gas Station X",
+    cost: 40.75,
+    category: "Transportation",
+    description: "Fuel for the car",
+    user: "user456",
+    houseCode: "house789",
+    date: new Date("2023-10-24"),
+    _id: "expense5",
+    img: "https://picsum.photos/200/300",
+  },
+  {
+    store: "Hardware Store Y",
+    cost: 60.0,
+    category: "Home Improvement",
+    description: "Paint and tools",
+    user: "user789",
+    houseCode: "house123",
+    date: new Date("2023-10-26"),
+    _id: "expense6",
+    img: "https://picsum.photos/200/300",
+  },
+  {
+    store: "Pharmacy Z",
+    cost: 25.3,
+    category: "Healthcare",
+    description: "Medications and vitamins",
+    user: "user123",
+    houseCode: "house456",
+    date: new Date("2023-10-28"),
+    _id: "expense7",
+    img: "https://picsum.photos/200/300",
+  },
+  {
+    store: "Bookstore D",
+    cost: 15.99,
+    category: "Books",
+    description: "New novel purchase",
+    user: "user456",
+    houseCode: "house789",
+    date: new Date("2023-10-30"),
+    _id: "expense8",
+    img: "https://picsum.photos/200/300",
+  },
+  {
+    store: "Pet Store E",
+    cost: 35.5,
+    category: "Pets",
+    description: "Pet food and supplies",
+    user: "user789",
+    houseCode: "house123",
+    date: new Date("2023-11-02"),
+    _id: "expense9",
+    img: "https://picsum.photos/200/300",
+  },
+  {
+    store: "Coffee Shop F",
+    cost: 10.75,
+    category: "Dining Out",
+    description: "Morning coffee",
+    user: "user123",
+    houseCode: "house456",
+    date: new Date("2023-11-04"),
+    _id: "expense10",
+    img: "https://picsum.photos/200/300",
+  },
+];
 
-//   export const chartBoxUser = {
-//     color: "#8884d8",
-//     icon: "/userIcon.svg",
-//     title: "Total Users",
-//     number: "11.238",
-//     dataKey: "users",
-//     percentage: 45,
-//     chartData: [
-//       { name: "Sun", users: 400 },
-//       { name: "Mon", users: 600 },
-//       { name: "Tue", users: 500 },
-//       { name: "Wed", users: 700 },
-//       { name: "Thu", users: 400 },
-//       { name: "Fri", users: 500 },
-//       { name: "Sat", users: 450 },
-//     ],
-//   };
+export const chartBoxUser = {
+  color: "#8884d8",
+  icon: "/userIcon.svg",
+  title: "Total Users",
+  number: "11.238",
+  dataKey: "users",
+  percentage: 45,
+  chartData: [
+    { name: "Sun", users: 400 },
+    { name: "Mon", users: 600 },
+    { name: "Tue", users: 500 },
+    { name: "Wed", users: 700 },
+    { name: "Thu", users: 400 },
+    { name: "Fri", users: 500 },
+    { name: "Sat", users: 450 },
+  ],
+};
 
 //   export const chartBoxProduct = {
 //     color: "skyblue",
