@@ -80,8 +80,8 @@ const ChartBox: React.FC<ChartBoxProps> = ({
       </div>
       <div className="chart-info">
         <div className="chart">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart width={300} height={100} data={chartData}>
+          <ResponsiveContainer width="99%" height="100%">
+            <LineChart data={chartData}>
               <Tooltip
                 contentStyle={{ background: "transparent", border: "none" }}
                 labelStyle={{ display: "none" }}
@@ -90,6 +90,12 @@ const ChartBox: React.FC<ChartBoxProps> = ({
               <Line
                 type="monotone"
                 dataKey={dataKey}
+                stroke={color}
+                strokeWidth={2}
+              />
+              <Line
+                type="monotone"
+                dataKey={"name"}
                 stroke={color}
                 strokeWidth={2}
               />

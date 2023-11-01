@@ -1,6 +1,9 @@
+import BarChartBox from "../../components/BarChartBox";
 import ChartBox from "../../components/ChartBox";
 import TopBox from "../../components/TopBox";
 import {
+  barChartBoxAllUserLastThreeMonths,
+  barChartBoxUserExpenseLastSixMonths,
   chartBoxConversion,
   chartBoxHouseExpense,
   chartBoxStoreExpense,
@@ -30,9 +33,13 @@ const Home = (props: Props) => {
         <ChartBox {...chartBoxStoreExpense} />
       </div>
       <div className="box box7">7</div>
-      <div className="box box8">8</div>
+      <div className="box box8">
+        <BarChartBox {...barChartBoxUserExpenseLastSixMonths} />
+      </div>
 
-      <div className="box box9">9</div>
+      <div className="box box9">
+        <BarChartBox {...barChartBoxAllUserLastThreeMonths} />{" "}
+      </div>
     </div>
   );
 };
