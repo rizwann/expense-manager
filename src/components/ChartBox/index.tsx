@@ -80,7 +80,7 @@ const ChartBox: React.FC<ChartBoxProps> = ({
       </div>
       <div className="chart-info">
         <div className="chart">
-          <ResponsiveContainer width="99%" height="100%">
+          <ResponsiveContainer width="99%" height="60%">
             <LineChart data={chartData}>
               <Tooltip
                 contentStyle={{ background: "transparent", border: "none" }}
@@ -107,7 +107,7 @@ const ChartBox: React.FC<ChartBoxProps> = ({
             className="percentage"
             style={{ color: percentage < 0 ? "tomato" : "limegreen" }}
           >
-            {percentage}
+            {percentage}%
           </span>
           <span className="duration">current month</span>
         </div>

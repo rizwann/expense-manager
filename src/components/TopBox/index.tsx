@@ -4,7 +4,7 @@ import "./topBox.scss";
 const TopBox = () => {
   return (
     <div className="top-box">
-      <h1>Recent Expenses</h1>
+      <h1>Expenses</h1>
       <div className="list">
         {dummyExpenses.map((expense) => {
           const date = new Date(expense.date).toLocaleDateString("en-DE", {

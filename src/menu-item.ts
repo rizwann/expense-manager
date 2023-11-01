@@ -286,38 +286,27 @@ export const barChartBoxUserExpenseLastSixMonths = {
 };
 
 // last 3 months all user house expense
-export const barChartBoxAllUserLastThreeMonths = {
-  title: "All User Expenses",
+export const barChartBoxAllUser = {
+  title: "All Member Expenses",
   color: "#FF8042",
   dataKey: "expenses",
   chartData: [
     {
-      name: "Jan",
-      expenses: 4000,
-    },
-    {
-      name: "Feb",
+      name: "Shomrat",
       expenses: 3000,
     },
     {
-      name: "Mar",
+      name: "Rizwan",
+      expenses: 4000,
+    },
+
+    {
+      name: "Nahid",
       expenses: 2000,
     },
     {
-      name: "Apr",
+      name: "Rashed",
       expenses: 2780,
-    },
-    {
-      name: "May",
-      expenses: 1890,
-    },
-    {
-      name: "Jun",
-      expenses: 2390,
-    },
-    {
-      name: "Jul",
-      expenses: 3490,
     },
   ],
 };
