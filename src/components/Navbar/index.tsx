@@ -1,6 +1,15 @@
 import "./navbar.scss";
 
 const Navbar = () => {
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  };
   return (
     <div className="navbar">
       <div className="logo">
@@ -10,7 +19,12 @@ const Navbar = () => {
       <div className="icons">
         <img src="/search.svg" alt="" className="icon" />
         <img src="/app.svg" alt="" className="icon" />
-        <img src="/expand.svg" alt="" className="icon" />
+        <img
+          src="/expand.svg"
+          alt=""
+          className="icon"
+          onClick={toggleFullscreen}
+        />
         <div className="notification">
           <img src="/notifications.svg" alt="" />
           <span>1</span>

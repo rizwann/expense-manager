@@ -7,7 +7,8 @@ export interface Expense {
   houseCode: string; // House id to which the expense is assigned
   date: Date;
   _id: string;
-  img: string;
+  storeName: string;
+  storeImg: string;
 }
 
 export const menu = [
@@ -57,258 +58,258 @@ export const menu = [
 
 export const dummyExpenses: Expense[] = [
   {
-    store: "Grocery Store A",
+    store: "store1",
+    _id: "expense1",
     cost: 50.25,
     category: "Groceries",
     description: "Weekly grocery shopping",
     user: "user123",
     houseCode: "house456",
     date: new Date("2023-10-15"),
-    _id: "expense1",
-    img: "https://picsum.photos/200/300",
+    storeName: "Grocery Store A",
+    storeImg: "https://picsum.photos/200/300",
   },
   {
-    store: "Restaurant XYZ",
+    store: "store2",
+    _id: "expense2",
     cost: 30.5,
     category: "Dining Out",
     description: "Dinner with friends",
     user: "user456",
     houseCode: "house789",
     date: new Date("2023-10-18"),
-    _id: "expense2",
-    img: "https://picsum.photos/200/300",
+    storeName: "Restaurant XYZ",
+    storeImg: "https://picsum.photos/200/300",
   },
   {
-    store: "Electronics Store B",
+    store: "store3",
+    _id: "expense3",
     cost: 200.0,
     category: "Electronics",
     description: "New headphones purchase",
     user: "user789",
     houseCode: "house123",
     date: new Date("2023-10-20"),
-    _id: "expense3",
-    img: "https://picsum.photos/200/300",
+    storeName: "Electronics Store B",
+    storeImg: "https://picsum.photos/200/300",
   },
   {
-    store: "Clothing Store C",
+    store: "store4",
+    _id: "expense4",
     cost: 75.99,
     category: "Clothing",
     description: "Shopping for winter clothes",
     user: "user123",
     houseCode: "house456",
     date: new Date("2023-10-22"),
-    _id: "expense4",
-    img: "https://picsum.photos/200/300",
+    storeName: "Clothing Store C",
+    storeImg: "https://picsum.photos/200/300",
   },
   {
-    store: "Gas Station X",
+    store: "store5",
+    _id: "expense5",
     cost: 40.75,
     category: "Transportation",
     description: "Fuel for the car",
     user: "user456",
     houseCode: "house789",
     date: new Date("2023-10-24"),
-    _id: "expense5",
-    img: "https://picsum.photos/200/300",
+    storeName: "Gas Station X",
+    storeImg: "https://picsum.photos/200/300",
   },
   {
-    store: "Hardware Store Y",
+    store: "store6",
+    _id: "expense6",
     cost: 60.0,
     category: "Home Improvement",
     description: "Paint and tools",
     user: "user789",
     houseCode: "house123",
     date: new Date("2023-10-26"),
-    _id: "expense6",
-    img: "https://picsum.photos/200/300",
+    storeName: "Hardware Store Y",
+    storeImg: "https://picsum.photos/200/300",
   },
   {
-    store: "Pharmacy Z",
+    store: "store7",
+    _id: "expense7",
     cost: 25.3,
     category: "Healthcare",
     description: "Medications and vitamins",
     user: "user123",
     houseCode: "house456",
     date: new Date("2023-10-28"),
-    _id: "expense7",
-    img: "https://picsum.photos/200/300",
+    storeName: "Pharmacy Z",
+    storeImg: "https://picsum.photos/200/300",
   },
   {
-    store: "Bookstore D",
+    store: "store8",
+    _id: "expense8",
     cost: 15.99,
     category: "Books",
     description: "New novel purchase",
     user: "user456",
     houseCode: "house789",
     date: new Date("2023-10-30"),
-    _id: "expense8",
-    img: "https://picsum.photos/200/300",
+    storeName: "Bookstore D",
+    storeImg: "https://picsum.photos/200/300",
   },
   {
-    store: "Pet Store E",
+    store: "store9",
+    _id: "expense9",
     cost: 35.5,
     category: "Pets",
     description: "Pet food and supplies",
     user: "user789",
     houseCode: "house123",
     date: new Date("2023-11-02"),
-    _id: "expense9",
-    img: "https://picsum.photos/200/300",
+    storeName: "Pet Store E",
+    storeImg: "https://picsum.photos/200/300",
   },
   {
-    store: "Coffee Shop F",
+    store: "store10",
+    _id: "expense10",
     cost: 10.75,
     category: "Dining Out",
     description: "Morning coffee",
     user: "user123",
     houseCode: "house456",
     date: new Date("2023-11-04"),
-    _id: "expense10",
-    img: "https://picsum.photos/200/300",
+    storeName: "Coffee Shop F",
+    storeImg: "https://picsum.photos/200/300",
   },
 ];
 
-export const chartBoxUser = {
+export const chartBoxUserExpense = {
   color: "#8884d8",
   icon: "/userIcon.svg",
-  title: "Total Users",
-  number: "11.238",
-  dataKey: "users",
+  title: "Total Expenses",
+  number: "$241.5",
+  dataKey: "expenses",
   percentage: 45,
   chartData: [
-    { name: "Sun", users: 400 },
-    { name: "Mon", users: 600 },
-    { name: "Tue", users: 500 },
-    { name: "Wed", users: 700 },
-    { name: "Thu", users: 400 },
-    { name: "Fri", users: 500 },
-    { name: "Sat", users: 450 },
+    { name: "Sun", expenses: 400 },
+    { name: "Mon", expenses: 600 },
+    { name: "Tue", expenses: 500 },
+    { name: "Wed", expenses: 700 },
+    { name: "Thu", expenses: 400 },
+    { name: "Fri", expenses: 500 },
+    { name: "Sat", expenses: 450 },
   ],
 };
 
-//   export const chartBoxProduct = {
-//     color: "skyblue",
-//     icon: "/productIcon.svg",
-//     title: "Total Products",
-//     number: "238",
-//     dataKey: "products",
-//     percentage: 21,
-//     chartData: [
-//       { name: "Sun", products: 400 },
-//       { name: "Mon", products: 600 },
-//       { name: "Tue", products: 500 },
-//       { name: "Wed", products: 700 },
-//       { name: "Thu", products: 400 },
-//       { name: "Fri", products: 500 },
-//       { name: "Sat", products: 450 },
-//     ],
-//   };
-//   export const chartBoxRevenue = {
-//     color: "teal",
-//     icon: "/revenueIcon.svg",
-//     title: "Total Revenue",
-//     number: "$56.432",
-//     dataKey: "revenue",
-//     percentage: -12,
-//     chartData: [
-//       { name: "Sun", revenue: 400 },
-//       { name: "Mon", revenue: 600 },
-//       { name: "Tue", revenue: 500 },
-//       { name: "Wed", revenue: 700 },
-//       { name: "Thu", revenue: 400 },
-//       { name: "Fri", revenue: 500 },
-//       { name: "Sat", revenue: 450 },
-//     ],
-//   };
-//   export const chartBoxConversion = {
-//     color: "gold",
-//     icon: "/conversionIcon.svg",
-//     title: "Total Ratio",
-//     number: "2.6",
-//     dataKey: "ratio",
-//     percentage: 12,
-//     chartData: [
-//       { name: "Sun", ratio: 400 },
-//       { name: "Mon", ratio: 600 },
-//       { name: "Tue", ratio: 500 },
-//       { name: "Wed", ratio: 700 },
-//       { name: "Thu", ratio: 400 },
-//       { name: "Fri", ratio: 500 },
-//       { name: "Sat", ratio: 450 },
-//     ],
-//   };
+export const chartBoxStoreExpense = {
+  color: "skyblue",
+  icon: "/productIcon.svg",
+  title: "Store Expenses",
+  number: "$18",
+  dataKey: "expenses",
+  percentage: 21,
+  chartData: [
+    { name: "Aldi", expenses: 400 },
+    { name: "Netto", expenses: 600 },
+    { name: "Lidl", expenses: 500 },
+    { name: "BAK-AL", expenses: 700 },
+    { name: "Sud", expenses: 400 },
+    { name: "REWE", expenses: 500 },
+    { name: "Bangla", expenses: 450 },
+  ],
+};
+export const chartBoxHouseExpense = {
+  color: "teal",
+  icon: "/revenueIcon.svg",
+  title: "House Expense",
+  number: "$564.32",
+  dataKey: "expenses",
+  percentage: -12,
+  chartData: [
+    { name: "Sun", expenses: 400 },
+    { name: "Mon", expenses: 600 },
+    { name: "Tue", expenses: 500 },
+    { name: "Wed", expenses: 700 },
+    { name: "Thu", expenses: 400 },
+    { name: "Fri", expenses: 500 },
+    { name: "Sat", expenses: 450 },
+  ],
+};
+export const chartBoxConversion = {
+  color: "gold",
+  icon: "/conversionIcon.svg",
+  title: "Total Ratio",
+  number: "2.6",
+  dataKey: "ratio",
+  percentage: 12,
+  chartData: [
+    { name: "Sun", ratio: 400 },
+    { name: "Mon", ratio: 600 },
+    { name: "Tue", ratio: 500 },
+    { name: "Wed", ratio: 700 },
+    { name: "Thu", ratio: 400 },
+    { name: "Fri", ratio: 500 },
+    { name: "Sat", ratio: 450 },
+  ],
+};
 
-//   export const barChartBoxRevenue = {
-//     title: "Profit Earned",
-//     color: "#8884d8",
-//     dataKey: "profit",
-//     chartData: [
-//       {
-//         name: "Sun",
-//         profit: 4000,
-//       },
-//       {
-//         name: "Mon",
-//         profit: 3000,
-//       },
-//       {
-//         name: "Tue",
-//         profit: 2000,
-//       },
-//       {
-//         name: "Wed",
-//         profit: 2780,
-//       },
-//       {
-//         name: "Thu",
-//         profit: 1890,
-//       },
-//       {
-//         name: "Fri",
-//         profit: 2390,
-//       },
-//       {
-//         name: "Sat",
-//         profit: 3490,
-//       },
-//     ],
-//   };
+export const barChartBoxUserExpenseLastSixMonths = {
+  title: "User Expenses",
+  color: "#8884d8",
+  dataKey: "expenses",
+  chartData: [
+    {
+      name: "Jan",
+      expenses: 4000,
+    },
+    {
+      name: "Feb",
+      expenses: 3000,
+    },
+    {
+      name: "Mar",
+      expenses: 2000,
+    },
+    {
+      name: "Apr",
+      expenses: 2780,
+    },
+    {
+      name: "May",
+      expenses: 1890,
+    },
+    {
+      name: "Jun",
+      expenses: 2390,
+    },
+    {
+      name: "Jul",
+      expenses: 3490,
+    },
+  ],
+};
 
-//   export const barChartBoxVisit = {
-//     title: "Total Visit",
-//     color: "#FF8042",
-//     dataKey: "visit",
-//     chartData: [
-//       {
-//         name: "Sun",
-//         visit: 4000,
-//       },
-//       {
-//         name: "Mon",
-//         visit: 3000,
-//       },
-//       {
-//         name: "Tue",
-//         visit: 2000,
-//       },
-//       {
-//         name: "Wed",
-//         visit: 2780,
-//       },
-//       {
-//         name: "Thu",
-//         visit: 1890,
-//       },
-//       {
-//         name: "Fri",
-//         visit: 2390,
-//       },
-//       {
-//         name: "Sat",
-//         visit: 3490,
-//       },
-//     ],
-//   };
+// last 3 months all user house expense
+export const barChartBoxAllUser = {
+  title: "All Member Expenses",
+  color: "#FF8042",
+  dataKey: "expenses",
+  chartData: [
+    {
+      name: "Shomrat",
+      expenses: 3000,
+    },
+    {
+      name: "Rizwan",
+      expenses: 4000,
+    },
+
+    {
+      name: "Nahid",
+      expenses: 2000,
+    },
+    {
+      name: "Rashed",
+      expenses: 2780,
+    },
+  ],
+};
 
 //   export const userRows = [
 //     {
