@@ -14,10 +14,10 @@ const TopBox = () => {
           return (
             <div className="list-item" key={expense._id}>
               <div className="user">
-                <img src={expense.img} alt="" />
+                <img src={expense.storeImg} alt="" />
 
                 <div className="user-texts">
-                  <span className="storename">{expense.store}</span>
+                  <span className="storename">{expense.storeName}</span>
                   <span className="date">{date}</span>
                 </div>
               </div>
