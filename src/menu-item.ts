@@ -200,18 +200,23 @@ export const chartBoxUserExpense = {
 export const chartBoxStoreExpense = {
   color: "skyblue",
   icon: "/productIcon.svg",
-  title: "Store Expenses",
-  number: "$18",
+  title: "Popular Category",
+  number: "10047.76",
   dataKey: "expenses",
   percentage: 21,
   chartData: [
-    { name: "Aldi", expenses: 400 },
-    { name: "Netto", expenses: 600 },
-    { name: "Lidl", expenses: 500 },
-    { name: "BAK-AL", expenses: 700 },
-    { name: "Sud", expenses: 400 },
-    { name: "REWE", expenses: 500 },
-    { name: "Bangla", expenses: 450 },
+    {
+      name: "Butcher",
+      expenses: 4233.69,
+    },
+    {
+      name: "Grocery",
+      expenses: 1399.15,
+    },
+    {
+      name: "Other",
+      expenses: 10047.76,
+    },
   ],
 };
 export const chartBoxHouseExpense = {
@@ -222,19 +227,18 @@ export const chartBoxHouseExpense = {
   dataKey: "expenses",
   percentage: -12,
   chartData: [
-    { name: "Sun", expenses: 400 },
-    { name: "Mon", expenses: 600 },
-    { name: "Tue", expenses: 500 },
-    { name: "Wed", expenses: 700 },
-    { name: "Thu", expenses: 400 },
-    { name: "Fri", expenses: 500 },
-    { name: "Sat", expenses: 450 },
+    { name: "Jun", expenses: 400 },
+    { name: "July", expenses: 600 },
+    { name: "August", expenses: 500 },
+    { name: "Sept", expenses: 700 },
+    { name: "Oct", expenses: 400 },
+    { name: "Nov", expenses: 500 },
   ],
 };
 export const chartBoxConversion = {
   color: "gold",
   icon: "/conversionIcon.svg",
-  title: "Total Ratio",
+  title: "Popular Store",
   number: "2.6",
   dataKey: "ratio",
   percentage: 12,
@@ -250,7 +254,7 @@ export const chartBoxConversion = {
 };
 
 export const barChartBoxUserExpenseLastSixMonths = {
-  title: "User Expenses",
+  title: "User Monthly Expenses",
   color: "#8884d8",
   dataKey: "expenses",
   chartData: [
@@ -287,7 +291,7 @@ export const barChartBoxUserExpenseLastSixMonths = {
 
 // last 3 months all user house expense
 export const barChartBoxAllUser = {
-  title: "All Member Expenses",
+  title: "Member Contribution",
   color: "#FF8042",
   dataKey: "expenses",
   chartData: [

@@ -3,22 +3,33 @@ import "./pieChartBox.scss";
 
 interface PieChartBoxProps {}
 
-const data = [
-  { name: "Aldi", value: 900, color: "#0088FE" },
-  { name: "Netto", value: 300, color: "#86f8e3" },
-  { name: "Lidl", value: 300, color: "#FFBB28" },
-  { name: "BAK-AL", value: 700, color: "#839b94" },
-  { name: "Edeka", value: 278, color: "#2b9d55" },
-  { name: "Rewe", value: 189, color: "#FF8042" },
-  { name: "Penny", value: 239, color: "#FF8042" },
-  { name: "Kaufland", value: 349, color: "#aa9616" },
-  { name: "Real", value: 149, color: "#4e1122" },
+type StoreData = {
+  name: string;
+  value: number;
+  color?: string;
+};
+
+const data: StoreData[] = [
+  { name: "Aldi", value: 900 },
+  { name: "Netto", value: 300 },
+  { name: "Lidl", value: 300 },
+  { name: "BAK-AL", value: 700 },
+  { name: "Edeka", value: 278 },
+  { name: "Rewe", value: 189 },
+  { name: "Penny", value: 239 },
+  { name: "Kaufland", value: 349 },
+  { name: "Real", value: 149 },
 ];
+
+//add random color to each store
+data.forEach((item) => {
+  item.color = "#" + Math.floor(Math.random() * 16777215).toString(16);
+});
 
 const PieChartBox: React.FC<PieChartBoxProps> = ({}) => {
   return (
     <div className="pieChartBox">
-      <h1>Leads by Source</h1>
+      <h1>Expenses by Store</h1>
       <div className="chart">
         <ResponsiveContainer width="99%" height={300}>
           <PieChart>
@@ -76,7 +87,6 @@ const PieChartBox: React.FC<PieChartBoxProps> = ({}) => {
               <div className="dot" style={{ backgroundColor: item.color }} />
               <span>{item.name}</span>
             </div>
-            {/* <span>{item.value}</span> */}
           </div>
         ))}
       </div>
