@@ -1,9 +1,8 @@
 import { Link } from "react-router-dom";
 import { menu } from "../../menu-item";
 import "./menu.scss";
-type Props = {};
 
-const Menu = (props: Props) => {
+const Menu: React.FC = () => {
   return (
     <div className="menu">
       {menu.map((item) => (

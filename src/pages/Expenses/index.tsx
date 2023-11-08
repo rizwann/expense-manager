@@ -1,4 +1,6 @@
 import { GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import { useState } from "react";
+import Add from "../../components/Add";
 import DataTable from "../../components/DataTable";
 import "./expenses.scss";
 
@@ -159,13 +161,17 @@ const columns: GridColDef[] = [
 ];
 
 const Expenses = (props: Props) => {
+  const [modalOpen, setModalOpen] = useState(false);
   return (
     <div className="expenses">
       <div className="info">
         <h1>Expenses</h1>
-        <button>Add Expense</button>
+        <button onClick={() => setModalOpen(true)}>Add Expense</button>
       </div>
       <DataTable columns={columns} rows={rows} slug="expenses" />
+      {modalOpen && (
+        <Add setModalOpen={setModalOpen} slug="Expense" columns={columns} />
+      )}
     </div>
   );
 };

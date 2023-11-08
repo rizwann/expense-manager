@@ -1,4 +1,4 @@
-.stores {
+.houses {
   .info {
     display: flex;
     align-items: center;
@@ -9,5 +9,11 @@
       padding: 5px;
       cursor: pointer;
     }
+  }
+  .users {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    font-size: 10px;
   }
 }

@@ -4,8 +4,10 @@ import Menu from "./components/Menu";
 import Navbar from "./components/Navbar";
 import Expenses from "./pages/Expenses";
 import Home from "./pages/Home";
+import Houses from "./pages/Houses";
 import Login from "./pages/Login";
 import Stores from "./pages/Stores";
+import Users from "./pages/Users";
 import "./styles/global.scss";
 
 const App = () => {
@@ -42,6 +44,14 @@ const App = () => {
         {
           path: "/expenses",
           element: <Expenses />,
+        },
+        {
+          path: "/houses",
+          element: <Houses />,
+        },
+        {
+          path: "/users",
+          element: <Users />,
         },
       ],
     },
