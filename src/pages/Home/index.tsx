@@ -3,6 +3,7 @@ import BigChart from "../../components/BigChart";
 import ChartBox from "../../components/ChartBox";
 import PieChartBox from "../../components/PieChartBox";
 import TopBox from "../../components/TopBox";
+import { useAuth } from "../../hooks/useAuth";
 import {
   barChartBoxAllUser,
   barChartBoxUserExpenseLastSixMonths,
@@ -16,6 +17,8 @@ import "./home.scss";
 type Props = {};
 
 const Home = (props: Props) => {
+  const { user } = useAuth();
+  console.log(user, "user");
   return (
     <div className="home">
       <div className="box box1">

@@ -1,7 +1,15 @@
+@import "../../styles/responsive.scss";
+@import "../../styles/variables.scss";
+
 .data-table {
   .data-grid {
-    background: white;
+    background: rgb(219, 212, 212);
     padding: 20px;
+    border-radius: 10px;
+    // make the table responsive
+    @include lg {
+      width: calc(100% - 80px);
+    }
 
     .MuiDataGrid-toolbarContainer {
       flex-direction: row-reverse;

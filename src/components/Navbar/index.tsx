@@ -1,6 +1,8 @@
+import { useAuth } from "../../hooks/useAuth";
 import "./navbar.scss";
 
-const Navbar = () => {
+const Navbar: React.FC = () => {
+  const { logout, user } = useAuth();
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen();
@@ -10,6 +12,7 @@ const Navbar = () => {
       }
     }
   };
+
   return (
     <div className="navbar">
       <div className="logo">
@@ -34,9 +37,15 @@ const Navbar = () => {
             src="https://images.pexels.com/photos/11038549/pexels-photo-11038549.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
             alt=""
           />
-          <span>Jane</span>
+          <span>{user?.username}</span>
         </div>
-        <img src="/settings.svg" alt="" className="icon" />
+        <img
+          src="/settings.svg"
+          alt=""
+          className="icon"
+          onClick={logout}
+          style={{ cursor: "pointer" }}
+        />
       </div>
     </div>
   );

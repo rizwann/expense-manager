@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
-import Login from "../../components/Login";
+import Registration from "../../components/Registration";
 import { useAuth } from "../../hooks/useAuth";
 
-export default function LoginPage() {
+export default function RegistrationPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -17,12 +17,12 @@ export default function LoginPage() {
     <div className="flex items-center justify-center h-screen min-h-full px-4 py-12 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
         <Header
-          heading="Login to your account"
-          paragraph="Don't have an account yet? "
-          linkName="Signup"
-          linkUrl="/registration"
+          heading="Sign up for an account"
+          paragraph="Already have an account? "
+          linkName="Login"
+          linkUrl="/login"
         />
-        <Login />
+        <Registration />
       </div>
     </div>
   );
