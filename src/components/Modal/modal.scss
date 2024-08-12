@@ -1,0 +1,55 @@
+/* modal.scss */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7); /* Darker overlay for dark theme */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background: #333; /* Dark background for the modal content */
+    color: #f0f0f0; /* Light text color for readability */
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+  }
+  
+  .modal-actions {
+    margin-top: 20px;
+  }
+  
+  .confirm, .cancel {
+    border: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    cursor: pointer;
+    border-radius: 4px; /* Rounded corners for buttons */
+  }
+  
+  .confirm {
+    background-color: #28a745; /* Green for confirmation */
+    color: white;
+  }
+  
+  .cancel {
+    background-color: #dc3545; /* Red for cancellation */
+    color: white;
+  }
+  
+  .confirm:hover {
+    background-color: #218838; /* Darker green on hover */
+  }
+  
+  .cancel:hover {
+    background-color: #c82333; /* Darker red on hover */
+  }
+  

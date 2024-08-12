@@ -13,6 +13,7 @@ export interface House {
   description: string;
   image: string;
   users: string[]; // Array of user ids
+  userNames: string[]; // Array of user names
 }
 
 export interface IUser {
@@ -22,3 +23,28 @@ export interface IUser {
   active?: boolean;
   houseCodes: string[]; // Array of house codes the user belongs to
 }
+
+export type Store = {
+  _id: string;
+  name: string;
+  image?: string;
+};
+export type Expense = {
+  _id: string;
+  storeName: string;
+  storeImg: string;
+  storeId: string;
+  cost: number;
+  category: string;
+  description: string;
+  user: string;
+  userId: string;
+  houseCode: string;
+  involvedUsers: string[];
+  date: string;
+  __v: number;
+}
+
+
+// make a type by combinging all of the above types
+export type General =  IUser | House | Store 

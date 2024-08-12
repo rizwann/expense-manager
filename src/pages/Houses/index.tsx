@@ -2,6 +2,7 @@ import { GridColDef } from "@mui/x-data-grid";
 import { useState } from "react";
 import Add from "../../components/Add";
 import DataTable from "../../components/DataTable";
+import Button from "../components/Button";
 import "./houses.scss";
 
 type Props = {};
@@ -131,7 +132,7 @@ const Houses = (props: Props) => {
     <div className="houses">
       <div className="info">
         <h1>Houses</h1>
-        <button onClick={() => setModalOpen(true)}>Add House</button>
+        <Button onClick={() => setModalOpen(true)} text="Add House" />
       </div>
       <DataTable columns={columns} rows={rows} slug="Houses" />
       {modalOpen && (

@@ -6,7 +6,7 @@
     background: rgb(219, 212, 212);
     padding: 20px;
     border-radius: 10px;
-    // make the table responsive
+
     @include lg {
       width: calc(100% - 80px);
     }
@@ -30,6 +30,50 @@
         width: 20px;
         height: 20px;
         cursor: pointer;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .data-grid {
+      padding: 15px;
+      width: calc(100% - 40px);
+
+      .MuiDataGrid-toolbarContainer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .action {
+        gap: 10px;
+      }
+
+      img {
+        width: 28px;
+        height: 28px;
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .data-grid {
+      padding: 10px;
+      width: 100%;
+
+      .MuiDataGrid-toolbarContainer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+      }
+
+      .action {
+        gap: 8px;
+      }
+
+      img {
+        width: 24px;
+        height: 24px;
       }
     }
   }

@@ -1,8 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Outlet,
   RouterProvider,
   createBrowserRouter,
+  useLocation,
   useNavigate,
 } from "react-router-dom";
 import Footer from "./components/Footer";
@@ -23,6 +24,20 @@ import Stores from "./pages/Stores";
 import User from "./pages/User";
 import Users from "./pages/Users";
 import "./styles/global.scss";
+const LoadingSkeleton = () => {
+  // Replace this with your own skeleton loading UI using Tailwind CSS classes
+  return (
+    <div className="p-4 bg-gray-100 border rounded">
+      {/* Example skeleton loading UI */}
+      <div className="h-10 mb-4 bg-gray-300 rounded"></div>
+      <div className="flex gap-4">
+        <div className="flex-1 h-40 bg-gray-300 rounded"></div>
+        <div className="h-40 bg-gray-300 rounded flex-3"></div>
+      </div>
+      <div className="h-10 mt-4 bg-gray-300 rounded"></div>
+    </div>
+  );
+};
 
 const App = () => {
   const { user } = useAuth();
@@ -30,11 +45,21 @@ const App = () => {
 
   const Layout = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const [loading, setLoading] = useState(true);
+
     useEffect(() => {
-      if (!user) {
+      if (!user && location.pathname !== "/login") {
         navigate("/login");
+      } else {
+        setLoading(false);
       }
-    }, [user]);
+    }, [user, navigate, location]);
+
+    if (loading) {
+      return <LoadingSkeleton />; // Render the loading skeleton while checking authentication
+    }
+
     return (
       <div className="main">
         <Navbar />

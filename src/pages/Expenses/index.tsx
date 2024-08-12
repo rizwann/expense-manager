@@ -1,129 +1,37 @@
 import { GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Add from "../../components/Add";
 import DataTable from "../../components/DataTable";
+import Button from "../components/Button";
 import "./expenses.scss";
+import { config } from "../../utils/config";
+import axios from "axios";
+import { Expense, House } from "../../types";
+import { ToastContainer, toast } from "react-toastify";
+import { useAuth } from "../../hooks/useAuth";
 
 type Props = {};
 
-const rows = [
-  {
-    id: "654384d67207439061004b72",
-    storeName: "adidas",
-    storeImg: "https://picsum.photos/200/300",
-    storeId: "6536affcdf1bab53caae9456",
-    cost: 64.23,
-    category: "Grocery",
-    description: "hag3u",
-    user: "653686b3d426931967abc8e3",
-    houseCode: "0496",
-    date: "2023-01-02T11:15:34.335Z",
-    __v: 0,
-  },
-  {
-    id: "654384db7207439061004b76",
-    storeName: "adidas",
-    storeImg: "uploads/1698082812649-adidas",
-    storeId: "6536affcdf1bab53caae9456",
-    cost: 641.23,
-    category: "Grocery",
-    description: "hag3u",
-    user: "653686b3d426931967abc8e3",
-    houseCode: "0496",
-    date: "2023-11-02T11:15:39.912Z",
-    __v: 0,
-  },
-  {
-    id: "654384df7207439061004b7a",
-    storeName: "adidas",
-    storeImg: "uploads/1698082812649-adidas",
-    storeId: "6536affcdf1bab53caae9456",
-    cost: 41.23,
-    category: "Grocery",
-    description: "hag3u",
-    user: "653686b3d426931967abc8e3",
-    houseCode: "0496",
-    date: "2023-11-02T11:15:43.021Z",
-    __v: 0,
-  },
-  {
-    id: "654384e37207439061004b7e",
-    storeName: "adidas",
-    storeImg: "uploads/1698082812649-adidas",
-    storeId: "6536affcdf1bab53caae9456",
-    cost: 241.23,
-    category: "Grocery",
-    description: "hag3u",
-    user: "653686b3d426931967abc8e3",
-    houseCode: "0496",
-    date: "2023-11-02T11:15:47.715Z",
-    __v: 0,
-  },
-  {
-    id: "654384ea7207439061004b82",
-    storeName: "adidas",
-    storeImg: "uploads/1698082812649-adidas",
-    storeId: "6536affcdf1bab53caae9456",
-    cost: 411.23,
-    category: "Grocery",
-    description: "hag3u",
-    user: "653686b3d426931967abc8e3",
-    houseCode: "0496",
-    date: "2023-11-02T11:15:54.692Z",
-    __v: 0,
-  },
-  {
-    id: "6543851a7207439061004b86",
-    storeName: "GS-Mart",
-    storeImg: "uploads/1698082768529-GS-Mart",
-    storeId: "6536afd03b1b7212d89478cf",
-    cost: 4111.23,
-    category: "Butcher",
-    description: "hag3u",
-    user: "653686b3d426931967abc8e3",
-    houseCode: "0496",
-    date: "2023-11-02T11:16:42.634Z",
-    __v: 0,
-  },
-  {
-    id: "6543851e7207439061004b8a",
-    storeName: "GS-Mart",
-    storeImg: "uploads/1698082768529-GS-Mart",
-    storeId: "6536afd03b1b7212d89478cf",
-    cost: 111.23,
-    category: "Butcher",
-    description: "hag3u",
-    user: "653686b3d426931967abc8e3",
-    houseCode: "0496",
-    date: "2023-11-02T11:16:46.440Z",
-    __v: 0,
-  },
-  {
-    id: "654385207207439061004b8e",
-    storeName: "GS-Mart",
-    storeImg: "uploads/1698082768529-GS-Mart",
-    storeId: "6536afd03b1b7212d89478cf",
-    cost: 11.23,
-    category: "Butcher",
-    description: "hag3u",
-    user: "653686b3d426931967abc8e3",
-    houseCode: "0496",
-    date: "2023-11-02T11:16:48.848Z",
-    __v: 0,
-  },
-];
-
+// Define the columns
 const columns: GridColDef[] = [
-  { field: "id", headerName: "ID", width: 90 },
   {
     field: "image",
-    headerName: "Image",
+    headerName: "Logo",
     width: 100,
     renderCell: (params) => (
-      <img src={params.row.storeImg || "/noavatar.png "} />
+      <img
+        src={
+          params.row.storeImg
+            ? `${import.meta.env.VITE_API_URL}/${params.row.storeImg}`
+            : "/noavatar.png "
+        }
+        alt="store"
+        onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) =>
+          (e.currentTarget.src = "/noavatar.png")
+        }
+      />
     ),
   },
-
   {
     field: "storeName",
     headerName: "Store name",
@@ -143,9 +51,18 @@ const columns: GridColDef[] = [
     field: "cost",
     headerName: "Cost",
     type: "number",
-    width: 110,
+    width: 50,
   },
-  //  convert date to local date
+  {
+    field: "involvedUsers",
+    headerName: "Involved Users",
+    width: 150,
+  },
+  {
+    field: "user",
+    headerName: "Paid by",
+    width: 100,
+  },
   {
     field: "date",
     headerName: "Date",
@@ -162,16 +79,202 @@ const columns: GridColDef[] = [
 
 const Expenses = (props: Props) => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [filteredExpenses, setFilteredExpenses] = useState<Expense[]>([]);
+  const [myself, setMyself] = useState(false);
+  const [houses, setHouses] = useState<House[]>([]);
+  const [selectedHouse, setSelectedHouse] = useState<string | null>(null);
+  const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
+  const [selectedYear, setSelectedYear] = useState<string | null>(null);
+  const [refresh, setRefresh] = useState(false);
+  const { user } = useAuth();
+  const token = localStorage.getItem("token");
+
+  // Fetch houses
+  useEffect(() => {
+    const fetchHouses = async () => {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/houses`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setHouses(response.data);
+      } catch (error) {
+        console.error("Error fetching houses:", error);
+      }
+    };
+
+    fetchHouses();
+  }, [token]);
+
+  // Fetch expenses from all houses
+  const fetchExpenses = async () => {
+    try {
+      const allExpenses: Expense[] = [];
+
+      // Loop through each house to fetch its expenses
+      for (const house of houses) {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/expenses/house/${house.code}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        
+        const houseExpenses = response.data.expenses.map((expense: Expense) => ({
+          ...expense,
+          id: expense._id,
+        }));
+
+        allExpenses.push(...houseExpenses);  // Combine expenses
+      }
+
+      setExpenses(allExpenses);  // Set all combined expenses to state
+      // set all the filter to null
+      setSelectedHouse(null);
+      setSelectedMonth(null);
+      setSelectedYear(null);
+      setMyself(false);
+    } catch (error) {
+      console.error("Error fetching expenses:", error);
+    }
+  };
+
+  // Fetch expenses on component mount and when houses change
+  useEffect(() => {
+    if (houses.length > 0) {
+      fetchExpenses();
+    }
+  }, [houses, refresh]);
+
+  // Filter expenses based on house, user involvement, month, and year
+  useEffect(() => {
+    let filtered = expenses;
+
+    if (selectedHouse) {
+      filtered = filtered.filter((expense) => expense.houseCode === selectedHouse);
+    }
+
+    if (myself && user) {
+      filtered = filtered.filter(
+        (expense) => expense.involvedUsers.includes(user.username) || expense.userId === user._id
+      );
+    }
+
+    if (selectedMonth) {
+      filtered = filtered.filter(
+        (expense) => new Date(expense.date).getMonth() + 1 === parseInt(selectedMonth)
+      );
+    }
+
+    if (selectedYear) {
+      filtered = filtered.filter(
+        (expense) => new Date(expense.date).getFullYear() === parseInt(selectedYear)
+      );
+    }
+
+    setFilteredExpenses(filtered);
+  }, [selectedHouse, myself, selectedMonth, selectedYear, expenses, user]);
+  
+  const handleDelete = async (id: string) => {
+    try {
+     const res= await axios.delete(`${import.meta.env.VITE_API_URL}/api/expenses/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setRefresh(!refresh);
+      toast.success(res?.data?.message || "Expense deleted successfully!!");
+    } catch (error:any) {
+      console.error("Error deleting expense:", error);
+      toast.error(error.response.data.message ||
+        "An error occurred while saving the expense.");
+    }
+  }
   return (
     <div className="expenses">
       <div className="info">
         <h1>Expenses</h1>
-        <button onClick={() => setModalOpen(true)}>Add Expense</button>
+        <Button text="Add Expense" onClick={() => setModalOpen(true)} />
+
+        {/* Myself Filter Checkbox */}
+        <label className="dark-input">
+          <input
+            type="checkbox"
+            checked={myself}
+            onChange={() => setMyself(!myself)}
+          />
+          Myself
+        </label>
+
+        {/* House Selector */}
+        <select
+          className="dark-input"
+          value={selectedHouse || ""}
+          onChange={(e) => setSelectedHouse(e.target.value)}
+        >
+          <option value="">All Houses</option>
+          {houses.map((house) => (
+            <option key={house._id} value={house.code}>
+              {house.description}
+            </option>
+          ))}
+        </select>
+
+        {/* Month Selector */}
+        <select
+          className="dark-input"
+          value={selectedMonth || ""}
+          onChange={(e) => setSelectedMonth(e.target.value)}
+        >
+          <option value="">All Months</option>
+          {Array.from({ length: 12 }, (_, i) => (
+            <option key={i + 1} value={i + 1}>
+              {new Date(0, i).toLocaleString("en", { month: "long" })}
+            </option>
+          ))}
+        </select>
+
+        {/* Year Selector */}
+        <select
+          className="dark-input"
+          value={selectedYear || ""}
+          onChange={(e) => setSelectedYear(e.target.value)}
+        >
+          <option value="">All Years</option>
+          {Array.from(
+            new Set(expenses.map((expense) => new Date(expense.date).getFullYear()))
+          ).map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>
       </div>
-      <DataTable columns={columns} rows={rows} slug="expenses" />
+
+      <DataTable columns={columns} rows={filteredExpenses} slug="expenses" handleDelete={handleDelete} />
+
       {modalOpen && (
-        <Add setModalOpen={setModalOpen} slug="Expense" columns={columns} />
+        <Add
+          setModalOpen={setModalOpen}
+          slug="Expense"
+          columns={config.expenseFields}
+          setRefresh={setRefresh}
+        />
       )}
+
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </div>
   );
 };
