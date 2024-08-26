@@ -1,11 +1,17 @@
-import { GridColDef } from "@mui/x-data-grid";
-import { useState } from "react";
-import Add from "../../components/Add";
-import DataTable from "../../components/DataTable";
-import Button from "../components/Button";
-import "./houses.scss";
+import { GridColDef } from "@mui/x-data-grid"
+import { useEffect, useState } from "react"
+import DataTable from "../../components/DataTable"
+import Button from "../components/Button"
+import "./houses.scss"
+import { House } from "../../types"
+import axios from "axios"
+import { toast } from "react-toastify"
+import Toaster from "../../components/Toaster"
+import AddHouse from "../../components/AddHouse"
+import { config } from "../../utils/config"
+import Spinner from "../../components/Spinner"
 
-type Props = {};
+type Props = {}
 
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 100 },
@@ -18,7 +24,19 @@ const columns: GridColDef[] = [
     field: "image",
     headerName: "House Image",
     width: 100,
-    renderCell: (params) => <img src={params.row.image || "/noavatar.png "} />,
+    renderCell: (params) => (
+      <img
+        src={
+          params.row.image
+            ? `${import.meta.env.VITE_API_URL}/${params.row.image}`
+            : "/noavatar.png "
+        }
+        alt="house"
+        onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) =>
+          (e.currentTarget.src = "/noavatar.png")
+        }
+      />
+    ),
   },
   {
     field: "code",
@@ -33,117 +51,88 @@ const columns: GridColDef[] = [
     renderCell: (params) => {
       return (
         <div className="users">
-          {params.row.users.map((user: any) => {
+          {params.row.userNames.map((user: any) => {
             return (
               <div className="user">
                 <p>{user}</p>
               </div>
-            );
+            )
           })}
         </div>
-      );
+      )
     },
   },
-];
-
-const rows = [
-  {
-    id: 1,
-    description: "House 1",
-    image: "https://picsum.photos/200",
-    code: "0496",
-    users: ["Rizwan Kabir", "Shomrat", "Shozib"],
-  },
-  {
-    id: 2,
-    description: "House 2",
-    image: "https://picsum.photos/200",
-    code: "0496",
-    users: ["Rizwan Kabir", "Shomrat", "Shozib"],
-  },
-  {
-    id: 3,
-    description: "House 3",
-    image: "https://picsum.photos/200",
-    code: "0496",
-    users: ["Rizwan Kabir", "Shomrat", "Shozib"],
-  },
-  {
-    id: 4,
-    description: "House 4",
-    image: "https://picsum.photos/200",
-    code: "0496",
-    users: ["Rizwan Kabir", "Shomrat", "Shozib"],
-  },
-  {
-    id: 5,
-    description: "House 5",
-    image: "https://picsum.photos/200",
-    code: "0496",
-    users: ["Rizwan Kabir", "Shomrat", "Shozib"],
-  },
-  {
-    id: 6,
-    description: "House 6",
-    image: "https://picsum.photos/200",
-    code: "0496",
-    users: ["Rizwan Kabir", "Shomrat", "Shozib"],
-  },
-  {
-    id: 7,
-    description: "House 7",
-    image: "https://picsum.photos/200",
-    code: "0496",
-    users: ["Rizwan Kabir", "Shomrat", "Shozib"],
-  },
-  {
-    id: 8,
-    description: "House 8",
-    image: "https://picsum.photos/200",
-    code: "0496",
-    users: ["Rizwan Kabir", "Shomrat", "Shozib"],
-  },
-  {
-    id: 9,
-    description: "House 9",
-    image: "https://picsum.photos/200",
-    code: "0496",
-    users: ["Rizwan Kabir", "Shomrat", "Shozib"],
-  },
-  {
-    id: 10,
-    description: "House 10",
-    image: "https://picsum.photos/200",
-    code: "0496",
-    users: ["Rizwan Kabir", "Shomrat", "Shozib"],
-  },
-  {
-    id: 11,
-    description: "House 11",
-    image: "https://picsum.photos/200",
-    code: "0496",
-    users: ["Rizwan Kabir", "Shomrat", "Shozib"],
-  },
-];
+]
 
 const Houses = (props: Props) => {
-  const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false)
+  const [houses, setHouses] = useState<House[]>([])
+  const token = localStorage.getItem("token")
+  const [refresh, setRefresh] = useState(false)
+  const [spinner, setSpinner] = useState(false)
+
+  useEffect(() => {
+    //fetch stores
+    const fetchStores = async () => {
+      const houseApi = `${import.meta.env.VITE_API_URL}/api/houses`
+      setSpinner(true)
+      try {
+        const data = await axios.get<House[]>(houseApi, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        setHouses(data.data)
+        setSpinner(false)
+      } catch (error: any) {
+        console.error("Error fetching houses:", error)
+        toast.error("Failed to load house details.")
+        setSpinner(false)
+      }
+    }
+    fetchStores()
+  }, [refresh, token])
+
+  const handleDelete = async (id: string, name: string) => {
+    try {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/houses/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      setHouses(houses.filter((store) => store._id !== id))
+      toast.success(`House → ${name} ← deleted successfully.`)
+    } catch (error: any) {
+      console.error("Error deleting Store:", error)
+      toast.error(
+        error.response.data.message ||
+          "An error occurred while saving the Store."
+      )
+    }
+  }
   return (
     <div className="houses">
       <div className="info">
         <h1>Houses</h1>
         <Button onClick={() => setModalOpen(true)} text="Add House" />
       </div>
-      <DataTable columns={columns} rows={rows} slug="Houses" />
+      {spinner && <Spinner />}
+      <DataTable
+        columns={columns}
+        rows={houses.map((house) => ({ ...house, id: house._id }))}
+        slug="Houses"
+        handleDelete={handleDelete}
+      />
       {modalOpen && (
-        <Add
+        <AddHouse
           setModalOpen={setModalOpen}
-          slug="Houses"
-          columns={columns.filter((column) => column.field !== "users")}
+          columns={config.houseFields}
+          setRefresh={setRefresh}
         />
       )}
+      <Toaster />
     </div>
-  );
-};
+  )
+}
 
-export default Houses;
+export default Houses

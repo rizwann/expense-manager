@@ -8,15 +8,7 @@ import Button from "../components/Button"
 import { Expense } from "../../types"
 import { config } from "../../utils/config"
 import Add from "../../components/Add"
-
-enum CategoryName {
-  Other = "Other",
-  Grocery = "Grocery",
-  Restaurant = "Restaurant",
-  Clothing = "Clothing",
-  Entertainment = "Entertainment",
-  Butcher = "Butcher",
-}
+import Loading from "../../components/Loading"
 
 const ExpenseDetail = () => {
   const { id } = useParams<{ id: string }>()
@@ -54,18 +46,20 @@ const ExpenseDetail = () => {
     fetchExpense()
   }, [id, token, refresh])
 
-  if (!expense) return <div>Loading...</div>
+  if (!expense) {
+    return <Loading />
+  }
 
   const isEditable = user?.username === expense.user
 
   return (
     <div className="expense-detail">
-      <div className="header">
+      <div className="expense-header">
         <button className="back-button" onClick={() => navigate("/expenses")}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
+            width="20"
+            height="20"
             fill="currentColor"
             className="bi bi-arrow-left"
             viewBox="0 0 16 16"
@@ -75,13 +69,13 @@ const ExpenseDetail = () => {
               d="M8.707 12.707a1 1 0 0 0 0-1.414L5.414 8l3.293-3.293a1 1 0 0 0-1.414-1.414L4 7.586a2 2 0 0 0 0 2.828l3.293 3.293a1 1 0 0 0 1.414 0z"
             />
           </svg>
-          All Expenses
+          <p>Expenses</p>
         </button>
-        <h1>Expense Details</h1>
         {isEditable && <Button text={"Edit"} onClick={() => openEditModal()} />}
       </div>
       <div className="content">
         <div className="image">
+      <h1>Expense Details</h1>
           <img
             src={`${import.meta.env.VITE_API_URL}/${expense.storeImg}`}
             alt={expense.storeName}

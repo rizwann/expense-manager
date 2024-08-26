@@ -1,0 +1,157 @@
+@import "../../styles/variables.scss";
+
+// Ensure the background and text colors are consistent with the given variables
+.store-detail {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: $main-bg;
+  border-radius: 15px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+
+  .store-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+
+    .back-button {
+      background-color: rgb(147 51 234);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      transition: background-color 0.3s;
+    }
+
+    .back-button:hover {
+      background-color: #0056b3;
+    }
+
+    .back-button svg {
+      margin-right: 8px;
+    }
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .image {
+      width: 100%;
+      max-width: 300px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      row-gap: 15px;
+
+      h1 {
+        font-size: 2rem;
+        font-weight: bold;
+        color: $main-color;
+      }
+
+      img {
+        width: 100%;
+        border-radius: 10px;
+        object-fit: cover;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+      }
+    }
+
+    .details {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+
+      label {
+        font-weight: bold;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: $soft-bg;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        font-size: 1.2rem;
+        color: $main-color;
+
+        span,
+        input,
+        select {
+          flex: 1;
+          text-align: right;
+          color: $main-color;
+
+          // Styling for input fields and selects in edit mode
+          input,
+          select {
+            border: none;
+            background-color: transparent;
+            color: $main-color;
+            font-size: 1rem;
+            padding: 5px;
+            border-bottom: 1px solid $main-color;
+
+            &:focus {
+              outline: none;
+              border-color: $soft-color;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Mobile responsiveness
+  @media (max-width: 640px) {
+    .store-header {
+      .back-button {
+        font-size: 12px;
+        padding: 4px 5px;
+        .back-button svg {
+          margin-right: 5px;
+        }
+      }
+
+
+    }
+
+    .content {
+      align-items: flex-start;
+
+      .image {
+        h1 {
+          font-size: 1.5rem;
+        }
+
+        img {
+          width: 100%;
+        }
+      }
+
+      .details {
+        label {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 5px;
+
+          span,
+          input,
+          select {
+            text-align: left;
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}

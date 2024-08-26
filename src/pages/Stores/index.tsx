@@ -1,13 +1,18 @@
-import { GridColDef } from "@mui/x-data-grid";
-import { useEffect, useState } from "react";
-import Add from "../../components/Add";
-import DataTable from "../../components/DataTable";
-import "./stores.scss";
-import axios from "axios";
-import { Store } from "../../types";
-import { config } from "../../utils/config";
+import { GridColDef } from "@mui/x-data-grid"
+import { useEffect, useState } from "react"
+import DataTable from "../../components/DataTable"
+import "./stores.scss"
+import axios from "axios"
+import { Store } from "../../types"
+import { config } from "../../utils/config"
+import { toast } from "react-toastify"
+import AddStore from "../../components/AddStore"
+import Button from "../components/Button"
+import Toaster from "../../components/Toaster"
+import { set } from "react-hook-form"
+import Spinner from "../../components/Spinner"
 
-type Props = {};
+type Props = {}
 
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 200 },
@@ -20,45 +25,92 @@ const columns: GridColDef[] = [
     field: "image",
     headerName: "Store Image",
     width: 100,
-    renderCell: (params) => <img src={params.row.image ? `${import.meta.env.VITE_API_URL}/${params.row.image}` : "/noavatar.png "} />,
+    renderCell: (params) => (
+      <img
+        src={
+          params.row.image
+            ? `${import.meta.env.VITE_API_URL}/${params.row.image}`
+            : "/noavatar.png "
+        }
+        alt="store"
+        onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) =>
+          (e.currentTarget.src = "/noavatar.png")
+        }
+      />
+    ),
   },
 ]
 
-
 const Stores = (props: Props) => {
-  const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false)
   const [stores, setStores] = useState<Store[]>([])
   const token = localStorage.getItem("token")
+  const [refresh, setRefresh] = useState(false)
+  const [spinner, setSpinner] = useState(false)
 
   useEffect(() => {
     //fetch stores
     const fetchStores = async () => {
       const storeApi = `${import.meta.env.VITE_API_URL}/api/stores`
-      const data = await axios.get<Store[]>(storeApi,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-        )
+      setSpinner(true)
+     try{
+      const data = await axios.get<Store[]>(storeApi, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       setStores(data.data)
+      setSpinner(false)
+     } catch (error: any) {
+      console.error("Error fetching stores:", error)
+      toast.error("Failed to load store details.")
+      setSpinner(false)
     }
-  
+    }
+
     fetchStores()
-  
-  }, [])
+  }, [refresh, token])
+
+  const handleDelete = async (id: string, name: string) => {
+    try {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/stores/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      setStores(stores.filter((store) => store._id !== id))
+      toast.success(`Store → ${name} ← deleted successfully.`)
+    } catch (error: any) {
+      console.error("Error deleting Store:", error)
+      toast.error(
+        error.response.data.message ||
+          "An error occurred while saving the Store."
+      )
+    }
+  }
   return (
     <div className="stores">
       <div className="info">
         <h1>Stores</h1>
-        <button onClick={() => setModalOpen(true)}>Add Store</button>
+        <Button text="Add Store" onClick={() => setModalOpen(true)} />
       </div>
-      <DataTable columns={columns} rows={stores.map(store => ({...store, id: store._id}))} slug="stores" />
+      {spinner && <Spinner />}
+      <DataTable
+        columns={columns}
+        rows={stores.map((store) => ({ ...store, id: store._id }))}
+        slug="stores"
+        handleDelete={handleDelete}
+      />
       {modalOpen && (
-        <Add setModalOpen={setModalOpen} slug="Stores" columns={config.storeFields} options={stores} />
+        <AddStore
+          setModalOpen={setModalOpen}
+          columns={config.storeFields}
+          setRefresh={setRefresh}
+        />
       )}
+       <Toaster />
     </div>
-  );
-};
+  )
+}
 
-export default Stores;
+export default Stores

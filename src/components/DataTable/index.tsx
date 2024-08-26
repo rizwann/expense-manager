@@ -9,17 +9,32 @@ type Props = {
   columns: GridColDef[];
   rows: object[];
   slug: string;
-  handleDelete: (id: string) => void;
+  handleDelete: (id: string, name: string) => void;
 };
 
 const DataTable: React.FC<Props> = ({ columns, rows, slug, handleDelete }) => {
   const isMobile = useMediaQuery(768);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [name, setName] = useState<string>('');
 
+  let columnList: string[] = []
+   switch (slug) {
+      case 'stores':
+        columnList = [ 'name', 'image']
+        break
+      case 'expenses':
+        columnList = ['storeName', 'cost']
+        break
+      case 'houses':
+        columnList = ['name', 'image', 'code', 'users']
+        break
+      default:
+        columnList = ['name']
+  };
   // Define columns for mobile view
   const mobileColumns = columns.filter((col) =>
-    ['storeName', 'cost', 'date', 'category'].includes(col.field)
+    columnList.includes(col.field)
   );
 
   const actionColumns: GridColDef = {
@@ -36,6 +51,7 @@ const DataTable: React.FC<Props> = ({ columns, rows, slug, handleDelete }) => {
             className="delete"
             onClick={() => {
               setDeleteId(params.row._id);
+              setName(params.row.name);
               setIsModalOpen(true);
             }}
           >
@@ -48,7 +64,7 @@ const DataTable: React.FC<Props> = ({ columns, rows, slug, handleDelete }) => {
 
   const handleConfirmDelete = () => {
     if (deleteId) {
-      handleDelete(deleteId);
+      handleDelete(deleteId, name);
       setIsModalOpen(false);
       setDeleteId(null);
     }
@@ -61,7 +77,9 @@ const DataTable: React.FC<Props> = ({ columns, rows, slug, handleDelete }) => {
 
   return (
     <div className="data-table">
-      <DataGrid
+      {
+        rows.length > 0 ? (
+          <DataGrid
         className="data-grid"
         rows={rows}
         columns={[...(isMobile ? mobileColumns : columns), actionColumns]}
@@ -89,7 +107,12 @@ const DataTable: React.FC<Props> = ({ columns, rows, slug, handleDelete }) => {
         disableColumnFilter
         disableColumnSelector
         disableDensitySelector
+        rowHeight={slug === 'users' ? 70 : 53}
       />
+        ) : (
+          <p>No records found</p>
+        )
+      }
       <ConfirmationModal
         open={isModalOpen}
         onClose={handleCloseModal}

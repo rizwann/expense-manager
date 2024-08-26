@@ -1,19 +1,20 @@
-import { useEffect, useState } from "react";
-import "./add.scss";
-import { House, IUser, Store } from "../../types";
-import axios from "axios";
-import { Collapse, Switch, Checkbox, FormControlLabel } from "@mui/material";
-import CustomDropdown from "../CustomDropDown";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { useAuth } from "../../hooks/useAuth";
+import { useEffect, useState } from "react"
+import "./addExpense.scss"
+import { House, IUser, Store } from "../../types"
+import axios from "axios"
+import { Collapse, Switch, Checkbox, FormControlLabel } from "@mui/material"
+import CustomDropdown from "../CustomDropDown"
+import { toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
+import { useAuth } from "../../hooks/useAuth"
+import Button from "../../pages/components/Button"
 
 interface IProps {
-  slug: string;
-  columns: any[];
-  setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setRefresh?: React.Dispatch<React.SetStateAction<boolean>>;
-  editData?: any; // Data to be edited, if applicable
+  slug: string
+  columns: any[]
+  setModalOpen: React.Dispatch<React.SetStateAction<boolean>>
+  setRefresh?: React.Dispatch<React.SetStateAction<boolean>>
+  editData?: any // Data to be edited, if applicable
 }
 
 enum CategoryName {
@@ -25,109 +26,127 @@ enum CategoryName {
   Butcher = "Butcher",
 }
 
-const Add: React.FC<IProps> = ({ slug, columns, setModalOpen, setRefresh, editData }) => {
-  const [stores, setStores] = useState<Store[]>([]);
-  const [houses, setHouses] = useState<House[]>([]);
-  const [houseUsers, setHouseUsers] = useState<IUser[]>([]);
-  const [selectCustomTime, setSelectCustomTime] = useState(false);
-  const [selectedHouse, setSelectedHouse] = useState<House | null>(null);
-  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
-  const [paidByMe, setPaidByMe] = useState(true);
-  const [selectedPayer, setSelectedPayer] = useState<string | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [formData, setFormData] = useState<any>({});
-  const token = localStorage.getItem("token");
-  const { user } = useAuth();
-  const userId = user?._id;
+const Add: React.FC<IProps> = ({
+  slug,
+  columns,
+  setModalOpen,
+  setRefresh,
+  editData,
+}) => {
+  const [stores, setStores] = useState<Store[]>([])
+  const [houses, setHouses] = useState<House[]>([])
+  const [houseUsers, setHouseUsers] = useState<IUser[]>([])
+  const [selectCustomTime, setSelectCustomTime] = useState(false)
+  const [selectedHouse, setSelectedHouse] = useState<House | null>(null)
+  const [selectedUsers, setSelectedUsers] = useState<string[]>([])
+  const [paidByMe, setPaidByMe] = useState(true)
+  const [selectedPayer, setSelectedPayer] = useState<string | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [formData, setFormData] = useState<{ [key: string]: any }>({})
+  const token = localStorage.getItem("token")
+  const { user } = useAuth()
+  const userId = user?._id
 
   useEffect(() => {
     const fetchStores = async () => {
-      const storeApi = `${import.meta.env.VITE_API_URL}/api/stores`;
+      const storeApi = `${import.meta.env.VITE_API_URL}/api/stores`
       const data = await axios.get<Store[]>(storeApi, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      });
-      setStores(data.data);
-    };
+      })
+      setStores(data.data)
+    }
 
     const fetchHouses = async () => {
-      const houseApi = `${import.meta.env.VITE_API_URL}/api/houses`;
+      const houseApi = `${import.meta.env.VITE_API_URL}/api/houses`
       const data = await axios.get<House[]>(houseApi, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      });
-      setHouses(data.data);
-    };
+      })
+      setHouses(data.data)
+    }
 
-    fetchStores();
-    fetchHouses();
-  }, [token]);
+    fetchStores()
+    fetchHouses()
+  }, [token])
 
   useEffect(() => {
     if (selectedHouse) {
       const fetchHouseUsers = async () => {
         try {
-          const res = await axios.get<IUser[]>(`${import.meta.env.VITE_API_URL}/api/user/house/${selectedHouse.code}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          setHouseUsers(res.data);
+          const res = await axios.get<IUser[]>(
+            `${import.meta.env.VITE_API_URL}/api/user/house/${
+              selectedHouse.code
+            }`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
+          setHouseUsers(res.data)
         } catch (error) {
-          console.error("Error fetching house users:", error);
+          console.error("Error fetching house users:", error)
         }
-      };
-      fetchHouseUsers();
+      }
+      fetchHouseUsers()
     }
-  }, [selectedHouse, token]);
+  }, [selectedHouse, token])
 
   useEffect(() => {
     if (editData) {
-      setFormData(editData);
-      setSelectedUsers(editData.involvedUsers || []);
-      setPaidByMe(editData.paymentPerson === userId);
-      setSelectedPayer(editData.paymentPerson || null);
+      setFormData(editData)
+      setSelectedUsers(editData.involvedUsers || [])
+      setPaidByMe(editData.paymentPerson === userId)
+      setSelectedPayer(editData.paymentPerson || null)
 
-      const selectedHouse = houses.find(house => house.code === editData.houseCode);
-      setSelectedHouse(selectedHouse || null);
+      const selectedHouse = houses.find(
+        (house) => house.code === editData.houseCode
+      )
+      setSelectedHouse(selectedHouse || null)
     }
-  }, [editData, houses, userId]);
+  }, [editData, houses, userId])
 
   useEffect(() => {
     if (editData && selectedHouse) {
       const fetchHouseUsers = async () => {
         try {
-          const res = await axios.get<IUser[]>(`${import.meta.env.VITE_API_URL}/api/user/house/${selectedHouse.code}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          setHouseUsers(res.data);
+          const res = await axios.get<IUser[]>(
+            `${import.meta.env.VITE_API_URL}/api/user/house/${
+              selectedHouse.code
+            }`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
+          setHouseUsers(res.data)
         } catch (error) {
-          console.error("Error fetching house users:", error);
+          console.error("Error fetching house users:", error)
         }
-      };
-      fetchHouseUsers();
+      }
+      fetchHouseUsers()
     }
-  }, [editData, selectedHouse, token]);
+  }, [editData, selectedHouse, token])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const data: any = {};
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+    const data: any = {}
     formData.forEach((value, key) => {
       if (key === "date" && !selectCustomTime) {
-        return null;
+        return null
       } else if (key === "involvedUsers") {
-        data[key] = selectedUsers;
+        data[key] = selectedUsers
       } else {
-        data[key] = value;
+        data[key] = value
       }
-    });
+    })
 
-    data.paymentPerson = paidByMe ? userId : selectedPayer;
+    data.paymentPerson = paidByMe ? userId : selectedPayer
 
     try {
       if (editData) {
@@ -139,8 +158,8 @@ const Add: React.FC<IProps> = ({ slug, columns, setModalOpen, setRefresh, editDa
               Authorization: `Bearer ${token}`,
             },
           }
-        );
-        toast.success("Expense updated successfully!");
+        )
+        toast.success("Expense updated successfully!")
       } else {
         await axios.post(
           `${import.meta.env.VITE_API_URL}/api/expenses/create`,
@@ -150,196 +169,241 @@ const Add: React.FC<IProps> = ({ slug, columns, setModalOpen, setRefresh, editDa
               Authorization: `Bearer ${token}`,
             },
           }
-        );
-        toast.success("Expense created successfully!");
+        )
+        toast.success("Expense created successfully!")
       }
-      setRefresh && setRefresh((prev) => !prev);
-      setModalOpen(false);
+      setRefresh && setRefresh((prev) => !prev)
+      setModalOpen(false)
     } catch (error: any) {
       if (error.response) {
         setErrorMessage(
           error.response.data.message ||
             "An error occurred while saving the expense."
-        );
+        )
       } else if (error.request) {
-        setErrorMessage("No response from the server. Please try again later.");
+        setErrorMessage("No response from the server. Please try again later.")
       } else {
-        setErrorMessage("An unexpected error occurred. Please try again.");
+        setErrorMessage("An unexpected error occurred. Please try again.")
       }
-      toast.error(errorMessage);
+      toast.error(errorMessage)
     }
-  };
+  }
 
   return (
-    <div className="add">
-      <div className="modal">
+    <div className="add-expense">
+      <div className="modal-expense">
         <span className="close" onClick={() => setModalOpen(false)}>
           X
         </span>
         <h1>{editData ? `Edit ${slug}` : `Add New ${slug}`}</h1>
-        <form onSubmit={handleSubmit}>
-          {columns
-            .filter((item) => item.field !== "id")
-            .map((column) => {
-              return (
-                <div className="item" key={column.field}>
-                  {(() => {
-                    switch (column.control) {
-                      case "text":
-                        return (
-                          <input
-                            type={column.type === "number" ? "number" : "text"}
-                            placeholder={column.headerName}
-                            name={column.field}
-                            value={formData[column.field] || ''}
-                            onChange={(e) => setFormData(prev => ({ ...prev, [column.field]: e.target.value }))}
-                            required={column.field === "cost"}
-                          />
-                        );
-                      case "date":
-                        return (
-                          <div
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              gap: "10px",
-                            }}
-                          >
-                            <div>
-                              <Switch
-                                checked={selectCustomTime}
-                                onChange={() =>
-                                  setSelectCustomTime(!selectCustomTime)
-                                }
-                                inputProps={{ "aria-label": "controlled" }}
-                              />
-                              <label>Custom Time</label>
-                            </div>
-                            <Collapse in={selectCustomTime}>
-                              <div
-                                style={{
-                                  display: "flex",
-                                  flexDirection: "column",
-                                  gap: "10px",
-                                }}
-                              >
-                                <input
-                                  type="datetime-local"
-                                  placeholder={column.headerName}
-                                  name={column.field}
-                                  value={formData[column.field] || ''}
-                                  onChange={(e) => setFormData(prev => ({ ...prev, [column.field]: e.target.value }))}
-                                />
-                              </div>
-                            </Collapse>
-                          </div>
-                        );
-                      case "select":
-                        if (column.field === "storeName") {
+        <form onSubmit={handleSubmit} style={{display:'contents', marginTop: "20px"}}>
+          <div className="item-container">
+            {columns
+              .filter((item) => item.field !== "id")
+              .map((column) => {
+                return (
+                  <div className="item" key={column.field}>
+                    {(() => {
+                      switch (column.control) {
+                        case "text":
                           return (
-                            <select
-                              name={"storeId"}
-                              value={formData.storeId || ''}
-                              onChange={(e) => setFormData(prev => ({ ...prev, storeId: e.target.value }))}
-                              required
-                            >
-                              <option value="" disabled>Select Store</option>
-                              {stores.map((store) => (
-                                <option key={store._id} value={store._id}>
-                                  {store.name}
-                                </option>
-                              ))}
-                            </select>
-                          );
-                        } else if (column.field === "category") {
-                          return (
-                            <select
+                            <input
+                              type={
+                                column.type === "number" ? "number" : "text"
+                              }
+                              placeholder={column.headerName}
                               name={column.field}
-                              value={formData.category || ''}
-                              onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
-                              required
-                            >
-                              <option value="" disabled>Select Category</option>
-                              {Object.values(CategoryName).map((category) => (
-                                <option key={category} value={category}>
-                                  {category}
-                                </option>
-                              ))}
-                            </select>
-                          );
-                        } else if (column.field === "house") {
-                          return (
-                            <select
-                              name={"houseCode"}
-                              value={selectedHouse?.code || ''}
-                              onChange={(e) => {
-                                const selectedHouse = houses.find(
-                                  (house) => house.code === e.target.value
-                                );
-                                setSelectedHouse(selectedHouse || null);
-                              }}
-                              required
-                            >
-                              <option value="" disabled>Select House</option>
-                              {houses.map((house) => (
-                                <option key={house._id} value={house.code}>
-                                  {house.description}
-                                </option>
-                              ))}
-                            </select>
-                          );
-                        } else if (column.field === "involvedUsers") {
-                          return (
-                            <CustomDropdown
-                              options={houseUsers}
-                              label={column.headerName}
-                              name={column.field}
-                              selectedValues={selectedUsers}
-                              setSelectedValues={setSelectedUsers}
+                              value={formData[column.field] || ""}
+                              onChange={(e) =>
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  [column.field]: e.target.value,
+                                }))
+                              }
+                              required={column.field === "cost"}
                             />
-                          );
-                        } else {
-                          return null;
-                        }
-                      default:
-                        return null;
-                    }
-                  })()}
-                </div>
-              );
-            })}
-         { !editData && <div className="item">
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={paidByMe}
-                  onChange={() => setPaidByMe(!paidByMe)}
-                />
-              }
-              label="Paid by me"
-            />
-            {!paidByMe && (
-              <select
-                name="paymentPerson"
-                value={selectedPayer || ''}
-                onChange={(e) => setSelectedPayer(e.target.value)}
-                required
-              >
-                <option value="" disabled>Select Payer</option>
-                {houseUsers.map((user) => (
-                  <option key={user._id} value={user._id}>
-                    {user.username}
-                  </option>
-                ))}
-              </select>
-            )}
-          </div>}
-          {errorMessage && <p className="error-message">{errorMessage}</p>}
-          <button type="submit">{editData ? 'Update' : 'Create'}</button>
+                          )
+                        case "date":
+                          return (
+                            <div className="switch-container">
+                              { !editData && (
+                                <div>
+                                <FormControlLabel
+                                  control={
+                                    <Switch
+                                      checked={selectCustomTime}
+                                      onChange={() =>
+                                        setSelectCustomTime(!selectCustomTime)
+                                      }
+                                      inputProps={{
+                                        "aria-label": "controlled",
+                                      }}
+                                    />
+                                  }
+                                  label="Custom Time"
+                                />
+                                <Collapse
+                                  in={selectCustomTime}
+                                  style={{ marginTop: "10px" }}
+                                >
+                                  <input
+                                    type="datetime-local"
+                                    placeholder={column.headerName}
+                                    name={column.field}
+                                    value={formData[column.field] || ""}
+                                    onChange={(e) =>
+                                      setFormData((prev) => ({
+                                        ...prev,
+                                        [column.field]: e.target.value,
+                                      }))
+                                    }
+                                  />
+                                </Collapse>
+                              </div>
+                              )}
+                              <div>
+                                {!editData && (
+                                  <div className="item">
+                                    <FormControlLabel
+                                      control={
+                                        <Checkbox
+                                          checked={paidByMe}
+                                          onChange={() =>
+                                            setPaidByMe(!paidByMe)
+                                          }
+                                          inputProps={{
+                                            "aria-label": "controlled",
+                                          }}
+                                        />
+                                        
+                                      }
+                                      label="Paid by me"
+                                    />
+                                    <Collapse in={!paidByMe}>
+                                      <select
+                                        name="paymentPerson"
+                                        value={selectedPayer || ""}
+                                        onChange={(e) =>
+                                          setSelectedPayer(e.target.value)
+                                        }
+                                        required = {!paidByMe}
+                                      >
+                                        <option value="" disabled>
+                                          Select Payer
+                                        </option>
+                                        {houseUsers.filter(u => u._id !== userId).map((user) => (
+                                          <option
+                                            key={user._id}
+                                            value={user._id}
+                                          >
+                                            {user.username}
+                                          </option>
+                                        ))}
+                                      </select>
+                                    </Collapse>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          )
+                        case "select":
+                          if (column.field === "storeName") {
+                            return (
+                              <select
+                                name={"storeId"}
+                                value={formData.storeId || ""}
+                                onChange={(e) =>
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    storeId: e.target.value,
+                                  }))
+                                }
+                                required
+                              >
+                                <option value="" disabled>
+                                  Select Store
+                                </option>
+                                {stores.map((store) => (
+                                  <option key={store._id} value={store._id}>
+                                    {store.name}
+                                  </option>
+                                ))}
+                              </select>
+                            )
+                          } else if (column.field === "category") {
+                            return (
+                              <select
+                                name={column.field}
+                                value={formData.category || ""}
+                                onChange={(e) =>
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    category: e.target.value,
+                                  }))
+                                }
+                                required
+                              >
+                                <option value="" disabled>
+                                  Select Category
+                                </option>
+                                {Object.values(CategoryName).map((category) => (
+                                  <option key={category} value={category}>
+                                    {category}
+                                  </option>
+                                ))}
+                              </select>
+                            )
+                          } else if (column.field === "house") {
+                            return (
+                              <select
+                                name={"houseCode"}
+                                value={selectedHouse?.code || ""}
+                                onChange={(e) => {
+                                  const selectedHouse = houses.find(
+                                    (house) => house.code === e.target.value
+                                  )
+                                  setSelectedHouse(selectedHouse || null)
+                                }}
+                                required
+                              >
+                                <option value="" disabled>
+                                  Select House
+                                </option>
+                                {houses.map((house) => (
+                                  <option key={house._id} value={house.code}>
+                                    {house.description}
+                                  </option>
+                                ))}
+                              </select>
+                            )
+                          } else if (column.field === "involvedUsers") {
+                            return (
+                              <CustomDropdown
+                                options={houseUsers}
+                                label={column.headerName}
+                                name={column.field}
+                                selectedValues={selectedUsers}
+                                setSelectedValues={setSelectedUsers}
+                              />
+                            )
+                          } else {
+                            return null
+                          }
+                        default:
+                          return null
+                      }
+                    })()}
+                  </div>
+                )
+              })}
+          </div>
+
+          {errorMessage && <div className="error-message">{errorMessage}</div>}
+          <Button type="submit" text={editData ? "Update" : "Create"} />
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Add;
+export default Add

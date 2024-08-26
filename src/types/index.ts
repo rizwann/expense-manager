@@ -22,6 +22,10 @@ export interface IUser {
   username: string;
   active?: boolean;
   houseCodes: string[]; // Array of house codes the user belongs to
+  houseNames?: string[]; // Array of house names the user belongs to
+  houses?: House[]; // Array of house objects the user belongs to
+  name?: string;
+  image?: string;
 }
 
 export type Store = {

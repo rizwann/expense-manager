@@ -9,14 +9,13 @@
   border-radius: 15px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 
-  .header {
+  .expense-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
     .back-button {
-
-        background-color: #007bff;
+        background-color: rgb(147 51 234);
         color: white;
         border: none;
         border-radius: 5px;
@@ -29,18 +28,12 @@
       }
       
       .back-button:hover {
-        background-color: #0056b3;
+        background-color: rgb(147 51 234 / 80%);
       }
       
       .back-button svg {
         margin-right: 8px;
       }
-
-    h1 {
-      font-size: 2rem;
-      font-weight: bold;
-      color: $main-color;
-    }
   }
 
   .content {
@@ -52,7 +45,16 @@
       width: 100%;
       max-width: 300px;
       margin-bottom: 20px;
-
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      row-gap: 15px;
+      h1 {
+        font-size: 2rem;
+        font-weight: bold;
+        color: $main-color;
+      }
       img {
         width: 100%;
         border-radius: 10px;
@@ -107,20 +109,27 @@
   }
 
   // Mobile responsiveness
-  @media (max-width: 768px) {
-    .header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 10px;
-
-      h1 {
-        font-size: 1.5rem;
+  @media (max-width: 640px) {
+    .expense-header {
+    .back-button {
+      font-size: 12px;
+      padding: 4px 5px;
+      .back-button svg {
+        margin-right: 5px;
       }
     }
+  }
 
     .content {
       align-items: flex-start;
-
+      .image {
+        h1 {
+          font-size: 1.5rem;
+        }
+        img {
+          width: 100%;
+        }
+      }
       .details {
         label {
           flex-direction: column;

@@ -74,10 +74,11 @@
     }
 
     // Ensure all elements stack on small screens
-    @media (max-width: 768px) {
+    @media (max-width: 640px) {
+      margin-left: 50px;
       flex-direction: column;
-      align-items: stretch; // Full width on mobile
       gap: 10px; // Smaller gap for mobile
+      align-items: flex-start; // Align items to the left
 
       h1 {
         text-align: center; // Center heading on mobile
@@ -85,7 +86,14 @@
 
       button,
       .dark-input {
-        width: 100%; // Full width on mobile
+        width: 80%; // Full width on mobile
+      }
+    }
+    @media (max-width: 470px) {
+      button,
+      .dark-input {
+        max-width: 70%; // Full width on mobile
+   
       }
     }
   }
