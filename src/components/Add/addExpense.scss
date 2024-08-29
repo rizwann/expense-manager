@@ -151,7 +151,6 @@
   @media (max-width: 600px) {
     .modal-expense {
       padding: 20px;
-
       h1 {
         font-size: 24px;
       }
@@ -160,17 +159,12 @@
         gap: 15px;
 
         .item-container {
-          flex-direction: column;
-
           .item {
             width: 100%;
           }
         }
 
         .switch-container {
-          flex-direction: column;
-          align-items: stretch;
-
           .item {
             width: 100%;
           }
@@ -181,6 +175,33 @@
           padding: 12px;
         }
       }
+    }
+  }
+
+  @media (max-width: 415px) {
+    .modal-expense {
+      height: 80%;
+      h1 {
+        font-size: 20px;
+      }
+
+      form {
+        gap: 10px;
+        .item-container {
+          .item {
+            width: 100%;
+          }
+        }
+        button {
+          font-size: 12px;
+          padding: 10px;
+        }
+      }
+    }
+  }
+  @media (max-height: 680px) {
+    .modal-expense {
+      height: 100%;
     }
   }
 }

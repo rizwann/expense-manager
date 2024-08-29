@@ -2,10 +2,12 @@
 @import "../../styles/variables.scss";
 
 .data-table {
+  // Common styles for both mobile and desktop
   .data-grid {
     padding: 20px;
     border-radius: 10px;
 
+    // Large screen adjustments
     @include lg {
       width: calc(100% - 80px);
     }
@@ -33,6 +35,7 @@
     }
   }
 
+  // Mobile-specific styles
   @media (max-width: 768px) {
     .data-grid {
       padding: 15px;
@@ -55,6 +58,7 @@
     }
   }
 
+  // Small screen (mobile) adjustments
   @media (max-width: 480px) {
     .data-grid {
       padding: 10px;

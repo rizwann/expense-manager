@@ -55,10 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
   });
   useEffect(() => {
-    const user =
-      localStorage.getItem("user") !== undefined
-        ? JSON.parse(localStorage.getItem("user")!)
-        : null;
+    const user = (localStorage.getItem("user") !== "undefined" && localStorage.getItem("user") !== null) ? JSON.parse(localStorage.getItem("user") as string) : null;
     if (token && user) {
       const getUpdatedUser = async () => {
         try {

@@ -45,22 +45,10 @@ const columns: GridColDef[] = [
     width: 60,
   },
   {
-    field: "users",
+    field: "userNames",
     headerName: "Members",
     width: 150,
-    renderCell: (params) => {
-      return (
-        <div className="users">
-          {params.row.userNames.map((user: any) => {
-            return (
-              <div className="user">
-                <p>{user}</p>
-              </div>
-            )
-          })}
-        </div>
-      )
-    },
+    type: "array",
   },
 ]
 

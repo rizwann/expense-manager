@@ -12,6 +12,12 @@
     flex: 1;
 
     .info {
+      .back-btn{
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
       .top-info {
         display: flex;
         align-items: center;

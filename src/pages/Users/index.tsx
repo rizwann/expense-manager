@@ -15,6 +15,12 @@ type Props = {}
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 90 },
   {
+    field: "name",
+    type: "string",
+    headerName: "Name",
+    width: 150,
+  },
+  {
     field: "username",
     type: "string",
     headerName: "Username",
@@ -38,6 +44,7 @@ const columns: GridColDef[] = [
     field: "houseNames",
     headerName: "House Names",
     width: 250,
+    type: "array",
     renderCell: (params) => {
       return (
         <>

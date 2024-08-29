@@ -13,10 +13,6 @@
       font-weight: 200;
       color: $soft-color;
       text-transform: uppercase;
-
-      @include lg {
-        display: none;
-      }
     }
 
     .list-item {

@@ -3,12 +3,13 @@ import { useParams, useNavigate } from "react-router-dom"
 import axios from "axios"
 import "./expenseDetail.scss"
 import { useAuth } from "../../hooks/useAuth"
-import { toast, ToastContainer } from "react-toastify"
+import { toast } from "react-toastify"
 import Button from "../components/Button"
 import { Expense } from "../../types"
 import { config } from "../../utils/config"
 import Add from "../../components/Add"
 import Loading from "../../components/Loading"
+import Toaster from "../../components/Toaster"
 
 const ExpenseDetail = () => {
   const { id } = useParams<{ id: string }>()
@@ -124,7 +125,7 @@ const ExpenseDetail = () => {
           setRefresh={setRefresh}
         />
       )}
-      <ToastContainer />
+      <Toaster />
     </div>
   )
 }

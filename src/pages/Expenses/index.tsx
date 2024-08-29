@@ -7,9 +7,10 @@ import "./expenses.scss"
 import { config } from "../../utils/config"
 import axios from "axios"
 import { Expense, House } from "../../types"
-import { ToastContainer, toast } from "react-toastify"
+import { toast } from "react-toastify"
 import { useAuth } from "../../hooks/useAuth"
 import Spinner from "../../components/Spinner"
+import Toaster from "../../components/Toaster"
 
 type Props = {}
 
@@ -18,7 +19,7 @@ const columns: GridColDef[] = [
   {
     field: "image",
     headerName: "Logo",
-    width: 100,
+    width: 50,
     renderCell: (params) => (
       <img
         src={
@@ -37,32 +38,57 @@ const columns: GridColDef[] = [
     field: "storeName",
     headerName: "Store name",
     width: 100,
+    type: "string",
   },
   {
     field: "category",
     headerName: "Category",
     width: 100,
+    type: "string",
   },
   {
     field: "description",
     headerName: "Description",
-    width: 100,
-  },
-  {
-    field: "cost",
-    headerName: "Cost",
-    type: "number",
-    width: 50,
+    width: 150,
+    type: "string",
+    //should be hidden
+    disableColumnMenu: true,
   },
   {
     field: "involvedUsers",
-    headerName: "Involved Users",
+    headerName: "Involved",
     width: 150,
+    type: "array",
+    renderCell: (params) => {
+      return (
+        <>
+          {params.row.involvedUsers.length > 0 ? (
+            <div className="houses">
+              {params.row.involvedUsers.slice(0, 2).map((user: any) => {
+                return (
+                  <div className="house">
+                    <p>{user}</p>
+                  </div>
+                )
+              })}
+              {params.row.involvedUsers.length > 2 && (
+                <div className="more">
+                  +{params.row.involvedUsers.length - 2} more
+                </div>
+              )}
+            </div>
+          ) : (
+            <p>No Users</p>
+          )}
+        </>
+      )
+    },
   },
   {
     field: "user",
-    headerName: "Paid by",
+    headerName: "Payer",
     width: 100,
+    type: "string",
   },
   {
     field: "date",
@@ -76,12 +102,26 @@ const columns: GridColDef[] = [
       }),
     width: 110,
   },
+  {
+    field: "cost",
+    headerName: "Cost",
+    type: "number",
+    width: 80,
+    renderCell: (params) => {
+      return (
+        <strong style={{ color: "green" }}>
+          €{params.row.cost.toFixed(2)}
+        </strong>
+      )
+    }
+  },
 ]
 
 const Expenses = (props: Props) => {
   const [modalOpen, setModalOpen] = useState(false)
   const [expenses, setExpenses] = useState<Expense[]>([])
   const [filteredExpenses, setFilteredExpenses] = useState<Expense[]>([])
+  const [mobileExpenses, setMobileExpenses] = useState<Expense[]>([])
   const [myself, setMyself] = useState(false)
   const [houses, setHouses] = useState<House[]>([])
   const [selectedHouse, setSelectedHouse] = useState<string | null>(null)
@@ -214,12 +254,34 @@ const Expenses = (props: Props) => {
       )
     }
   }
+  useEffect(() => {
+    if (filteredExpenses[0] && filteredExpenses[0].date) {
+      const expenses = filteredExpenses.sort((a: any, b: any) => {
+        return new Date(b.date).getTime() - new Date(a.date).getTime()
+      })
+  
+      const mobileExpenses = expenses.map((expense) => {
+        return {
+          ...expense,
+          date: new Date(expense.date).toLocaleDateString("en-DE", {
+            hour: "2-digit",
+            minute: "2-digit",
+            month: "short",
+            day: "numeric",
+          }),
+        }
+      })
+  
+      setMobileExpenses(mobileExpenses)
+    }
+  } , [])
+  
   return (
     <div className="expenses">
       {spinner && <Spinner />}
       <div className="info">
         <h1>Expenses</h1>
-        <Button text="Add Expense" onClick={() => setModalOpen(true)} />
+        <Button text="➕  Add Expense" onClick={() => setModalOpen(true)} />
 
         {/* Myself Filter Checkbox */}
         <label className="dark-input">
@@ -292,18 +354,7 @@ const Expenses = (props: Props) => {
           setRefresh={setRefresh}
         />
       )}
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-      />
+      <Toaster />
     </div>
   )
 }

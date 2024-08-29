@@ -1,8 +1,12 @@
+import React, { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import "./navbar.scss";
+import { NavLink } from "react-router-dom";
 
 const Navbar: React.FC = () => {
   const { logout, user } = useAuth();
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen();
@@ -13,6 +17,10 @@ const Navbar: React.FC = () => {
     }
   };
 
+  const togglePreferences = () => {
+    setIsPreferencesOpen(!isPreferencesOpen);
+  };
+
   return (
     <div className="navbar">
       <div className="logo">
@@ -20,22 +28,21 @@ const Navbar: React.FC = () => {
         <span>Expense Manager</span>
       </div>
       <div className="icons">
-        <img src="/search.svg" alt="" className="icon" />
-        <img src="/app.svg" alt="" className="icon" />
-        <img
-          src="/expand.svg"
-          alt=""
-          className="icon"
-          onClick={toggleFullscreen}
-        />
         <div className="notification">
           <img src="/notifications.svg" alt="" />
           <span>1</span>
         </div>
         <div className="user">
           <img
-            src="https://images.pexels.com/photos/11038549/pexels-photo-11038549.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
-            alt=""
+            src={
+              user?.image
+                ? `${import.meta.env.VITE_API_URL}/${user?.image}`
+                : "/noavatar.png"
+            }
+            alt="store"
+            onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) =>
+              (e.currentTarget.src = "/noavatar.png")
+            }
           />
           <span>{user?.username}</span>
         </div>
@@ -43,10 +50,22 @@ const Navbar: React.FC = () => {
           src="/settings.svg"
           alt=""
           className="icon"
-          onClick={logout}
+          onClick={togglePreferences}
           style={{ cursor: "pointer" }}
         />
       </div>
+
+      {isPreferencesOpen && (
+        <div className="preferences-popup">
+          <ul>
+            <li>
+              <NavLink to={`/users/${user?._id}`}>Profile</NavLink>
+            </li>
+            <li>About</li>
+            <li onClick={logout}>Sign Out</li>
+          </ul>
+        </div>
+      )}
     </div>
   );
 };
