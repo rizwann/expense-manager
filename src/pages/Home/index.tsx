@@ -19,10 +19,11 @@ type Props = {};
 const Home = (props: Props) => {
   const { user } = useAuth();
   console.log(user, "user");
+  if(!user) return null;
   return (
     <div className="home">
       <div className="box box1">
-        <TopBox />
+        <TopBox user={user} />
       </div>
       <div className="box box2">
         <ChartBox {...chartBoxUserExpense} />

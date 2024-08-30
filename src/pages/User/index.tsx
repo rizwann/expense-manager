@@ -80,7 +80,7 @@ interface IProps {
 //   },
 // ];
 
-const SingleUser: React.FC<IProps> = () => {
+const SingleUser: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const [user, setUser] = useState<IUser| null>(null)
   const [info, setInfo] = useState<object>({})
@@ -135,7 +135,7 @@ const SingleUser: React.FC<IProps> = () => {
                 {
                   item[0] === "House Names" ? (
                     <span>
-                    {user?.houses?.length && user?.houses?.map((house, index) => {
+                    {user?.houses?.length ? user?.houses?.map((house, index) => {
                       return (
                         <NavLink to={`/Houses/${house._id}`} key={house._id}
                         style ={{
@@ -151,7 +151,8 @@ const SingleUser: React.FC<IProps> = () => {
                       )
 
                     }
-                    )}
+                    ) : <span>No joined houses!</span>
+                  }
                     </span>
                    
                   ) : (

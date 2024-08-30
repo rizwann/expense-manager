@@ -35,7 +35,7 @@ const darkTheme = createTheme({
 const LoadingSkeleton = () => {
   // Replace this with your own skeleton loading UI using Tailwind CSS classes
   return (
-    <div className="p-4 bg-gray-100 border rounded">
+    <div className="h-screen p-4 bg-gray-100 border rounded">
       {/* Example skeleton loading UI */}
       <div className="h-10 mb-4 bg-gray-300 rounded"></div>
       <div className="flex gap-4">
