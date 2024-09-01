@@ -23,21 +23,21 @@ import Store from "./pages/Store"
 import Stores from "./pages/Stores"
 import User from "./pages/User"
 import Users from "./pages/Users"
+
 import "./styles/global.scss"
 import { ThemeProvider, createTheme } from "@mui/material/styles"
 import CssBaseline from "@mui/material/CssBaseline"
-import { GridMenuIcon } from "@mui/x-data-grid"
+import NotFoundPage from "./pages/NotFound"
 
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
   },
 })
+
 const LoadingSkeleton = () => {
-  // Replace this with your own skeleton loading UI using Tailwind CSS classes
   return (
     <div className="h-screen p-4 bg-gray-100 border rounded">
-      {/* Example skeleton loading UI */}
       <div className="h-10 mb-4 bg-gray-300 rounded"></div>
       <div className="flex gap-4">
         <div className="flex-1 h-40 bg-gray-300 rounded"></div>
@@ -61,6 +61,7 @@ const App = () => {
     const toggleMenu = () => {
       setOpen(!open)
     }
+
     useEffect(() => {
       if (!user && location.pathname !== "/login") {
         navigate("/login")
@@ -70,7 +71,7 @@ const App = () => {
     }, [user, navigate, location])
 
     if (loading) {
-      return <LoadingSkeleton /> // Render the loading skeleton while checking authentication
+      return <LoadingSkeleton />
     }
 
     return (
@@ -79,14 +80,8 @@ const App = () => {
         <div className="main">
           <Navbar toggleMenu={toggleMenu} />
           <div className="container">
-            {/* Hamburer Menu */}
-      {/* <div className="hamburger-menu"
-      onClick={toggleMenu}
-      >
-        <GridMenuIcon />
-      </div> */}
             <div className={`menu-container ${open ? "close" : ""}`}>
-              <Menu/>
+              <Menu />
             </div>
             <div className="content-container">
               <Outlet />
@@ -103,60 +98,23 @@ const App = () => {
       path: "/",
       element: <Layout />,
       children: [
-        {
-          path: "/",
-          element: <Home />,
-        },
-        {
-          path: "/stores",
-          element: <Stores />,
-        },
-        {
-          path: "/expenses",
-          element: <Expenses />,
-        },
-        {
-          path: "/houses",
-          element: <Houses />,
-        },
-        {
-          path: "/users",
-          element: <Users />,
-        },
-        {
-          path: "/users/:id",
-          element: <User />,
-        },
-        {
-          path: "/expenses/:id",
-          element: <Expense />,
-        },
-        {
-          path: "/stores/:id",
-          element: <Store />,
-        },
-        {
-          path: "/houses/:id",
-          element: <House />,
-        },
+        { path: "/", element: <Home /> },
+        { path: "/stores", element: <Stores /> },
+        { path: "/expenses", element: <Expenses /> },
+        { path: "/houses", element: <Houses /> },
+        { path: "/users", element: <Users /> },
+        { path: "/users/:id", element: <User /> },
+        { path: "/expenses/:id", element: <Expense /> },
+        { path: "/stores/:id", element: <Store /> },
+        { path: "/houses/:id", element: <House /> },
+        { path: "*", element: <NotFoundPage /> }, // Add wildcard route for undefined paths
       ],
     },
-    {
-      path: "/login",
-      element: <LoginPage />,
-    },
-    {
-      path: "/registration",
-      element: <RegistrationPage />,
-    },
-    {
-      path: "/forgot-password",
-      element: <ForgotPasswordPage />,
-    },
-    {
-      path: "/reset-password/:id",
-      element: <ResetPasswordPage />,
-    },
+    { path: "/login", element: <LoginPage /> },
+    { path: "/registration", element: <RegistrationPage /> },
+    { path: "/forgot-password", element: <ForgotPasswordPage /> },
+    { path: "/reset-password/:id", element: <ResetPasswordPage /> },
+    { path: "*", element: <NotFoundPage /> }, // Add another wildcard route for undefined paths
   ])
 
   return <RouterProvider router={router} />
