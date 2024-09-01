@@ -29,6 +29,7 @@ interface AuthContextType {
   verified: boolean;
   selectedHouse: House | null;
   setEmailSent: React.Dispatch<React.SetStateAction<boolean>>;
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(
@@ -43,6 +44,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [verified, setVerified] = useState<boolean>(true);
   const [expiredError, setExpiredError] = useState<string | null>(null);
   const [selectedHouse, setSelectedHouse] = useState<House | null>(null);
+  const [refresh, setRefresh] = useState<boolean>(false);
 
   const APP_URL = import.meta.env.VITE_API_URL;
   // Check if the user is already authenticated
@@ -56,6 +58,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
   useEffect(() => {
     const user = (localStorage.getItem("user") !== "undefined" && localStorage.getItem("user") !== null) ? JSON.parse(localStorage.getItem("user") as string) : null;
+    console.log("userfromlewra", user)
     if (token && user) {
       const getUpdatedUser = async () => {
         try {
@@ -65,12 +68,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             },
           });
 
-          console.log(response.data?.user);
-          setUser(response.data?.user);
-          if (response.data?.user.houseCodes.length > 0) {
+          console.log(response.data);
+          setUser(response.data);
+          if (response.data?.houseCodes.length > 0) {
             try {
               const res = await axios.get<House>(
-                `${APP_URL}/api/houses/${response.data?.user.houseCodes[0]}`,
+                `${APP_URL}/api/houses/${response.data?.houseCodes[0]}`,
                 {
                   headers: {
                     Authorization: `Bearer ${token}`,
@@ -83,7 +86,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             }
           }
 
-          localStorage.setItem("user", JSON.stringify(response.data.user));
+          localStorage.setItem("user", JSON.stringify(response.data));
         } catch (error) {
           console.log(error);
           setUser(user);
@@ -92,7 +95,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       getUpdatedUser();
       setUser(user);
     }
-  }, [APP_URL, token]);
+  }, [APP_URL, token, refresh]);
 
   console.log(user);
 
@@ -132,6 +135,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         email: data.email,
         password: data.password,
         username: data.username,
+        name: data.name,
       };
 
       const response = await axios.post(
@@ -262,6 +266,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         changeHouse,
         selectedHouse,
         setEmailSent,
+        setRefresh
       }}
     >
       {children}

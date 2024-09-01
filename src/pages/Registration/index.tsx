@@ -14,8 +14,8 @@ export default function RegistrationPage() {
     }
   }, [user]);
   return (
-    <div className="flex items-center justify-center h-screen min-h-full px-4 py-12 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-8">
+    <div className="flex items-center justify-center h-screen min-h-full px-4 py-12 bg-gray-900 sm:px-6 lg:px-8">
+    <div className="w-full max-w-md p-6 space-y-8 bg-gray-800 rounded-lg shadow-md">
         <Header
           heading="Sign up for an account"
           paragraph="Already have an account? "

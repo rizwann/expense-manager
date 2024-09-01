@@ -23,7 +23,7 @@ const HouseDetail = () => {
   }
 
   useEffect(() => {
-    const fetchStore = async () => {
+    const fetchHouse = async () => {
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/api/houses/house/${id}`,
@@ -37,10 +37,12 @@ const HouseDetail = () => {
       } catch (error) {
         console.error("Error fetching house:", error)
         toast.error("Failed to load house details.")
+        navigate("/houses", { replace: true })
+
       }
     }
 
-    fetchStore()
+    fetchHouse()
   }, [id, token, refresh])
 
   if (!house) {

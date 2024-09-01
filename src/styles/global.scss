@@ -20,15 +20,33 @@ a {
 
 .container {
   display: flex;
+  // .hamburger-menu {
+  //   // display: none;
+  //   display: flex;
+  //     justify-content: center;
+  //   @include md {
+  //     display: flex;
+  //     justify-content: center;
+  //   }
+  // }
 }
 
 .menu-container {
-  width: 250px;
+  // width: 220px;
   padding: 5px 20px;
   border-right: 2px solid $soft-bg;
-
-  @include lg {
+  
+  @include md {
     width: max-content;
+  }
+  @include sm {
+//take the fullscreen
+
+    
+  }
+  &.close {
+    transform: translateX(0);
+    display: none;
   }
 }
 

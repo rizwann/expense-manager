@@ -26,6 +26,7 @@ import Users from "./pages/Users"
 import "./styles/global.scss"
 import { ThemeProvider, createTheme } from "@mui/material/styles"
 import CssBaseline from "@mui/material/CssBaseline"
+import { GridMenuIcon } from "@mui/x-data-grid"
 
 const darkTheme = createTheme({
   palette: {
@@ -55,7 +56,11 @@ const App = () => {
     const navigate = useNavigate()
     const location = useLocation()
     const [loading, setLoading] = useState(true)
+    const [open, setOpen] = useState(false)
 
+    const toggleMenu = () => {
+      setOpen(!open)
+    }
     useEffect(() => {
       if (!user && location.pathname !== "/login") {
         navigate("/login")
@@ -72,12 +77,17 @@ const App = () => {
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
         <div className="main">
-          <Navbar />
+          <Navbar toggleMenu={toggleMenu} />
           <div className="container">
-            <div className="menu-container">
-              <Menu />
+            {/* Hamburer Menu */}
+      {/* <div className="hamburger-menu"
+      onClick={toggleMenu}
+      >
+        <GridMenuIcon />
+      </div> */}
+            <div className={`menu-container ${open ? "close" : ""}`}>
+              <Menu/>
             </div>
-
             <div className="content-container">
               <Outlet />
             </div>

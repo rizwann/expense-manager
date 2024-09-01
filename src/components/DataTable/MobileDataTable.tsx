@@ -10,6 +10,7 @@ type Props = {
   rows: IUser[] | Expense[] | Store[] | House[] | any[]
   slug: string
   handleDelete: (id: string, name: string) => void
+  handleLeaveHouse?: (id: string, name: string) => void;
 }
 
 const MobileDataTable: React.FC<Props> = ({
@@ -17,10 +18,14 @@ const MobileDataTable: React.FC<Props> = ({
   rows,
   slug,
   handleDelete,
+  handleLeaveHouse
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [name, setName] = useState<string>("")
+  const [leaveHouseId, setLeaveHouseId] = useState<string | null>(null);
+  const [leaveHouseName, setLeaveHouseName] = useState<string>('');
+  const [isLeaveHouseModalOpen, setIsLeaveHouseModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState<string>("")
   const [filteredRows, setFilteredRows] = useState(rows)
 
@@ -89,10 +94,22 @@ const MobileDataTable: React.FC<Props> = ({
       setDeleteId(null)
     }
   }
+  const handleLeaveHouseConfirm = () => {
+    if (leaveHouseId && handleLeaveHouse) {
+      handleLeaveHouse(leaveHouseId, leaveHouseName);
+      setIsLeaveHouseModalOpen(false);
+      setLeaveHouseId(null);
+    }
+  }
 
   const handleCloseModal = () => {
     setIsModalOpen(false)
     setDeleteId(null)
+  }
+
+  const handleLeaveHouseCloseModal = () => {
+    setIsLeaveHouseModalOpen(false);
+    setLeaveHouseId(null);
   }
 
   //if date is there sort the rows by date, new to old
@@ -123,11 +140,25 @@ const MobileDataTable: React.FC<Props> = ({
                     className="delete"
                     onClick={() => {
                       setDeleteId(row._id)
-                      setName(row.name)
+                      if (slug === 'Houses'){
+                        setName(row.description);
+                      } else {
+                      setName(row.name);
+                      }
                       setIsModalOpen(true)
                     }}
                   >
                     <img src="/delete.svg" alt="Delete" />
+                  </div>
+                  <div
+                    className="leave"
+                    onClick={() => {
+                      setLeaveHouseId(row.code);
+              setLeaveHouseName(row.description);
+              setIsLeaveHouseModalOpen(true);
+                    }}
+                  >
+                    <img src="/leave.svg" alt="Leave" />
                   </div>
                 </div>
               </div>
@@ -160,6 +191,13 @@ const MobileDataTable: React.FC<Props> = ({
         onConfirm={handleConfirmDelete}
         title="Confirm Delete"
         message="Are you sure you want to delete this record?"
+      />
+       <ConfirmationModal
+        open={isLeaveHouseModalOpen}
+        onClose={handleLeaveHouseCloseModal}
+        onConfirm={handleLeaveHouseConfirm}
+        title="Confirm Leaving"
+        message="Are you sure you want to leave this house?"
       />
     </div>
   )

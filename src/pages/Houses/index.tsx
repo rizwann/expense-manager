@@ -1,7 +1,7 @@
 import { GridColDef } from "@mui/x-data-grid"
 import { useEffect, useState } from "react"
 import DataTable from "../../components/DataTable"
-import Button from "../components/Button"
+import ButtonInternal from "../components/Button"
 import "./houses.scss"
 import { House } from "../../types"
 import axios from "axios"
@@ -10,6 +10,8 @@ import Toaster from "../../components/Toaster"
 import AddHouse from "../../components/AddHouse"
 import { config } from "../../utils/config"
 import Spinner from "../../components/Spinner"
+import JoinHouse from "../../components/JoinHouse"
+import { useAuth } from "../../hooks/useAuth"
 
 type Props = {}
 
@@ -18,12 +20,12 @@ const columns: GridColDef[] = [
   {
     field: "description",
     headerName: "House Name",
-    width: 120,
+    width: 180,
   },
   {
     field: "image",
     headerName: "House Image",
-    width: 100,
+    width: 120,
     renderCell: (params) => (
       <img
         src={
@@ -47,22 +49,25 @@ const columns: GridColDef[] = [
   {
     field: "userNames",
     headerName: "Members",
-    width: 150,
+    width: 180,
     type: "array",
   },
 ]
 
 const Houses = (props: Props) => {
   const [modalOpen, setModalOpen] = useState(false)
+  const [joinHouseModal, setJoinHouseModal] = useState(false)
   const [houses, setHouses] = useState<House[]>([])
   const token = localStorage.getItem("token")
   const [refresh, setRefresh] = useState(false)
   const [spinner, setSpinner] = useState(false)
+  const {user, setRefresh: setUserReload} = useAuth()
+  const isAdmin = user ? !!(user.username === 'RizwanKabir') : false
 
   useEffect(() => {
-    //fetch stores
-    const fetchStores = async () => {
-      const houseApi = `${import.meta.env.VITE_API_URL}/api/houses`
+    //fetch Houses
+    const fetchHouses = async () => {
+      const houseApi = isAdmin ? `${import.meta.env.VITE_API_URL}/api/houses/all` : `${import.meta.env.VITE_API_URL}/api/houses`
       setSpinner(true)
       try {
         const data = await axios.get<House[]>(houseApi, {
@@ -78,7 +83,7 @@ const Houses = (props: Props) => {
         setSpinner(false)
       }
     }
-    fetchStores()
+    fetchHouses()
   }, [refresh, token])
 
   const handleDelete = async (id: string, name: string) => {
@@ -90,7 +95,36 @@ const Houses = (props: Props) => {
       })
       setHouses(houses.filter((store) => store._id !== id))
       toast.success(`House → ${name} ← deleted successfully.`)
+      setUserReload((prev) => !prev)
     } catch (error: any) {
+      console.error("Error deleting Store:", error)
+      toast.error(
+        error.response.data.message ||
+          "An error occurred while saving the Store."
+      )
+    }
+  }
+
+  const handleLeaveHouse = async (id: string, name: string) => {
+    const houseCode = id
+    try {
+      await axios.post
+        (`${import.meta.env.VITE_API_URL}/api/houses/leave-house`, {
+          houseCode,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+
+        }
+        )
+      setHouses(houses.filter((house) => house.code !== houseCode))
+      toast.success(`You left the house → ${name} ← successfully.`)
+      setUserReload((prev) => !prev)
+  }
+  catch (error: any) {
       console.error("Error deleting Store:", error)
       toast.error(
         error.response.data.message ||
@@ -101,8 +135,13 @@ const Houses = (props: Props) => {
   return (
     <div className="houses">
       <div className="info">
+        <div className="title">
         <h1>Houses</h1>
-        <Button onClick={() => setModalOpen(true)} text="Add House" />
+        <ButtonInternal onClick={() => setModalOpen(true)} text="Add House" />
+        </div>
+        <ButtonInternal text={"Join a House"}
+        onClick={() => setJoinHouseModal(true)}
+       />
       </div>
       {spinner && <Spinner />}
       <DataTable
@@ -110,11 +149,19 @@ const Houses = (props: Props) => {
         rows={houses.map((house) => ({ ...house, id: house._id }))}
         slug="Houses"
         handleDelete={handleDelete}
+        handleLeaveHouse={handleLeaveHouse}
       />
       {modalOpen && (
         <AddHouse
           setModalOpen={setModalOpen}
           columns={config.houseFields}
+          setRefresh={setRefresh}
+        />
+      )}
+      {joinHouseModal && (
+        <JoinHouse
+          setModalOpen={setJoinHouseModal}
+          columns={config.houseFields.filter((field) => field.field === "code")}
           setRefresh={setRefresh}
         />
       )}

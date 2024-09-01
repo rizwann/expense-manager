@@ -91,6 +91,10 @@ const ExpenseDetail = () => {
             <span>{expense.storeName}</span>
           </label>
           <label>
+            House:
+            <span>{expense.houseName}</span>
+          </label>
+          <label>
             Category:
             <span>{expense.category}</span>
           </label>

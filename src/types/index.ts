@@ -44,6 +44,7 @@ export type Expense = {
   user: string;
   userId: string;
   houseCode: string;
+  houseName: string;
   involvedUsers: string[];
   date: string;
   __v: number;

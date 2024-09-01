@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+
 interface IProps {
   heading: string;
   paragraph?: string;
@@ -13,7 +14,7 @@ const Header: React.FC<IProps> = ({
   linkUrl = "#",
 }) => {
   return (
-    <div className="mb-10">
+    <div className="mb-10 text-gray-200">
       <div className="flex justify-center">
         <img
           alt=""
@@ -21,14 +22,14 @@ const Header: React.FC<IProps> = ({
           src="https://i.ibb.co/8xr4L5n/expenses.png"
         />
       </div>
-      <h2 className="mt-6 text-3xl font-extrabold text-center text-gray-900">
+      <h2 className="mt-6 text-3xl font-extrabold text-center text-gray-100">
         {heading}
       </h2>
-      <p className="mt-2 mt-5 text-sm text-center text-gray-600">
+      <p className="mt-2 mt-5 text-sm text-center text-gray-400">
         {paragraph}{" "}
         <Link
           to={linkUrl}
-          className="font-medium text-purple-600 hover:text-purple-500"
+          className="font-medium text-purple-400 hover:text-purple-300"
         >
           {linkName}
         </Link>

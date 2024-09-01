@@ -116,7 +116,7 @@ const Users = (props: Props) => {
       console.error("Error deleting User:", error)
       toast.error(
         error.response.data.message ||
-          "An error occurred while saving the User."
+          "An error occurred while deleting the User."
       )
     }
   }

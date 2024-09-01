@@ -33,15 +33,18 @@
   }
 
   .box4 {
-    grid-column: span 1;
-    grid-row: span 3;
+
+      grid-column: span 1;
+      grid-row: span 1;
+    
   }
   .box7 {
     grid-column: span 2;
     grid-row: span 2;
 
     @include md {
-      display: none;
+      grid-column: span 1;
+      grid-row: span 1;
     }
   }
 }

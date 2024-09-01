@@ -8,7 +8,7 @@
   left: 0;
   background: rgba(0, 0, 0, 0.9);
   display: flex;
-  align-items: center;
+  align-items: center; 
   justify-content: center;
   padding: 20px; // Added padding to prevent content from touching the edges on small screens
 
@@ -57,9 +57,11 @@
 
     form {
       display: flex;
+      flex-direction: column;
       flex-wrap: wrap;
       gap: 10px;
-      justify-content: center;
+      justify-content: space-between;
+      align-items: center;
 
       .item {
         width: 100%; // Make items full width on mobile
@@ -154,7 +156,7 @@
 
   // Mobile-specific styles
   @media (max-width: 768px) {
-    .modal-store {
+    .modal-house {
       padding: 15px;
     }
 

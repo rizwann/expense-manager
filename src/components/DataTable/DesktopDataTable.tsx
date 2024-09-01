@@ -3,18 +3,25 @@ import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 import ConfirmationModal from '../Modal/Confirmation';
 import './dataTable.scss';
+import Button from '../../pages/components/Button';
+import { useAuth } from '../../hooks/useAuth';
 
 type Props = {
   columns: GridColDef[];
   rows: object[];
   slug: string;
   handleDelete: (id: string, name: string) => void;
+  handleLeaveHouse?: (id: string, name: string) => void;
 };
 
-const DesktopDataTable: React.FC<Props> = ({ columns, rows, slug, handleDelete }) => {
+const DesktopDataTable: React.FC<Props> = ({ columns, rows, slug, handleDelete, handleLeaveHouse }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [name, setName] = useState<string>('');
+  const [leaveHouseId, setLeaveHouseId] = useState<string | null>(null);
+  const [leaveHouseName, setLeaveHouseName] = useState<string>('');
+  const [isLeaveHouseModalOpen, setIsLeaveHouseModalOpen] = useState(false);
+  const {user} = useAuth()
 
   const actionColumns: GridColDef = {
     field: 'actions',
@@ -30,16 +37,29 @@ const DesktopDataTable: React.FC<Props> = ({ columns, rows, slug, handleDelete }
             className="delete"
             onClick={() => {
               setDeleteId(params.row._id);
+              if (slug === 'Houses'){
+                setName(params.row.description);
+              } else {
               setName(params.row.name);
+              }
               setIsModalOpen(true);
             }}
           >
             <img src="/delete.svg" alt="Delete" />
           </div>
+          { slug === 'Houses' && user?.houseCodes.includes(params.row.code) &&
+            <Button size='sm' onClick={() => {
+              setLeaveHouseId(params.row.code);
+              setLeaveHouseName(params.row.description);
+              setIsLeaveHouseModalOpen(true);
+            }} text='Leave House' />
+          }
         </div>
       );
     },
   };
+
+
 
   const handleConfirmDelete = () => {
     if (deleteId) {
@@ -49,10 +69,23 @@ const DesktopDataTable: React.FC<Props> = ({ columns, rows, slug, handleDelete }
     }
   };
 
+  const handleLeaveHouseConfirm = () => {
+    if (leaveHouseId && handleLeaveHouse) {
+      handleLeaveHouse(leaveHouseId, leaveHouseName);
+      setIsLeaveHouseModalOpen(false);
+      setLeaveHouseId(null);
+    }
+  }
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setDeleteId(null);
   };
+
+  const handleLeaveHouseCloseModal = () => {
+    setIsLeaveHouseModalOpen(false);
+    setLeaveHouseId(null);
+  }
 
   return (
     <div className="data-table">
@@ -99,6 +132,13 @@ const DesktopDataTable: React.FC<Props> = ({ columns, rows, slug, handleDelete }
         onConfirm={handleConfirmDelete}
         title="Confirm Delete"
         message="Are you sure you want to delete this record?"
+      />
+      <ConfirmationModal
+        open={isLeaveHouseModalOpen}
+        onClose={handleLeaveHouseCloseModal}
+        onConfirm={handleLeaveHouseConfirm}
+        title="Confirm Leaving"
+        message="Are you sure you want to leave this house?"
       />
     </div>
   );

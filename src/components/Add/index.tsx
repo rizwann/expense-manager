@@ -220,7 +220,7 @@ const Add: React.FC<IProps> = ({
                                   [column.field]: e.target.value,
                                 }))
                               }
-                              required={column.field === "cost"}
+                              required={column.field === "cost" || column.field === "description"}
                             />
                           )
                         case "date":

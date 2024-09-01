@@ -1,35 +1,44 @@
-import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
-import "./pieChartBox.scss";
+import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts"
+import "./pieChartBox.scss"
+import { House, IUser } from "../../types"
+import { useEffect, useState } from "react"
+import { fetchHouseExpByAllStore } from "../../utils/chartDataFetch"
+import { generateContrastingColors } from "../../utils/utils"
 
-interface PieChartBoxProps {}
+interface PieChartBoxProps {
+  user: IUser
+  selectedHouse: House
+}
 
-type StoreData = {
-  name: string;
-  value: number;
-  color?: string;
-};
+export type StoreData = {
+  name: string
+  expenses: number
+  color?: string
+}
 
-const data: StoreData[] = [
-  { name: "Aldi", value: 900 },
-  { name: "Netto", value: 300 },
-  { name: "Lidl", value: 300 },
-  { name: "BAK-AL", value: 700 },
-  { name: "Edeka", value: 278 },
-  { name: "Rewe", value: 189 },
-  { name: "Penny", value: 239 },
-  { name: "Kaufland", value: 349 },
-  { name: "Real", value: 149 },
-];
+const PieChartBox: React.FC<PieChartBoxProps> = ({ user, selectedHouse }) => {
+  const token = localStorage.getItem("token") || ""
+  const [data, setData] = useState<StoreData[]>([])
 
-//add random color to each store
-data.forEach((item) => {
-  item.color = "#" + Math.floor(Math.random() * 16777215).toString(16);
-});
+  useEffect(() => {
+    const fetchChartData = async () => {
+      const chartData = await fetchHouseExpByAllStore(selectedHouse, token)
+      const numColors = chartData.length
+      const contrastingColors = generateContrastingColors(numColors)
 
-const PieChartBox: React.FC<PieChartBoxProps> = ({}) => {
+      chartData.forEach((item, index) => {
+        item.color = contrastingColors[index]
+      })
+      setData(chartData)
+    }
+    fetchChartData()
+  }, [user, token])
+
+  console.log("voda", data)
   return (
     <div className="pieChartBox">
-      <h1>Expenses by Store</h1>
+      <h1>In-house Expenses by Store</h1>
+
       <div className="chart">
         <ResponsiveContainer width="99%" height={300}>
           <PieChart>
@@ -62,7 +71,7 @@ const PieChartBox: React.FC<PieChartBoxProps> = ({}) => {
                         }}
                       >{`${payload[0].value}€`}</p>
                     </div>
-                  );
+                  )
                 }
               }}
             />
@@ -71,7 +80,7 @@ const PieChartBox: React.FC<PieChartBoxProps> = ({}) => {
               innerRadius={"70%"}
               outerRadius={"90%"}
               paddingAngle={5}
-              dataKey="value"
+              dataKey="expenses"
             >
               {data.map((item) => (
                 <Cell key={item.name} fill={item.color} />
@@ -91,7 +100,7 @@ const PieChartBox: React.FC<PieChartBoxProps> = ({}) => {
         ))}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default PieChartBox;
+export default PieChartBox

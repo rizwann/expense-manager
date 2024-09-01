@@ -6,65 +6,67 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { CategoryName } from "../../types";
+import { CategoryName, House } from "../../types";
 import "./bigChart.scss";
+import { useEffect, useState } from "react";
+import { fetchSixMonthsExpensesByCategory } from "../../utils/chartDataFetch";
 
-const data = [
-  {
-    name: "Jun",
-    Other: 160,
-    Grocery: 0,
-    Restaurant: 0,
-    Clothing: 0,
-    Entertainment: 0,
-    Butcher: 0,
-  },
-  {
-    name: "Jul",
-    Other: 0,
-    Grocery: 0,
-    Restaurant: 0,
-    Clothing: 0,
-    Entertainment: 0,
-    Butcher: 0,
-  },
-  {
-    name: "Aug",
-    Other: 0,
-    Grocery: 0,
-    Restaurant: 0,
-    Clothing: 0,
-    Entertainment: 0,
-    Butcher: 0,
-  },
-  {
-    name: "Sep",
-    Other: 23,
-    Grocery: 22,
-    Restaurant: 0,
-    Clothing: 0,
-    Entertainment: 0,
-    Butcher: 30,
-  },
-  {
-    name: "Oct",
-    Other: 0,
-    Grocery: 64.23,
-    Restaurant: 34.24,
-    Clothing: 0,
-    Entertainment: 0,
-    Butcher: 0,
-  },
-  {
-    name: "Nov",
-    Other: 147.75,
-    Grocery: 14.92,
-    Restaurant: 0,
-    Clothing: 0,
-    Entertainment: 0,
-    Butcher: 43.68,
-  },
-];
+// const data = [
+//   {
+//     name: "Jun",
+//     Other: 160,
+//     Grocery: 0,
+//     Restaurant: 0,
+//     Clothing: 0,
+//     Entertainment: 0,
+//     Butcher: 0,
+//   },
+//   {
+//     name: "Jul",
+//     Other: 0,
+//     Grocery: 0,
+//     Restaurant: 0,
+//     Clothing: 0,
+//     Entertainment: 0,
+//     Butcher: 0,
+//   },
+//   {
+//     name: "Aug",
+//     Other: 0,
+//     Grocery: 0,
+//     Restaurant: 0,
+//     Clothing: 0,
+//     Entertainment: 0,
+//     Butcher: 0,
+//   },
+//   {
+//     name: "Sep",
+//     Other: 23,
+//     Grocery: 22,
+//     Restaurant: 0,
+//     Clothing: 0,
+//     Entertainment: 0,
+//     Butcher: 30,
+//   },
+//   {
+//     name: "Oct",
+//     Other: 0,
+//     Grocery: 64.23,
+//     Restaurant: 34.24,
+//     Clothing: 0,
+//     Entertainment: 0,
+//     Butcher: 0,
+//   },
+//   {
+//     name: "Nov",
+//     Other: 147.75,
+//     Grocery: 14.92,
+//     Restaurant: 0,
+//     Clothing: 0,
+//     Entertainment: 0,
+//     Butcher: 43.68,
+//   },
+// ];
 
 const categories = Object.values(CategoryName).map((item) => {
   const color = "#" + Math.floor(Math.random() * 16777215).toString(16);
@@ -72,11 +74,25 @@ const categories = Object.values(CategoryName).map((item) => {
 });
 console.log(categories);
 
-type Props = {};
+type Props = {
+  selectedHouse: House
+};
 
-const BigChart = (props: Props) => (
+const BigChart:React.FC<Props> = ({ selectedHouse }) => {
+  const [data, setdata] = useState<object[]>([]);
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetchSixMonthsExpensesByCategory(selectedHouse, token || "")
+      setdata(response);
+    }
+    fetchData();
+  }, []);
+
+  return (
   <div className="bigchart-box">
-    <h1>Something Analysis</h1>
+    <h1>In-house Expenses by Category</h1>
     <div className="chart">
       <ResponsiveContainer width="99%" height="100%">
         <AreaChart
@@ -88,7 +104,6 @@ const BigChart = (props: Props) => (
             bottom: 0,
           }}
         >
-          {/* <CartesianGrid strokeDasharray="3 3" /> */}
           <XAxis dataKey="name" />
           <YAxis />
           <Tooltip
@@ -147,6 +162,7 @@ const BigChart = (props: Props) => (
       ))}
     </div>
   </div>
-);
+)
+};
 
 export default BigChart;

@@ -1,40 +1,43 @@
-.add-expense {
-  // Check if the class name matches
+@import "../../styles/variables.scss";
+
+.join-house {
   width: 100vw;
-  height: 100vh;
-  position: fixed;
+  height: 100%;
+  position: absolute;
   top: 0;
   left: 0;
   background: rgba(0, 0, 0, 0.9);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-  overflow: hidden;
+  padding: 20px; // Added padding to prevent content from touching the edges on small screens
 
-  .modal-expense {
-    padding: 40px;
+  .join-modal-house {
+    padding: 50px;
     border-radius: 15px;
-    background: #2c2c2c;
     background: linear-gradient(145deg, #2a2a2a, #3a3a3a);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
     position: relative;
     max-width: 600px;
-    width: 100%;
-    height: 80%;
+    width: 100%; // Ensure it uses the full width on smaller screens
     text-align: center;
-    overflow: hidden;
+    transform: scale(0.95);
+    transition: transform 0.3s ease;
 
-    // Ensure display and flex direction are correctly set
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    &:hover {
+      transform: scale(1);
+    }
 
     h1 {
-      margin-bottom: 30px;
-      font-size: 28px;
+      margin-bottom: 20px;
+      font-size: 24px;
       color: #f0f0f0;
       text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+
+      @media (max-width: 768px) {
+        font-size: 20px;
+        margin-bottom: 15px;
+      }
     }
 
     .close {
@@ -53,16 +56,22 @@
     }
 
     form {
-      width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 20px; // Ensure the gap is applied correctly
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: space-between;
+      align-items: center;
+      
 
       .item {
-        width: 100%;
+        width: 100%; // Make items full width on mobile
         display: flex;
         flex-direction: column;
         gap: 10px;
+        margin-bottom: 20px;
+        align-items: center;
+        justify-content: center;
 
         label {
           font-size: 16px;
@@ -78,6 +87,7 @@
           border: 1px solid #666;
           border-radius: 5px;
           transition: border-color 0.3s ease, box-shadow 0.3s ease;
+          width: 100%; // Make inputs full width on mobile
 
           &:focus {
             border-color: #3498db;
@@ -92,37 +102,22 @@
         }
       }
 
-      .item-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
-        justify-content: space-between;
-
-        .item {
-          flex: 1 1 45%;
-        }
-      }
-
       .error-message {
         color: #e74c3c;
         font-size: 14px;
-        margin-top: 15px;
-        margin-bottom: 10px;
+        margin-top: -10px;
+        margin-bottom: 20px;
         text-align: center;
         background: #2c2c2c;
         padding: 10px;
         border-radius: 5px;
         border: 1px solid #e74c3c;
-      }
-
-      .switch-container {
-        display: flex;
-        justify-content: space-between;
+        max-height: 70px;
+        max-width: 140px;
       }
 
       button {
         width: 60%;
-        margin-top: 20px;
         padding: 15px;
         font-size: 16px;
         color: white;
@@ -148,60 +143,29 @@
     }
   }
 
-  @media (max-width: 600px) {
-    .modal-expense {
-      padding: 20px;
-      h1 {
-        font-size: 24px;
-      }
-
-      form {
-        gap: 15px;
-
-        .item-container {
-          .item {
-            width: 100%;
-          }
-        }
-
-        .switch-container {
-          .item {
-            width: 100%;
-          }
-        }
-
-        button {
-          font-size: 14px;
-          padding: 12px;
-        }
-      }
+  // Mobile-specific styles
+  @media (max-width: 768px) {
+    .join-modal-house {
+      padding: 15px;
     }
-  }
 
-  @media (max-width: 415px) {
-    .modal-expense {
-      height: 90vh;
-      h1 {
-        font-size: 20px;
-      }
+    form {
+      gap: 15px;
 
-      form {
-        gap: 10px;
-        .item-container {
-          .item {
-            width: 100%;
-          }
-        }
-        button {
-          font-size: 12px;
+      .item {
+        margin-bottom: 15px;
+
+        input,
+        select {
           padding: 10px;
+          width: 100%;
         }
       }
-    }
-  }
-  @media (max-height: 680px) {
-    .modal-expense {
-      height: 100%;
+
+      button {
+        padding: 12px;
+        font-size: 14px;
+      }
     }
   }
 }

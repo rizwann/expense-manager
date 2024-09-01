@@ -10,6 +10,7 @@ export type RegistrationFormInput = {
   password: string;
   confirmPassword: string;
   username: string;
+  name: string;
 };
 
 function Registration() {
@@ -30,9 +31,24 @@ function Registration() {
   return (
     <form
       onSubmit={handleSubmit((data) => registration(data))}
-      className="mt-8 space-y-6"
+      className="p-6 mt-8 space-y-6 bg-gray-800 rounded-lg shadow-md"
     >
-      <div>
+      <div className="">
+        <div className="my-5">
+          <label htmlFor="name" className="sr-only">
+            Name
+          </label>
+          <input
+            type="text"
+            id="name"
+            className={inputClassName}
+            placeholder="Your Name"
+            {...register("name", { required: "Name is required" })}
+          />
+          {errors.name && (
+            <span className="text-red-400">{errors.name.message}</span>
+          )}
+        </div>
         <div className="my-5">
           <label htmlFor="email" className="sr-only">
             Email
@@ -42,10 +58,10 @@ function Registration() {
             id="email"
             className={inputClassName}
             placeholder="Your email"
-            {...register("email", { required: true })}
+            {...register("email", { required: "Email is required" })}
           />
           {errors.email && (
-            <span className="text-red-500">Email is required</span>
+            <span className="text-red-400">{errors.email.message}</span>
           )}
         </div>
         <div className="my-5">
@@ -57,12 +73,16 @@ function Registration() {
             id="username"
             className={inputClassName}
             placeholder="Your username"
-            {...register("username", { required: true, minLength: 5 })}
+            {...register("username", {
+              required: "Username is required",
+              minLength: {
+                value: 5,
+                message: "Username must be at least 5 characters long",
+              },
+            })}
           />
           {errors.username && (
-            <span className="text-red-500">
-              Username must be at least 5 characters long
-            </span>
+            <span className="text-red-400">{errors.username.message}</span>
           )}
         </div>
         <div className="my-5">
@@ -75,7 +95,7 @@ function Registration() {
             className={inputClassName}
             placeholder="Your password"
             {...register("password", {
-              required: true,
+              required: "Password is required",
               pattern: {
                 value: passwordPattern,
                 message:
@@ -84,7 +104,7 @@ function Registration() {
             })}
           />
           {errors.password && (
-            <span className="text-red-500">{errors.password.message}</span>
+            <span className="text-red-400">{errors.password.message}</span>
           )}
         </div>
         <div className="my-5">
@@ -97,19 +117,17 @@ function Registration() {
             className={inputClassName}
             placeholder="Confirm your password"
             {...register("confirmPassword", {
-              required: true,
+              required: "Please confirm your password",
               validate: (value) =>
                 value === password.current || "The passwords do not match",
             })}
           />
           {errors.confirmPassword && (
-            <span className="text-red-500">
-              {errors.confirmPassword.message}
-            </span>
+            <span className="text-red-400">{errors.confirmPassword.message}</span>
           )}
         </div>
 
-        {errorMessage && <div className="text-red-500">{errorMessage}</div>}
+        {errorMessage && <div className="text-red-400">{errorMessage}</div>}
       </div>
 
       <FormAction text="Register" />

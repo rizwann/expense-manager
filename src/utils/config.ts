@@ -61,7 +61,6 @@ const houseFields = [
     field: "code",
     headerName: "House Code",
     control: "text",
-    type: "number",
   },
   {
     field: "image",

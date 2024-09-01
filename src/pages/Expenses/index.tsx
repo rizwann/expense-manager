@@ -47,11 +47,16 @@ const columns: GridColDef[] = [
     type: "string",
   },
   {
+    field: "houseName",
+    headerName: "House",
+    width: 150,
+    type: "string",
+  },
+  {
     field: "description",
     headerName: "Description",
     width: 150,
     type: "string",
-    //should be hidden
     disableColumnMenu: true,
   },
   {
@@ -170,7 +175,7 @@ const Expenses = (props: Props) => {
             }
           )
 
-          const houseExpenses = response.data.expenses.map(
+          const houseExpenses = response?.data?.expenses?.map(
             (expense: Expense) => ({
               ...expense,
               id: expense._id,
@@ -206,35 +211,37 @@ const Expenses = (props: Props) => {
   useEffect(() => {
     let filtered = expenses
 
-    if (selectedHouse) {
-      filtered = filtered.filter(
-        (expense) => expense.houseCode === selectedHouse
-      )
+    if(expenses.length > 0) {
+      if (selectedHouse) {
+        filtered = filtered.filter(
+          (expense) => expense.houseCode === selectedHouse
+        )
+      }
+  
+      if (myself && user) {
+        filtered = filtered.filter(
+          (expense) =>
+            expense.involvedUsers.includes(user.username) ||
+            expense.userId === user._id
+        )
+      }
+  
+      if (selectedMonth) {
+        filtered = filtered.filter(
+          (expense) =>
+            new Date(expense.date).getMonth() + 1 === parseInt(selectedMonth)
+        )
+      }
+  
+      if (selectedYear) {
+        filtered = filtered.filter(
+          (expense) =>
+            new Date(expense.date).getFullYear() === parseInt(selectedYear)
+        )
+      }
+  
+      setFilteredExpenses(filtered)
     }
-
-    if (myself && user) {
-      filtered = filtered.filter(
-        (expense) =>
-          expense.involvedUsers.includes(user.username) ||
-          expense.userId === user._id
-      )
-    }
-
-    if (selectedMonth) {
-      filtered = filtered.filter(
-        (expense) =>
-          new Date(expense.date).getMonth() + 1 === parseInt(selectedMonth)
-      )
-    }
-
-    if (selectedYear) {
-      filtered = filtered.filter(
-        (expense) =>
-          new Date(expense.date).getFullYear() === parseInt(selectedYear)
-      )
-    }
-
-    setFilteredExpenses(filtered)
   }, [selectedHouse, myself, selectedMonth, selectedYear, expenses, user])
 
   const handleDelete = async (id: string, name: string) => {
@@ -255,12 +262,7 @@ const Expenses = (props: Props) => {
     }
   }
   useEffect(() => {
-    if (filteredExpenses[0] && filteredExpenses[0].date) {
-      const expenses = filteredExpenses.sort((a: any, b: any) => {
-        return new Date(b.date).getTime() - new Date(a.date).getTime()
-      })
-  
-      const mobileExpenses = expenses.map((expense) => {
+      const mobileExpenses = filteredExpenses.map((expense) => {
         return {
           ...expense,
           date: new Date(expense.date).toLocaleDateString("en-DE", {
@@ -273,7 +275,7 @@ const Expenses = (props: Props) => {
       })
   
       setMobileExpenses(mobileExpenses)
-    }
+    
   } , [])
   
   return (
@@ -281,7 +283,7 @@ const Expenses = (props: Props) => {
       {spinner && <Spinner />}
       <div className="info">
         <h1>Expenses</h1>
-        <Button text="➕  Add Expense" onClick={() => setModalOpen(true)} />
+        <Button text="➕  Add Expense" onClick={() => setModalOpen(true)} size="lg" />
 
         {/* Myself Filter Checkbox */}
         <label className="dark-input">
