@@ -72,7 +72,7 @@ const columns: GridColDef[] = [
   },
 ]
 
-const Users = (props: Props) => {
+const Users = () => {
   const [modalOpen, setModalOpen] = useState(false)
   const token = localStorage.getItem("token")
   const [refresh, setRefresh] = useState(false)
