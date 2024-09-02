@@ -10,12 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
     "@hookform/resolvers": "^3.3.2",
+    "@mui/icons-material": "^5.16.7",
     "@mui/material": "^5.14.16",
     "@mui/x-data-grid": "^6.18.0",
     "axios": "^1.6.1",
+    "framer-motion": "^11.3.31",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.48.2",

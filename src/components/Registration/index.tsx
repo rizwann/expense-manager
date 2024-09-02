@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
@@ -14,7 +14,7 @@ export type RegistrationFormInput = {
 };
 
 function Registration() {
-  const { registration, errorMessage } = useAuth();
+  const { registration, errorMessage, setErrorMessage } = useAuth();
   const navigate = useNavigate();
 
   const {
@@ -27,7 +27,12 @@ function Registration() {
   password.current = watch("password", "");
 
   const passwordPattern = /^(?=.*[a-zA-Z0-9])(?=.*[^a-zA-Z0-9]).{6,}$/;
-
+  useEffect(() => {
+    if (errorMessage) {
+    setErrorMessage(null)
+    }
+  }
+  , [])
   return (
     <form
       onSubmit={handleSubmit((data) => registration(data))}

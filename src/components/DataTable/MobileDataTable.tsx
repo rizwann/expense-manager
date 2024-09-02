@@ -150,16 +150,16 @@ const MobileDataTable: React.FC<Props> = ({
                   >
                     <img src="/delete.svg" alt="Delete" />
                   </div>
-                  <div
+                  { slug === "Houses" && <div
                     className="leave"
                     onClick={() => {
                       setLeaveHouseId(row.code);
-              setLeaveHouseName(row.description);
-              setIsLeaveHouseModalOpen(true);
+                      setLeaveHouseName(row.description);
+                      setIsLeaveHouseModalOpen(true);
                     }}
                   >
                     <img src="/leave.svg" alt="Leave" />
-                  </div>
+                  </div>}
                 </div>
               </div>
               <div className="card-body">

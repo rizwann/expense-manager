@@ -28,6 +28,7 @@ import "./styles/global.scss"
 import { ThemeProvider, createTheme } from "@mui/material/styles"
 import CssBaseline from "@mui/material/CssBaseline"
 import NotFoundPage from "./pages/NotFound"
+import Balances from "./pages/Balances"
 
 const darkTheme = createTheme({
   palette: {
@@ -107,6 +108,7 @@ const App = () => {
         { path: "/expenses/:id", element: <Expense /> },
         { path: "/stores/:id", element: <Store /> },
         { path: "/houses/:id", element: <House /> },
+        { path: "/balance", element: <Balances /> },
         { path: "*", element: <NotFoundPage /> }, // Add wildcard route for undefined paths
       ],
     },

@@ -1,3 +1,5 @@
+import { TransactionData } from "./types";
+
 export interface Expense {
   store: string;
   cost: number;
@@ -43,16 +45,23 @@ export const menu = [
       },
       {
         id: 2,
+        title: "Houses",
+        url: "/houses",
+        icon: "/houses.svg",
+      },
+      {
+        id: 3,
         title: "Stores",
         url: "/stores",
         icon: "/storemenu.svg",
       },
       {
-        id: 3,
-        title: "Houses",
-        url: "/houses",
-        icon: "/houses.svg",
+        id: 4,
+        title: "Balance",
+        url: "/balance",
+        icon: "/balances.svg",
       },
+     
     ],
   },
 ];
@@ -864,4 +873,23 @@ export const singleProduct = {
       time: "2 months ago",
     },
   ],
+};
+export const sampleData: TransactionData = {
+  netChanges: {
+    RizwanKabir: -11,
+    Bonna: 11,
+  },
+  givers: ["Bonna"],
+  receivers: ["RizwanKabir"],
+  paymentInstructionsOptimized: [
+    { from: "Bonna", to: "RizwanKabir", amount: 11 },
+  ],
+  balances: {
+    RizwanKabir: 11,
+    Bonna: -11,
+  },
+  totalExpenseByUser: {
+    RizwanKabir: 48.97,
+  },
+  transactions: [{ from: "Bonna", to: "RizwanKabir", amount: 11 }],
 };

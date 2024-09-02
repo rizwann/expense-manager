@@ -18,12 +18,19 @@ function Login() {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormInput>();
-  const { login, errorMessage, setEmailSent } = useAuth();
+  const { login, errorMessage, setEmailSent, setErrorMessage } = useAuth();
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   useEffect(() => {
     setEmailSent(false);
   }, [setEmailSent]);
+
+  useEffect(() => {
+    if (errorMessage) {
+    setErrorMessage(null)
+    }
+  }
+  , [])
 
   const onSubmit: SubmitHandler<LoginFormInput> = async (data) => {
     setIsLoggingIn(true);

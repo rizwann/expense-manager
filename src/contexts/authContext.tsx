@@ -30,6 +30,7 @@ interface AuthContextType {
   selectedHouse: House | null;
   setEmailSent: React.Dispatch<React.SetStateAction<boolean>>;
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+  setErrorMessage: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(
@@ -89,7 +90,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           localStorage.setItem("user", JSON.stringify(response.data));
         } catch (error) {
           console.log(error);
-          setUser(user);
+          logout()
         }
       };
       getUpdatedUser();
@@ -266,7 +267,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         changeHouse,
         selectedHouse,
         setEmailSent,
-        setRefresh
+        setRefresh,
+        setErrorMessage
       }}
     >
       {children}

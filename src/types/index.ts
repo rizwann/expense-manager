@@ -49,6 +49,30 @@ export type Expense = {
   date: string;
   __v: number;
 }
+// src/types/TransactionData.ts
+
+export interface PaymentInstruction {
+  from: string;
+  to: string;
+  amount: number;
+}
+
+export interface Transaction {
+  from: string;
+  to: string;
+  amount: number;
+}
+
+export interface TransactionData {
+  netChanges: Record<string, number>;
+  givers: string[];
+  receivers: string[];
+  paymentInstructionsOptimized: PaymentInstruction[];
+  balances: Record<string, number>;
+  totalExpenseByUser: Record<string, number>;
+  transactions: Transaction[];
+}
+
 
 
 // make a type by combinging all of the above types

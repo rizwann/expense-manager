@@ -112,11 +112,11 @@ const SingleUser: React.FC = () => {
     <div className="single">
       <div className="view">
         <div className="info">
-          <div className="back-btn">
+          {/* <div className="back-btn">
             <NavLink to="/Users">
               <Button text="Back" />
             </NavLink>
-          </div>
+          </div> */}
           <div className="top-info">
           <img
             src={`${import.meta.env.VITE_API_URL}/${user?.image}`}

@@ -3,6 +3,7 @@ import { useAuth } from "../../hooks/useAuth";
 import FormAction from "../Form/formAction";
 import PasswordResetConfirmation from "./passwordResetConfirmation";
 import { inputClassName } from "./resetPassowordForm";
+import { useEffect } from "react";
 
 export type ResetPasswordFormInput = {
   email: string;
@@ -14,7 +15,7 @@ function ResetPassword() {
     handleSubmit,
     formState: { errors },
   } = useForm<ResetPasswordFormInput>();
-  const { resetPassword, errorMessage, emailSent } = useAuth();
+  const { resetPassword, errorMessage, emailSent, setErrorMessage } = useAuth();
 
   const onSubmit: SubmitHandler<ResetPasswordFormInput> = async (data) => {
     try {
@@ -23,6 +24,12 @@ function ResetPassword() {
       console.error("Password reset failed:", error);
     }
   };
+
+  useEffect(() => {
+    if (errorMessage) {
+    setErrorMessage(null)    
+  }
+  }, [])  ;
 
   return (
     <div className="p-6 bg-gray-800 rounded-lg shadow-md">
