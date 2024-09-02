@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import BarChartBox from "../../components/BarChartBox";
 import BigChart from "../../components/BigChart";
 import ChartBox from "../../components/ChartBox";
@@ -17,16 +17,67 @@ import {
 import "./home.scss";
 import { config } from "../../utils/config";
 import Button from "../components/Button";
-import { Typography } from "@mui/material";
+import { CircularProgress, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from "@mui/material";
 import AddHouse from "../../components/AddHouse";
-
+import axios from "axios";
+import { House } from "../../types";
+import { motion } from "framer-motion";
+import {
+  Home as HomeIcon
+} from "@mui/icons-material"
 type Props = {};
 
 const Home = (props: Props) => {
   const [joinHouseModal, setJoinHouseModal] = useState(false)
   const [createHouseModal, setCreateHouseModal] = useState(false)
   const { user, selectedHouse, setRefresh } = useAuth();
+  const token = localStorage.getItem("token")
+  const [loading, setLoading] = useState(true)
+  const [houses, setHouses] = useState<House[]>([])
+  const [selectedHouseLocal, setSelectedHouseLocal] = useState<string>(
+    selectedHouse?.code || ""
+  )
+  const isAdmin = user ? !!(user.username === "RizwanKabir") : false
+  const fetchHouses = async () => {
+    setLoading(true)
+    const houseApi = isAdmin
+      ? `${import.meta.env.VITE_API_URL}/api/houses/all`
+      : `${import.meta.env.VITE_API_URL}/api/houses`
+    try {
+      const response = await axios.get<House[]>(houseApi, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      setHouses(response.data)
+    } catch (error) {
+      console.error("Error fetching houses:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
   console.log(user, "user");
+  useEffect(() => {
+    fetchHouses()
+  }, [selectedHouseLocal])
+
+  const handleHouseChange = (
+    event: SelectChangeEvent<string>,
+    child: ReactNode
+  ) => {
+    setSelectedHouseLocal(event.target.value as string)
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <CircularProgress />
+      </div>
+    )
+  }
+  const selectedHouseData = houses?.find(
+    (house) => house.code === selectedHouseLocal
+  )
   if(!user) return null;
   if (!(user.houseCodes.length > 0)) {
     return(
@@ -68,36 +119,73 @@ const Home = (props: Props) => {
       </div>
     )
   }
+  console.log("housesheda", houses)
   return (
+    <div style={{
+      display: "flex",
+      flexDirection: "column",  
+      justifyContent: "center",
+      alignItems: "center",
+    }}>
+              <motion.div
+          className="w-full max-w-xs m-3"
+          initial={{ y: -50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+                <FormControl variant="outlined" className="w-full max-w-xs mb-6">
+          <InputLabel id="select-house-label">Select House</InputLabel>
+          <Select
+            labelId="select-house-label"
+            value={selectedHouseLocal}
+            onChange={handleHouseChange}
+            label="Select House"
+            className="text-white bg-gray-800"
+            renderValue={(selected) => {
+              const selectedHouse = houses.find(house => house.code === selected);
+              return selectedHouse ? selectedHouse.description : '';
+            }}
+          >
+            {houses.map((house) => (
+              <MenuItem key={house.code} value={house.code}>
+               <HomeIcon className="mr-2 text-gray-500" />
+                {house.description}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        </motion.div>
     <div className="home">
       <div className="box box1">
-        <TopBox user={user} />
+        {selectedHouseData && <TopBox user={user} houseCode={selectedHouseData?.code} />}
       </div>
       <div className="box box2">
-        {selectedHouse && <ChartBox {...chartBoxUserExpense} user={user} type="weeklyUser" selectedHouse={selectedHouse} />}
+        {selectedHouseData && <ChartBox {...chartBoxUserExpense} user={user} type="weeklyUser" selectedHouse={selectedHouseData} />}
       </div>
       <div className="box box3">
-        {selectedHouse && <ChartBox {...chartBoxHouseExpense} user={user} type="houseExpenses" selectedHouse={selectedHouse}  />}
+        {selectedHouseData && <ChartBox {...chartBoxHouseExpense} user={user} type="houseExpenses" selectedHouse={selectedHouseData}  />}
       </div>
       <div className="box box4">
-        {selectedHouse && <PieChartBox user={user} selectedHouse={selectedHouse} />}
+        {selectedHouseData && <PieChartBox user={user} selectedHouse={selectedHouseData} />}
       </div>
       <div className="box box5">
-        {selectedHouse && <ChartBox {...chartBoxConversion} user={user} type="popularStore" selectedHouse={selectedHouse} />}
+        {selectedHouseData && <ChartBox {...chartBoxConversion} user={user} type="popularStore" selectedHouse={selectedHouseData} />}
       </div>
       <div className="box box6">
-        {selectedHouse && <ChartBox {...chartBoxStoreExpense} user={user} type="popularCategory" selectedHouse={selectedHouse}  />}
+        {selectedHouseData && <ChartBox {...chartBoxStoreExpense} user={user} type="popularCategory" selectedHouse={selectedHouseData}  />}
       </div>
       <div className="box box7">
-        {selectedHouse && <BigChart selectedHouse={selectedHouse} />}
+        {selectedHouseData && <BigChart selectedHouse={selectedHouseData} />}
       </div>
       <div className="box box8">
-        {selectedHouse && <BarChartBox {...barChartBoxUserExpenseLastSixMonths} user={user} type={"userSixMonths"} selectedHouse={selectedHouse} />}
+        {selectedHouseData && <BarChartBox {...barChartBoxUserExpenseLastSixMonths} user={user} type={"userSixMonths"} selectedHouse={selectedHouseData} />}
       </div>
 
       <div className="box box9">
-        {selectedHouse && <BarChartBox {...barChartBoxAllUser} user={user} type={"contribution"} selectedHouse={selectedHouse} />}
+        {selectedHouseData && <BarChartBox {...barChartBoxAllUser} user={user} type={"contribution"} selectedHouse={selectedHouseData} />}
       </div>
+    </div>
     </div>
   );
 };

@@ -5,17 +5,18 @@ import axios from "axios"
 
 interface IProps {
   user: IUser
+  houseCode: string
 }
 
-const TopBox: React.FC<IProps> = ({ user }) => {
+const TopBox: React.FC<IProps> = ({ user, houseCode }) => {
   const [expenses, setExpenses] = useState<Expense[]>([])
   const token = localStorage.getItem("token")
 
   useEffect(() => {
     const fetchExpenses = async () => {
       try {
-        const URI = `${import.meta.env.VITE_API_URL}/api/expenses/user/${
-          user._id
+        const URI = `${import.meta.env.VITE_API_URL}/api/expenses/house/${
+          houseCode
         }`
         const response = await axios.get<Expense[]>(URI, {
           headers: {
