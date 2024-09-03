@@ -217,7 +217,7 @@ const TransactionSummary: React.FC = () => {
                 <span>
                   {index + 1}. {person}
                 </span>
-                <span>{balance >= 0 ? `+${balance}` : `${balance}`}</span>
+                <span>{balance >= 0 ? `+${balance.toFixed(2)}` : `${balance.toFixed(2)}`}</span>
               </li>
             ))}
           </ul>
@@ -312,7 +312,7 @@ const TransactionSummary: React.FC = () => {
             {paymentInstructionsOptimized.map(({ from, to, amount }, index) => (
               <li key={index} className="flex justify-between">
                 {" "}
-                <span>
+                <span className="mr-2">
                   {" "}
                   {index + 1}. {from} <ArrowForward className="mx-2" /> {to}{" "}
                 </span>{" "}
@@ -332,7 +332,7 @@ const TransactionSummary: React.FC = () => {
           <ul>
             {transactions.map(({ from, to, amount }, index) => (
               <li key={index} className="flex justify-between">
-                <span>
+                <span className="mr-2">
                   {index + 1}. {from} <ArrowForward className="mx-2" /> {to}
                 </span>
                 <span>€{amount.toFixed(2)}</span>
