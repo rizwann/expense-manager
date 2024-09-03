@@ -186,6 +186,7 @@ const Expenses = (props: Props) => {
           allExpenses.push(...houseExpenses)
         } catch (error) {
           console.error("Error fetching expenses:", error)
+          setFilteredExpenses([])
         }
       }
       setSpinner(false)
@@ -204,6 +205,7 @@ const Expenses = (props: Props) => {
   // Fetch expenses on component mount and when houses change
   useEffect(() => {
     if (houses.length > 0) {
+      console.log("lewrafetching expenses")
       fetchExpenses()
     }
   }, [houses, refresh])
