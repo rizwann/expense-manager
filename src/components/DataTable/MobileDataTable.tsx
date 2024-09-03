@@ -57,7 +57,7 @@ const MobileDataTable: React.FC<Props> = ({
             {row[col.field].length > 0 ? (
               <div>
                 {row[col.field].slice(0, 2).map((house: any, idX: number) => {
-                  return <span>{house}{
+                  return <span key={idX}>{house}{
                     idX < row[col.field].length - 1 ? ", " : ""
                   } </span>
                 })}

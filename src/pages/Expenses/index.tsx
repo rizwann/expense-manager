@@ -175,7 +175,7 @@ const Expenses = (props: Props) => {
             }
           )
 
-          const houseExpenses = response?.data?.expenses?.map(
+          const houseExpenses = response?.data?.map(
             (expense: Expense) => ({
               ...expense,
               id: expense._id,
