@@ -80,6 +80,7 @@ const Stores = (props: Props) => {
       })
       setStores(stores.filter((store) => store._id !== id))
       toast.success(`Store → ${name} ← deleted successfully.`)
+      setRefresh(!refresh)
     } catch (error: any) {
       console.error("Error deleting Store:", error)
       toast.error(

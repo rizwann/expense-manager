@@ -11,6 +11,7 @@ import { toast } from "react-toastify"
 import { useAuth } from "../../hooks/useAuth"
 import Spinner from "../../components/Spinner"
 import Toaster from "../../components/Toaster"
+import { set } from "react-hook-form"
 
 type Props = {}
 
@@ -253,6 +254,7 @@ const Expenses = (props: Props) => {
       })
       setExpenses(expenses.filter((expense) => expense._id !== id))
       toast.success(`Expense deleted successfully.`)
+      setRefresh(!refresh)
     } catch (error: any) {
       console.error("Error deleting expense:", error)
       toast.error(

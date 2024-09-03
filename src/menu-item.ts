@@ -210,7 +210,7 @@ export const chartBoxUserExpense = {
 export const chartBoxStoreExpense = {
   color: "skyblue",
   icon: "/productIcon.svg",
-  title: "Popular Category (myself)",
+  title: "Popular Category",
   number: "10047.76",
   dataKey: "expenses",
   percentage: 21,
@@ -248,7 +248,7 @@ export const chartBoxHouseExpense = {
 export const chartBoxConversion = {
   color: "gold",
   icon: "/conversionIcon.svg",
-  title: "Popular Store (myself)",
+  title: "Popular Store",
   number: "2.6",
   dataKey: "expenses",
   percentage: 12,

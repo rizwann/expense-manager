@@ -96,6 +96,7 @@ const Houses = (props: Props) => {
       setHouses(houses.filter((store) => store._id !== id))
       toast.success(`House → ${name} ← deleted successfully.`)
       setUserReload((prev) => !prev)
+      setRefresh((prev) => !prev)
     } catch (error: any) {
       console.error("Error deleting Store:", error)
       toast.error(
@@ -123,6 +124,7 @@ const Houses = (props: Props) => {
       setHouses(houses.filter((house) => house.code !== houseCode))
       toast.success(`You left the house → ${name} ← successfully.`)
       setUserReload((prev) => !prev)
+      setRefresh((prev) => !prev)
   }
   catch (error: any) {
       console.error("Error deleting Store:", error)

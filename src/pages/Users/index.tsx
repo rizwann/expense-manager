@@ -112,6 +112,7 @@ const Users = () => {
       })
       setUsers(users.filter((user) => user._id !== id))
       toast.success(`User → ${name} ← deleted successfully.`)
+      setRefresh(!refresh)
     } catch (error: any) {
       console.error("Error deleting User:", error)
       toast.error(
