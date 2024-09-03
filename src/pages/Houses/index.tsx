@@ -30,7 +30,7 @@ const columns: GridColDef[] = [
       <img
         src={
           params.row.image
-            ? `${import.meta.env.VITE_API_URL}/${params.row.image}`
+            ? params.row.image
             : "/noavatar.png "
         }
         alt="house"

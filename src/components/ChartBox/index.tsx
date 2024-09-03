@@ -136,7 +136,7 @@ const ChartBox: React.FC<ChartBoxProps> = ({
               <img
               style={{ width: 40, height: 40, borderRadius: 50, objectFit: "cover"
               }}
-                src={`${import.meta.env.VITE_API_URL}/${data?.image}`}
+                src={data?.image}
                 alt="StoreImg"
                 onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) =>
                   (e.currentTarget.src = "/app.svg")

@@ -76,7 +76,7 @@ const HouseDetail = () => {
         <div className="image">
       <h1>House Details</h1>
           <img
-            src={`${import.meta.env.VITE_API_URL}/${house.image}`}
+            src={house.image}
             alt={house.description}
             onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) =>
               (e.currentTarget.src = "/app.svg")

@@ -24,7 +24,7 @@ const columns: GridColDef[] = [
       <img
         src={
           params.row.storeImg
-            ? `${import.meta.env.VITE_API_URL}/${params.row.storeImg}`
+            ? params.row.storeImg
             : "/noavatar.png "
         }
         alt="store"

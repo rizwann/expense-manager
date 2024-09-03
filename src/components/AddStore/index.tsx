@@ -23,7 +23,7 @@ const AddStore: React.FC<IProps> = ({ columns, setModalOpen, setRefresh, editDat
     if (editData) {
       setFormData(editData);
       if (editData.image) {
-        setImagePreview(`${import.meta.env.VITE_API_URL}/${editData.image}`);
+        setImagePreview(editData.image);
       }
     }
   }, [editData]);
@@ -134,7 +134,7 @@ const AddStore: React.FC<IProps> = ({ columns, setModalOpen, setRefresh, editDat
                               <img src={imagePreview ? 
                                 imagePreview : 
                                 editData?.image ? 
-                                `${import.meta.env.VITE_API_URL}/${editData?.image}` : 
+                                editData?.image : 
                                 "/app.svg"
                               
                             } alt="Image Preview"

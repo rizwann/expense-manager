@@ -128,7 +128,7 @@ const TransactionSummary: React.FC = () => {
             transition={{ duration: 0.5 }}
           >
             <img
-              src={`${import.meta.env.VITE_API_URL}/${selectedHouseData.image}`}
+              src={selectedHouseData.image}
               alt={selectedHouseData.description}
               className="object-cover w-32 h-32 border-4 border-gray-800 rounded-full shadow-lg ring-4 ring-gray-700"
               onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) =>
@@ -163,7 +163,7 @@ const TransactionSummary: React.FC = () => {
             {houses.map((house) => (
               <MenuItem key={house.code} value={house.code}>
                 <img
-                    src={`${import.meta.env.VITE_API_URL}/${house.image}`}
+                    src={house.image}
                     alt={house.description}
                     className="object-cover w-8 h-8 mr-2 border-4 border-gray-800 rounded-full ring-4 ring-gray-700"
                     onError={(

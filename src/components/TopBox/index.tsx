@@ -44,7 +44,7 @@ const TopBox: React.FC<IProps> = ({ user, houseCode }) => {
           return (
             <div className="list-item" key={expense._id}>
               <div className="user">
-                <img  src={`${import.meta.env.VITE_API_URL}/${expense?.storeImg}`}
+                <img  src={expense?.storeImg}
             alt={user?.name || "user"}
             onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) =>
               (e.currentTarget.src = "/storeName.svg")

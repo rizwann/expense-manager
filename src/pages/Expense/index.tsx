@@ -78,7 +78,7 @@ const ExpenseDetail = () => {
         <div className="image">
       <h1>Expense Details</h1>
           <img
-            src={`${import.meta.env.VITE_API_URL}/${expense.storeImg}`}
+            src={expense.storeImg}
             alt={expense.storeName}
             onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) =>
               (e.currentTarget.src = "/app.svg")

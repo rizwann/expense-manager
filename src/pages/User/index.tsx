@@ -119,7 +119,7 @@ const SingleUser: React.FC = () => {
           </div> */}
           <div className="top-info">
           <img
-            src={`${import.meta.env.VITE_API_URL}/${user?.image}`}
+            src={user?.image}
             alt={user?.name || "user"}
             onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) =>
               (e.currentTarget.src = "/app.svg")

@@ -53,7 +53,7 @@ const Navbar: React.FC<IProps> = ({ toggleMenu }) => {
           <img
             src={
               user?.image
-                ? `${import.meta.env.VITE_API_URL}/${user?.image}`
+                ? user?.image
                 : "/noavatar.png"
             }
             alt="store"
