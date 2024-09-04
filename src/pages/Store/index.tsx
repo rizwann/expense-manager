@@ -74,7 +74,7 @@ const StoreDetail = () => {
         <div className="image">
       <h1>Store Details</h1>
           <img
-            src={store.image}
+            src={store.image || "/app.svg"}
             alt={store.name}
             onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) =>
               (e.currentTarget.src = "/app.svg")
