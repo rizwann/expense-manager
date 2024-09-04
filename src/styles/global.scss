@@ -31,26 +31,27 @@ a {
   // }
 }
 
-.menu-container {
-  // width: 220px;
-  padding: 5px 20px;
-  border-right: 2px solid $soft-bg;
+// .menu-container {
+//   // width: 220px;
+//   padding: 5px 20px;
+//   border-right: 2px solid $soft-bg;
   
-  @include md {
-    width: max-content;
-  }
-  @include sm {
-//take the fullscreen
+//   @include md {
+//     width: max-content;
+//   }
+//   @include sm {
+// //take the fullscreen
 
     
-  }
-  &.close {
-    transform: translateX(0);
-    display: none;
-  }
-}
+//   }
+//   &.close {
+//     transform: translateX(0);
+//     display: none;
+//   }
+// }
 
 .content-container {
   padding: 5px 20px;
   width: 100%;
+  margin-top: 80px;
 }

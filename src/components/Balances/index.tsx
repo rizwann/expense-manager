@@ -113,7 +113,7 @@ const TransactionSummary: React.FC = () => {
 
   return (
     <motion.div
-      className="p-6 mx-auto text-white bg-gray-900 rounded-lg shadow-lg max-w-7xl"
+      className="p-6 mx-auto text-white rounded-lg shadow-lg max-w-7xl"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
@@ -122,7 +122,7 @@ const TransactionSummary: React.FC = () => {
       <div className="flex flex-col items-center mb-12">
         {selectedHouseData && (
           <motion.div
-            className="mb-8"
+            className="flex flex-col items-center justify-center mb-8"
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5 }}

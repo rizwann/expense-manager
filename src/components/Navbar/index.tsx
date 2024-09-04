@@ -1,30 +1,61 @@
-import React, { useState } from "react";
-import { useAuth } from "../../hooks/useAuth";
-import "./navbar.scss";
-import { NavLink, useNavigate } from "react-router-dom";
-import { GridMenuIcon } from "@mui/x-data-grid";
-import { Button } from "@mui/material";
+import React, { useState, useRef, useEffect } from "react"
+import { useAuth } from "../../hooks/useAuth"
+import "./navbar.scss"
+import { NavLink, useNavigate } from "react-router-dom"
+import { GridMenuIcon } from "@mui/x-data-grid"
+import Menu from "../Menu"
+import { TuneRounded } from "@mui/icons-material"
 
 interface IProps {
-  toggleMenu: () => void;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const Navbar: React.FC<IProps> = ({ toggleMenu }) => {
-  const { logout, user } = useAuth();
-  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const navigate = useNavigate();
+const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
+  const { logout, user } = useAuth()
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false)
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
+  const navigate = useNavigate()
+  const preferencesRef = useRef<HTMLDivElement>(null)
+
+  const toggleMenu = () => {
+    setIsOpen((prev) => !prev)
+  }
 
   const togglePreferences = () => {
-    setIsPreferencesOpen(!isPreferencesOpen);
-  };
+    setIsPreferencesOpen((prev) => !prev)
+  }
 
   const handleLogout = async () => {
-    setIsLoggingOut(true);
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate logout delay
-    logout(); // Call the actual logout function
-    navigate("/login"); // Redirect to login or any other route
-  };
+    setIsLoggingOut(true)
+    await new Promise((resolve) => setTimeout(resolve, 1000)) // Simulate logout delay
+    logout() // Call the actual logout function
+    navigate("/login") // Redirect to login or any other route
+  }
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      preferencesRef.current &&
+      !preferencesRef.current.contains(event.target as Node)
+    ) {
+      setIsPreferencesOpen(false)
+    }
+  }
+
+  useEffect(() => {
+    if (isPreferencesOpen) {
+      document.addEventListener("mousedown", handleClickOutside)
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [isPreferencesOpen])
+
+  const handlePreferenceItemClick = () => {
+    setIsPreferencesOpen(false)
+  }
 
   return (
     <div className="navbar">
@@ -40,22 +71,17 @@ const Navbar: React.FC<IProps> = ({ toggleMenu }) => {
           </div>
         </div>
       )}
-      <div className="logo" onClick={toggleMenu}>
-        <GridMenuIcon />
+      <div className="logo">
+        <GridMenuIcon onClick={toggleMenu} />
         <NavLink to={"/"}>Expense Manager</NavLink>
       </div>
+      <div className="menu">
+        <Menu />
+      </div>
       <div className="icons">
-        <div className="notification">
-          <img src="/notifications.svg" alt="" />
-          <span>1</span>
-        </div>
         <div className="user">
           <img
-            src={
-              user?.image
-                ? user?.image
-                : "/noavatar.png"
-            }
+            src={user?.image ? user?.image : "/noavatar.png"}
             alt="store"
             onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) =>
               (e.currentTarget.src = "/noavatar.png")
@@ -63,29 +89,30 @@ const Navbar: React.FC<IProps> = ({ toggleMenu }) => {
           />
           <span>{user?.username}</span>
         </div>
-        <img
-          src="/settings.svg"
-          alt=""
-          className="icon"
+        <TuneRounded
           onClick={togglePreferences}
           style={{ cursor: "pointer" }}
         />
       </div>
 
       {isPreferencesOpen && (
-        <div className="preferences-popup">
+        <div className="preferences-popup" ref={preferencesRef}>
           <ul>
-            <NavLink to={`/users/${user?._id}`}>
+            <NavLink
+              to={`/users/${user?._id}`}
+              onClick={handlePreferenceItemClick}
+            >
               <li>Profile</li>
             </NavLink>
-
-            <li>About</li>
+            <NavLink to="/about" onClick={handlePreferenceItemClick}>
+              <li>About</li>
+            </NavLink>
             <li onClick={handleLogout}>Sign Out</li>
           </ul>
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar

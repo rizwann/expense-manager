@@ -2,13 +2,8 @@
 @import "../../styles/responsive.scss";
 
 .menu {
-  
+  display: flex;
   .item {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 20px;
-
     .title {
       font-size: 12px;
       font-weight: 200;
@@ -20,7 +15,8 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 10px;
+      margin-right: 5px;
+      padding: 7px;
       border-radius: 5px;
       
       img {
@@ -31,11 +27,8 @@
       &:hover {
         background-color: $soft-bg;
       }
-
-      .list-item-title {
-        @include md {
-          display: none;
-        }
+      &.active {
+        background-color: $soft-bg;
       }
     }
   }

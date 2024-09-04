@@ -15,54 +15,41 @@ export interface Expense {
 
 export const menu = [
   {
+    id: 5,
+    title: "Home",
+    url: "/",
+    icon: "/home.svg",
+  },
+  {
+    id: 5,
+    title: "Users",
+    url: "/users",
+    icon: "/userNames.svg",
+    restricted: true,
+  },
+  {
     id: 1,
-    title: "main",
-    listItems: [
-      {
-        id: 1,
-        title: "Homepage",
-        url: "/",
-        icon: "/home.svg",
-      },
-      {
-        id: 2,
-        title: "Users",
-        url: "/users",
-        icon: "/userNames.svg",
-        restricted: true,
-      },
-    ],
+    title: "Expenses",
+    url: "/expenses",
+    icon: "/expenses.svg",
   },
   {
     id: 2,
-    title: "lists",
-    listItems: [
-      {
-        id: 1,
-        title: "Expenses",
-        url: "/expenses",
-        icon: "/expenses.svg",
-      },
-      {
-        id: 2,
-        title: "Houses",
-        url: "/houses",
-        icon: "/houses.svg",
-      },
-      {
-        id: 3,
-        title: "Stores",
-        url: "/stores",
-        icon: "/storemenu.svg",
-      },
-      {
-        id: 4,
-        title: "Balance",
-        url: "/balance",
-        icon: "/balances.svg",
-      },
-     
-    ],
+    title: "Houses",
+    url: "/houses",
+    icon: "/houses.svg",
+  },
+  {
+    id: 3,
+    title: "Stores",
+    url: "/stores",
+    icon: "/storemenu.svg",
+  },
+  {
+    id: 4,
+    title: "Balance",
+    url: "/balance",
+    icon: "/balances.svg",
   },
 ];
 

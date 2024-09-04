@@ -7,6 +7,8 @@
   align-items: center;
   justify-content: space-between;
   background-color: #1c1c1c; // Dark background
+  position: fixed;
+  z-index: 1000;
 
   .logo {
     display: flex;
@@ -14,6 +16,11 @@
     font-weight: bold;
     gap: 10px;
     color: #fff;
+  } 
+  .menu {
+    @include md {
+      display: none
+    }
   }
 
   .icons {
