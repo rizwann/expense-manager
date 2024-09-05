@@ -1,5 +1,4 @@
 import TransactionSummary from '../../components/Balances'
-import { sampleData } from '../../menu-item'
 
 const Balances = () => {
   return (

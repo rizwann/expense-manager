@@ -76,19 +76,14 @@ const App = () => {
         <CssBaseline />
         <div className="main">
           <Navbar setIsOpen={setIsOpen} />
-
-          <div className="container">
-            {/* <div className={`menu-container ${open ? "close" : ""}`}>
-              <Menu />
-            </div> */}
+          <div className="main-container">
             <MobileMenu isOpen={isOpen} setIsOpen={setIsOpen} />
-
             <div className="content-container">
               <Outlet />
             </div>
           </div>
-          <Footer />
         </div>
+        <Footer />
       </ThemeProvider>
     )
   }
