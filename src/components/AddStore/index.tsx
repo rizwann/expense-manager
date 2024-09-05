@@ -4,6 +4,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Button } from "../Button";
+import { Close } from "@mui/icons-material";
 
 
 interface IProps {
@@ -92,7 +93,7 @@ const AddStore: React.FC<IProps> = ({ columns, setModalOpen, setRefresh, editDat
     <div className="add-store">
       <div className="modal-store">
         <span className="close" onClick={() => setModalOpen(false)}>
-          X
+          <Close />
         </span>
         <h1>{editData ? "Edit Store" : "Add New Store"}</h1>
         <form onSubmit={handleSubmit}>

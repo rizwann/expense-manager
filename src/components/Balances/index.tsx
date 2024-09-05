@@ -18,6 +18,13 @@ import {
 } from "@mui/icons-material"
 import { motion } from "framer-motion"
 import { useAuth } from "../../hooks/useAuth"
+import { months } from "../../menu-item"
+
+// Helper function to get the current year and month
+const getCurrentYear = () => new Date().getFullYear();
+const getCurrentMonth = () => new Date().toLocaleString('default', { month: 'long' });
+
+const years = Array.from({ length: 5 }, (_, i) => getCurrentYear() - i);
 
 const TransactionSummary: React.FC = () => {
   const { selectedHouse, user } = useAuth()
@@ -28,6 +35,8 @@ const TransactionSummary: React.FC = () => {
   const [selectedHouseLocal, setSelectedHouseLocal] = useState<string>(
     selectedHouse?.code || ""
   )
+  const [selectedMonth, setSelectedMonth] = useState<string>(getCurrentMonth())
+  const [selectedYear, setSelectedYear] = useState<number>(getCurrentYear())
   const isAdmin = user ? !!(user.username === "RizwanKabir") : false
 
   // Fetch houses for the dropdown
@@ -47,12 +56,13 @@ const TransactionSummary: React.FC = () => {
     }
   }
 
-  // Fetch transaction data for selected house
-  const fetchTransactionData = async (houseCode: string) => {
+  // Fetch transaction data for selected house, month, and year
+  const fetchTransactionData = async (houseCode: string, month: string, year: number) => {
+    const monthNumber = months.indexOf(month) + 1
     setLoading(true)
     try {
       const response = await axios.get<TransactionData>(
-        `${import.meta.env.VITE_API_URL}/api/expenses/balance/${houseCode}`,
+        `${import.meta.env.VITE_API_URL}/api/expenses/balance/${houseCode}/${monthNumber}/${year}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -69,14 +79,22 @@ const TransactionSummary: React.FC = () => {
 
   useEffect(() => {
     fetchHouses()
-    fetchTransactionData(selectedHouseLocal)
-  }, [selectedHouseLocal])
+    fetchTransactionData(selectedHouseLocal, selectedMonth, selectedYear)
+  }, [selectedHouseLocal, selectedMonth, selectedYear])
 
   const handleHouseChange = (
     event: SelectChangeEvent<string>,
     child: ReactNode
   ) => {
     setSelectedHouseLocal(event.target.value as string)
+  }
+
+  const handleMonthChange = (event: SelectChangeEvent<string>) => {
+    setSelectedMonth(event.target.value as string)
+  }
+
+  const handleYearChange = (event: SelectChangeEvent<number>) => {
+    setSelectedYear(event.target.value as number)
   }
 
   if (loading) {
@@ -117,7 +135,7 @@ const TransactionSummary: React.FC = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
-      style={{ minHeight: "calc(100vh - 120px)" }} // Adjusting height to take full remaining space
+      style={{ minHeight: "calc(100vh - 120px)" }}
     >
       <div className="flex flex-col items-center mb-12">
         {selectedHouseData && (
@@ -130,7 +148,7 @@ const TransactionSummary: React.FC = () => {
             <img
               src={selectedHouseData.image || "/app.svg"}
               alt={selectedHouseData.description}
-              className="object-cover w-32 h-32 border-4 border-gray-800 rounded-full shadow-lg ring-4 ring-gray-700"
+              className="object-cover w-32 h-32 border-4 border-gray-800 rounded-full shadow-lg ring-4 ring-blue-500"
               onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) =>
                 (e.currentTarget.src = "/app.svg")
               }
@@ -142,40 +160,78 @@ const TransactionSummary: React.FC = () => {
         )}
 
         <motion.div
-          className="w-full max-w-xs"
+          className="flex flex-col items-center justify-between w-full gap-5 p-4 mb-2 text-white md:flex-row "
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
-                <FormControl variant="outlined" className="w-full max-w-xs mb-6">
-          <InputLabel id="select-house-label">Select House</InputLabel>
-          <Select
-            labelId="select-house-label"
-            value={selectedHouseLocal}
-            onChange={handleHouseChange}
-            label="Select House"
-            className="text-white bg-gray-800"
-            renderValue={(selected) => {
-              const selectedHouse = houses.find(house => house.code === selected);
-              return selectedHouse ? selectedHouse.description : '';
-            }}
-          >
-            {houses.map((house) => (
-              <MenuItem key={house.code} value={house.code}>
-                <img
-                    src={house.image}
-                    alt={house.description}
-                    className="object-cover w-8 h-8 mr-2 border-4 border-gray-800 rounded-full ring-4 ring-gray-700"
-                    onError={(
-                      e: React.SyntheticEvent<HTMLImageElement, Event>
-                    ) => (e.currentTarget.src = "/app.svg")}
-                  />
-                {house.description}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+          {/* House selection */}
+          <FormControl variant="outlined" className="w-full mb-6">
+            <InputLabel id="select-house-label">Select House</InputLabel>
+            <Select
+              labelId="select-house-label"
+              value={selectedHouseLocal}
+              onChange={handleHouseChange}
+              label="Select House"
+              className="text-white bg-gray-800"
+              renderValue={(selected) => {
+                const selectedHouse = houses.find(house => house.code === selected);
+                return selectedHouse ? selectedHouse.description : '';
+              }}
+            >
+              {houses.map((house) => (
+                <MenuItem key={house.code} value={house.code}>
+                  {house.image ? <img
+                      src={house.image}
+                      alt={house.description}
+                      className="object-cover w-8 h-8 mr-2 border-4 border-gray-800 rounded-full ring-4 ring-gray-700"
+                      onError={(
+                        e: React.SyntheticEvent<HTMLImageElement, Event>
+                      ) => (e.currentTarget.src = "/app.svg")}
+                    />
+                    : <Home className="mr-2 text-gray-500 rounded-full ring-4 ring-gray-700" />
+                  }
+                  {house.description}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
 
+          {/* Month selection */}
+          <FormControl variant="outlined" className="w-full mb-4">
+            <InputLabel id="select-month-label">Select Month</InputLabel>
+            <Select
+              labelId="select-month-label"
+              value={selectedMonth}
+              onChange={handleMonthChange}
+              label="Select Month"
+              className="text-white bg-gray-800"
+            >
+              {months.map((month) => (
+                <MenuItem key={month} value={month}>
+                  {month}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          {/* Year selection */}
+          <FormControl variant="outlined" className="w-full mb-4">
+            <InputLabel id="select-year-label">Select Year</InputLabel>
+            <Select
+              labelId="select-year-label"
+              value={selectedYear}
+              onChange={handleYearChange}
+              label="Select Year"
+              className="text-white bg-gray-800"
+            >
+              {years.map((year) => (
+                <MenuItem key={year} value={year}>
+                  {year}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </motion.div>
       </div>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

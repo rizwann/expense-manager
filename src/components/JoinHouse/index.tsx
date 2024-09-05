@@ -4,6 +4,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Button } from "../Button";
+import { Close } from "@mui/icons-material";
 
 
 interface IProps {
@@ -25,8 +26,6 @@ const JoinHouse: React.FC<IProps> = ({ columns, setModalOpen, setRefresh }) => {
     Object.keys(formData).forEach((key) => {
       formDataToSend.append(key, formData[key]);
     });
-
-    console.log('formDataToSend',formDataToSend);
 
     try {
         await axios.post(
@@ -62,7 +61,7 @@ const JoinHouse: React.FC<IProps> = ({ columns, setModalOpen, setRefresh }) => {
     <div className="join-house">
       <div className="join-modal-house">
         <span className="close" onClick={() => setModalOpen(false)}>
-          X
+          <Close />
         </span>
         <h1>{"Join a House"}</h1>
         

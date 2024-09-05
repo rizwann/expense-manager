@@ -880,3 +880,8 @@ export const sampleData: TransactionData = {
   },
   transactions: [{ from: "Bonna", to: "RizwanKabir", amount: 11 }],
 };
+
+export const months = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];

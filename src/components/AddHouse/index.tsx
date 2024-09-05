@@ -4,6 +4,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Button } from "../Button";
+import { CloseRounded } from "@mui/icons-material";
 
 
 interface IProps {
@@ -92,7 +93,7 @@ const AddHouse: React.FC<IProps> = ({ columns, setModalOpen, setRefresh, editDat
     <div className="add-house">
       <div className="modal-house">
         <span className="close" onClick={() => setModalOpen(false)}>
-          X
+          <CloseRounded />
         </span>
         <h1>{editData ? "Edit House" : "Add New House"}</h1>
         <form onSubmit={handleSubmit}>

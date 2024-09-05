@@ -2,12 +2,13 @@ import { useEffect, useState } from "react"
 import "./addExpense.scss"
 import { House, IUser, Store } from "../../types"
 import axios from "axios"
-import { Collapse, Switch, Checkbox, FormControlLabel } from "@mui/material"
+import { Collapse, Switch, Checkbox, FormControlLabel, Select } from "@mui/material"
 import CustomDropdown from "../CustomDropDown"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { useAuth } from "../../hooks/useAuth"
 import Button from "../../pages/components/Button"
+import { Close } from "@mui/icons-material"
 
 interface IProps {
   slug: string
@@ -193,7 +194,7 @@ const Add: React.FC<IProps> = ({
     <div className="add-expense">
       <div className="modal-expense">
         <span className="close" onClick={() => setModalOpen(false)}>
-          X
+          <Close />
         </span>
         <h1>{editData ? `Edit ${slug}` : `Add New ${slug}`}</h1>
         <form onSubmit={handleSubmit} style={{display:'contents', marginTop: "20px"}}>
@@ -220,46 +221,49 @@ const Add: React.FC<IProps> = ({
                                   [column.field]: e.target.value,
                                 }))
                               }
-                              required={column.field === "cost" || column.field === "description"}
+                              required={
+                                column.field === "cost" ||
+                                column.field === "description"
+                              }
                             />
                           )
                         case "date":
                           return (
                             <div className="switch-container">
-                              { !editData && (
+                              {!editData && (
                                 <div>
-                                <FormControlLabel
-                                  control={
-                                    <Switch
-                                      checked={selectCustomTime}
-                                      onChange={() =>
-                                        setSelectCustomTime(!selectCustomTime)
-                                      }
-                                      inputProps={{
-                                        "aria-label": "controlled",
-                                      }}
-                                    />
-                                  }
-                                  label="Custom Time"
-                                />
-                                <Collapse
-                                  in={selectCustomTime}
-                                  style={{ marginTop: "10px" }}
-                                >
-                                  <input
-                                    type="datetime-local"
-                                    placeholder={column.headerName}
-                                    name={column.field}
-                                    value={formData[column.field] || ""}
-                                    onChange={(e) =>
-                                      setFormData((prev) => ({
-                                        ...prev,
-                                        [column.field]: e.target.value,
-                                      }))
+                                  <FormControlLabel
+                                    control={
+                                      <Switch
+                                        checked={selectCustomTime}
+                                        onChange={() =>
+                                          setSelectCustomTime(!selectCustomTime)
+                                        }
+                                        inputProps={{
+                                          "aria-label": "controlled",
+                                        }}
+                                      />
                                     }
+                                    label="Custom Time"
                                   />
-                                </Collapse>
-                              </div>
+                                  <Collapse
+                                    in={selectCustomTime}
+                                    style={{ marginTop: "10px" }}
+                                  >
+                                    <input
+                                      type="datetime-local"
+                                      placeholder={column.headerName}
+                                      name={column.field}
+                                      value={formData[column.field] || ""}
+                                      onChange={(e) =>
+                                        setFormData((prev) => ({
+                                          ...prev,
+                                          [column.field]: e.target.value,
+                                        }))
+                                      }
+                                    />
+                                  </Collapse>
+                                </div>
                               )}
                               <div>
                                 {!editData && (
@@ -275,7 +279,6 @@ const Add: React.FC<IProps> = ({
                                             "aria-label": "controlled",
                                           }}
                                         />
-                                        
                                       }
                                       label="Paid by me"
                                     />
@@ -286,19 +289,21 @@ const Add: React.FC<IProps> = ({
                                         onChange={(e) =>
                                           setSelectedPayer(e.target.value)
                                         }
-                                        required = {!paidByMe}
+                                        required={!paidByMe}
                                       >
                                         <option value="" disabled>
                                           Select Payer
                                         </option>
-                                        {houseUsers.filter(u => u._id !== userId).map((user) => (
-                                          <option
-                                            key={user._id}
-                                            value={user._id}
-                                          >
-                                            {user.username}
-                                          </option>
-                                        ))}
+                                        {houseUsers
+                                          .filter((u) => u._id !== userId)
+                                          .map((user) => (
+                                            <option
+                                              key={user._id}
+                                              value={user._id}
+                                            >
+                                              {user.username}
+                                            </option>
+                                          ))}
                                       </select>
                                     </Collapse>
                                   </div>
@@ -310,12 +315,12 @@ const Add: React.FC<IProps> = ({
                           if (column.field === "storeName") {
                             return (
                               <select
-                                name={"storeId"}
-                                value={formData.storeId || ""}
+                                name={column.field}
+                                value={formData.storeName || ""}
                                 onChange={(e) =>
                                   setFormData((prev) => ({
                                     ...prev,
-                                    storeId: e.target.value,
+                                    storeName: e.target.value,
                                   }))
                                 }
                                 required
@@ -324,7 +329,7 @@ const Add: React.FC<IProps> = ({
                                   Select Store
                                 </option>
                                 {stores.map((store) => (
-                                  <option key={store._id} value={store._id}>
+                                  <option key={store._id} value={store.name}>
                                     {store.name}
                                   </option>
                                 ))}

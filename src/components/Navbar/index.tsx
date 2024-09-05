@@ -80,19 +80,18 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
       </div>
       <div className="icons">
         <div className="user">
+          <span>{user?.username}</span>
           <img
             src={user?.image ? user?.image : "/noavatar.png"}
             alt="store"
             onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) =>
               (e.currentTarget.src = "/noavatar.png")
             }
+            onClick={togglePreferences}
+            style={{ cursor: "pointer" }}
+            className=" ring-2 ring-black-300"
           />
-          <span>{user?.username}</span>
         </div>
-        <TuneRounded
-          onClick={togglePreferences}
-          style={{ cursor: "pointer" }}
-        />
       </div>
 
       {isPreferencesOpen && (

@@ -4,6 +4,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Button } from "../Button";
+import { Close } from "@mui/icons-material";
 
 interface IProps {
   columns: any[];
@@ -110,7 +111,7 @@ const AddUser: React.FC<IProps> = ({ columns, setModalOpen, setRefresh, editData
     <div className="add-user">
       <div className="modal-user">
         <span className="close" onClick={() => setModalOpen(false)}>
-          X
+          <Close />
         </span>
         <h1>{editData ? "Edit User" : "Add New User"}</h1>
         <form onSubmit={handleSubmit}>

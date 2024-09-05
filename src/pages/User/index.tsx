@@ -112,17 +112,12 @@ const SingleUser: React.FC = () => {
     <div className="single">
       <div className="view">
         <div className="info">
-          {/* <div className="back-btn">
-            <NavLink to="/Users">
-              <Button text="Back" />
-            </NavLink>
-          </div> */}
           <div className="top-info">
           <img
-            src={user?.image}
+            src={user?.image || "/noavatar.svg"}
             alt={user?.name || "user"}
             onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) =>
-              (e.currentTarget.src = "/app.svg")
+              (e.currentTarget.src = "/noavatar.svg")
             }
           />
             <h1>{user?.username}</h1>

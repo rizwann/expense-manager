@@ -172,7 +172,11 @@ const Home = (props: Props) => {
           >
             {houses.map((house) => (
               <MenuItem key={house.code} value={house.code}>
-                <HomeIcon className="mr-2 text-gray-500" />
+                {house.image ? <img src={house.image} className="mr-2 text-gray-500 ring-4 ring-gray-500" 
+                style={{width: "20px", height: "20px", borderRadius: "50%"}}
+                />:
+                <HomeIcon className="mr-2 text-gray-500"/>
+                }
                 {house.description}
               </MenuItem>
             ))}
