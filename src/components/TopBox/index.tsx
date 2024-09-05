@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { Expense, IUser } from "../../types"
 import "./topBox.scss"
 import axios from "axios"
+import { NavLink } from "react-router-dom"
 
 interface IProps {
   user: IUser
@@ -42,8 +43,10 @@ const TopBox: React.FC<IProps> = ({ user, houseCode }) => {
             day: "numeric",
           })
           return (
-            <div className="list-item" key={expense._id}>
-              <div className="user">
+            <div className="list-item" key={expense._id}
+              
+            >
+              <NavLink className="user" to={`/expenses/${expense._id}`}>
                 <img  src={expense?.storeImg}
             alt={user?.name || "user"}
             onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) =>
@@ -54,7 +57,7 @@ const TopBox: React.FC<IProps> = ({ user, houseCode }) => {
                   <span className="storename">{expense.storeName}</span>
                   <span className="date">{date}</span>
                 </div>
-              </div>
+              </NavLink>
               <span className="amount">€{expense.cost.toFixed(2)}</span>
             </div>
           )
