@@ -315,12 +315,12 @@ const Add: React.FC<IProps> = ({
                           if (column.field === "storeName") {
                             return (
                               <select
-                                name={column.field}
-                                value={formData.storeName || ""}
+                              name={"storeId"}
+                              value={formData.storeId || ""}
                                 onChange={(e) =>
                                   setFormData((prev) => ({
                                     ...prev,
-                                    storeName: e.target.value,
+                                    storeId: e.target.value,
                                   }))
                                 }
                                 required
@@ -329,7 +329,7 @@ const Add: React.FC<IProps> = ({
                                   Select Store
                                 </option>
                                 {stores.map((store) => (
-                                  <option key={store._id} value={store.name}>
+                                  <option key={store._id} value={store._id}>
                                     {store.name}
                                   </option>
                                 ))}
