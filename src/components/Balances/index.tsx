@@ -128,7 +128,7 @@ const TransactionSummary: React.FC = () => {
             transition={{ duration: 0.5 }}
           >
             <img
-              src={selectedHouseData.image}
+              src={selectedHouseData.image || "/app.svg"}
               alt={selectedHouseData.description}
               className="object-cover w-32 h-32 border-4 border-gray-800 rounded-full shadow-lg ring-4 ring-gray-700"
               onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) =>
