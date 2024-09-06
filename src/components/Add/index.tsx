@@ -2,7 +2,13 @@ import { useEffect, useRef, useState } from "react"
 import "./addExpense.scss"
 import { House, IUser, Store } from "../../types"
 import axios from "axios"
-import { Collapse, Switch, Checkbox, FormControlLabel, Select } from "@mui/material"
+import {
+  Collapse,
+  Switch,
+  Checkbox,
+  FormControlLabel,
+  Select,
+} from "@mui/material"
 import CustomDropdown from "../CustomDropDown"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
@@ -48,15 +54,15 @@ const Add: React.FC<IProps> = ({
   const [selectedPayer, setSelectedPayer] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [formData, setFormData] = useState<{ [key: string]: any }>({})
-  const [filteredStores, setFilteredStores] = useState<Store[]>([]);
-  const [selectedStore, setSelectedStore] = useState<string | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [filteredStores, setFilteredStores] = useState<Store[]>([])
+  const [selectedStore, setSelectedStore] = useState<string | null>(null)
+  const [searchTerm, setSearchTerm] = useState("")
+  const [showSuggestions, setShowSuggestions] = useState(false)
 
   const token = localStorage.getItem("token")
   const { user } = useAuth()
   const userId = user?._id
-  const containerRef = useRef<HTMLDivElement>(null); // Explicitly typing the ref
+  const containerRef = useRef<HTMLDivElement>(null) // Explicitly typing the ref
   // Ref for the dropdown container
 
   useEffect(() => {
@@ -84,39 +90,39 @@ const Add: React.FC<IProps> = ({
     fetchHouses()
   }, [token])
 
-   // Filter stores based on search term
+  // Filter stores based on search term
   useEffect(() => {
     if (searchTerm.length > 0) {
       const filtered = stores.filter((store) =>
         store.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setFilteredStores(filtered);
-      setShowSuggestions(true);
+      )
+      setFilteredStores(filtered)
+      setShowSuggestions(true)
     } else {
-      setShowSuggestions(false);
+      setShowSuggestions(false)
     }
-  }, [searchTerm, stores]);
+  }, [searchTerm, stores])
   const handleStoreSelect = (storeId: string, storeName: string) => {
-    setSelectedStore(storeId);
-    // setSearchTerm(storeName); // Set the searchTerm to the store name when selected
-    setShowSuggestions(false); // Hide the suggestions after selection
-  };
-
-
-
+    setSelectedStore(storeId)
+    setSearchTerm(storeName) // Set the searchTerm to the store name when selected
+    setShowSuggestions(false) // Hide the suggestions after selection
+  }
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       // Ensure containerRef.current is defined and not null
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setShowSuggestions(false); // Close suggestions when clicking outside
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setShowSuggestions(false) // Close suggestions when clicking outside
       }
-    };
+    }
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside)
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [])
   useEffect(() => {
     if (selectedHouse) {
       const fetchHouseUsers = async () => {
@@ -146,6 +152,8 @@ const Add: React.FC<IProps> = ({
       setSelectedUsers(editData.involvedUsers || [])
       setPaidByMe(editData.paymentPerson === userId)
       setSelectedPayer(editData.paymentPerson || null)
+      const selectedStoreName = editData.storeName
+      setSearchTerm(selectedStoreName || "")
 
       const selectedHouse = houses.find(
         (house) => house.code === editData.houseCode
@@ -177,7 +185,6 @@ const Add: React.FC<IProps> = ({
     }
   }, [editData, selectedHouse, token])
 
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
@@ -191,9 +198,8 @@ const Add: React.FC<IProps> = ({
         data[key] = value
       }
     })
-    data.storeId= selectedStore,
-
-    data.paymentPerson = paidByMe ? userId : selectedPayer
+    ;(data.storeId = selectedStore),
+      (data.paymentPerson = paidByMe ? userId : selectedPayer)
 
     try {
       if (editData) {
@@ -243,7 +249,10 @@ const Add: React.FC<IProps> = ({
           <Close />
         </span>
         <h1>{editData ? `Edit ${slug}` : `Add New ${slug}`}</h1>
-        <form onSubmit={handleSubmit} style={{display:'contents', marginTop: "20px"}}>
+        <form
+          onSubmit={handleSubmit}
+          style={{ display: "contents", marginTop: "20px" }}
+        >
           <div className="item-container">
             {columns
               .filter((item) => item.field !== "id")
@@ -357,40 +366,53 @@ const Add: React.FC<IProps> = ({
                               </div>
                             </div>
                           )
-                          case "select":
-                            if (column.field === "storeName") {
-                              return (
-                                <div className="relative w-full" ref={containerRef}>
+                        case "select":
+                          if (column.field === "storeName") {
+                            return (
+                              <div
+                                className="relative w-full"
+                                ref={containerRef}
+                              >
                                 <input
                                   type="text"
                                   placeholder="Search store..."
-                                  value={selectedStore ? stores.find((store) => store._id === selectedStore)?.name : searchTerm}
-                                  onChange={(e) => setSearchTerm(e.target.value)}
+                                  value={searchTerm}
+                                  onChange={(e) =>
+                                    setSearchTerm(e.target.value)
+                                  }
                                   onFocus={() => setShowSuggestions(true)} // Show suggestions when input is focused
                                   className="w-full px-4 py-2 text-white bg-gray-800 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
-                                {showSuggestions && filteredStores.length > 0 && (
-                                  <ul className="absolute z-10 w-full mt-1 overflow-y-auto bg-gray-800 border border-gray-600 rounded-md shadow-lg max-h-60">
-                                    {filteredStores.map((store) => (
-                                      <li
-                                        key={store._id}
-                                        onClick={() => {
-                                          
-                                          setShowSuggestions(false); // Close suggestions after selecting
-                                          handleStoreSelect(store._id, store.name);
-                                        }}
-                                        className="flex items-center gap-3 px-4 py-2 text-white cursor-pointer hover:bg-gray-700"
-                                      >
-                                        <img src={store.image || "/app.svg"} alt={store.name} className="w-8 h-8 rounded-full" />
-                                        <div className="text-sm" >{store.name}</div>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                )}
+                                {showSuggestions &&
+                                  filteredStores.length > 0 && (
+                                    <ul className="absolute z-10 w-full mt-1 overflow-y-auto bg-gray-800 border border-gray-600 rounded-md shadow-lg max-h-60">
+                                      {filteredStores.map((store) => (
+                                        <li
+                                          key={store._id}
+                                          onClick={() => {
+                                            setShowSuggestions(false) // Close suggestions after selecting
+                                            handleStoreSelect(
+                                              store._id,
+                                              store.name
+                                            )
+                                          }}
+                                          className="flex items-center gap-3 px-4 py-2 text-white cursor-pointer hover:bg-gray-700"
+                                        >
+                                          <img
+                                            src={store.image || "/app.svg"}
+                                            alt={store.name}
+                                            className="w-8 h-8 rounded-full"
+                                          />
+                                          <div className="text-sm">
+                                            {store.name}
+                                          </div>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  )}
                               </div>
-
-                              );
-                            } else if (column.field === "category") {
+                            )
+                          } else if (column.field === "category") {
                             return (
                               <select
                                 name={column.field}
