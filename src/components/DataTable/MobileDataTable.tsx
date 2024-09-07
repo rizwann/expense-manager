@@ -29,6 +29,13 @@ const MobileDataTable: React.FC<Props> = ({
   const [searchTerm, setSearchTerm] = useState<string>("")
   const [filteredRows, setFilteredRows] = useState(rows)
 
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  // Calculate the total number of pages
+  const totalPages = Math.ceil(filteredRows.length / rowsPerPage);
+
   useEffect(() => {
     setFilteredRows(
       rows.filter((row: any) =>
@@ -112,8 +119,20 @@ const MobileDataTable: React.FC<Props> = ({
     setLeaveHouseId(null);
   }
 
-  //if date is there sort the rows by date, new to old
- 
+  // Pagination logic
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setRowsPerPage(Number(event.target.value));
+    setCurrentPage(1); // Reset to first page when changing rows per page
+  };
+
+  const paginatedRows = filteredRows.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
 
   return (
     <div className="card-container">
@@ -125,66 +144,105 @@ const MobileDataTable: React.FC<Props> = ({
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
+      
       {filteredRows.length > 0 ? (
-        filteredRows.map((row) => (
-          <div className="card" key={row._id}>
-            <div className="card-left-border"></div>
-            <div className="card-content">
-              <div className="card-header">
-                <h3>{row.description || row.name || "No Name"}</h3>
-                <div className="card-actions">
-                  <Link to={`/${slug}/${row._id}`}>
-                    <img src="/view.svg" alt="View" />
-                  </Link>
-                  <div
-                    className="delete"
-                    onClick={() => {
-                      setDeleteId(row._id)
-                      if (slug === 'Houses'){
-                        setName(row.description);
-                      } else {
-                      setName(row.name);
-                      }
-                      setIsModalOpen(true)
-                    }}
-                  >
-                    <img src="/delete.svg" alt="Delete" />
+        <>
+          {paginatedRows.map((row) => (
+            <div className="card" key={row._id}>
+              <div className="card-left-border"></div>
+              <div className="card-content">
+                <div className="card-header">
+                  <h3>{row.description || row.name || "No Name"}</h3>
+                  <div className="card-actions">
+                    <Link to={`/${slug}/${row._id}`}>
+                      <img src="/view.svg" alt="View" />
+                    </Link>
+                    <div
+                      className="delete"
+                      onClick={() => {
+                        setDeleteId(row._id)
+                        if (slug === 'Houses'){
+                          setName(row.description);
+                        } else {
+                        setName(row.name);
+                        }
+                        setIsModalOpen(true)
+                      }}
+                    >
+                      <img src="/delete.svg" alt="Delete" />
+                    </div>
+                    { slug === "Houses" && <div
+                      className="leave"
+                      onClick={() => {
+                        setLeaveHouseId(row.code);
+                        setLeaveHouseName(row.description);
+                        setIsLeaveHouseModalOpen(true);
+                      }}
+                    >
+                      <img src="/leave.svg" alt="Leave" />
+                    </div>}
                   </div>
-                  { slug === "Houses" && <div
-                    className="leave"
-                    onClick={() => {
-                      setLeaveHouseId(row.code);
-                      setLeaveHouseName(row.description);
-                      setIsLeaveHouseModalOpen(true);
-                    }}
-                  >
-                    <img src="/leave.svg" alt="Leave" />
-                  </div>}
+                </div>
+                <div className="card-body">
+                  {columns.map(
+                    (col) =>
+                      col.field !== "name" && col.field !== "description" && col.field !== "image" &&
+                      col.field !== "id" && col.field !== "houseNames" && (
+                        <div key={col.field} className="card-item">
+                          <div className="card-item-header">
+                            <img src={`/${col.field}.svg`} alt={col.headerName} />
+                            <span>{col.headerName}:</span>
+                          </div>
+                          <span className="card-item-value">
+                            {getColumnValue(row, col)}
+                          </span>
+                        </div>
+                      )
+                  )}
                 </div>
               </div>
-              <div className="card-body">
-                {columns.map(
-                  (col) =>
-                    col.field !== "name" && col.field !== "description" && col.field !== "image" &&
-                    col.field !== "id" && col.field !== "houseNames" && (
-                      <div key={col.field} className="card-item">
-                        <div className="card-item-header">
-                          <img src={`/${col.field}.svg`} alt={col.headerName} />
-                          <span>{col.headerName}:</span>
-                        </div>
-                        <span className="card-item-value">
-                          {getColumnValue(row, col)}
-                        </span>
-                      </div>
-                    )
-                )}
-              </div>
+            </div>
+          ))}
+
+          {/* Pagination */}
+          <div className="flex items-center justify-between gap-3 mt-4 pagination-container">
+            <div className="flex items-center">
+              <label htmlFor="rowsPerPage" className="mr-2">Rows per page:</label>
+              <select
+                id="rowsPerPage"
+                value={rowsPerPage}
+                onChange={handleRowsPerPageChange}
+                className="px-2 py-1 text-gray-700 bg-gray-200 border rounded"
+              >
+                <option value={5}>5</option>
+                <option value={10}>10</option>
+                <option value={20}>20</option>
+              </select>
+            </div>
+
+            <div className="flex items-center space-x-2 pagination-buttons">
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="px-3 py-1 text-white bg-gray-700 rounded disabled:opacity-50"
+              >
+                &larr;
+              </button>
+              <span>{currentPage} of {totalPages}</span>
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="px-3 py-1 text-white bg-gray-700 rounded disabled:opacity-50"
+              >
+                &rarr;
+              </button>
             </div>
           </div>
-        ))
+        </>
       ) : (
         <p>No records found</p>
       )}
+
       <ConfirmationModal
         open={isModalOpen}
         onClose={handleCloseModal}

@@ -5,16 +5,17 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Button } from "../Button";
 import { Close } from "@mui/icons-material";
-
+import { Modal } from "@mui/material";
 
 interface IProps {
   columns: any[];
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setRefresh?: React.Dispatch<React.SetStateAction<boolean>>;
   editData?: any; // Data to be edited, if applicable
+  modalOpen: boolean;
 }
 
-const AddStore: React.FC<IProps> = ({ columns, setModalOpen, setRefresh, editData }) => {
+const AddStore: React.FC<IProps> = ({ columns, setModalOpen, setRefresh, editData, modalOpen }) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [formData, setFormData] = useState<{ [key: string]: any }>({});
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -90,6 +91,12 @@ const AddStore: React.FC<IProps> = ({ columns, setModalOpen, setRefresh, editDat
   };
 
   return (
+    <Modal
+    open={modalOpen}
+    onClose={() => setModalOpen(false)}
+    aria-labelledby="modal-modal-title"
+    aria-describedby="modal-modal-description"
+    >
     <div className="add-store">
       <div className="modal-store">
         <span className="close" onClick={() => setModalOpen(false)}>
@@ -156,6 +163,7 @@ const AddStore: React.FC<IProps> = ({ columns, setModalOpen, setRefresh, editDat
         </form>
       </div>
     </div>
+    </Modal>
   );
 };
 

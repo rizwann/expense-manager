@@ -134,13 +134,12 @@ const Users = () => {
         rows={users.map((user) => ({ ...user, id: user._id }))}
         handleDelete={handleDelete}
       />
-      {modalOpen && (
         <AddUser
           setModalOpen={setModalOpen}
           setRefresh={setRefresh}
           columns={config.userFields}
+          modalOpen={modalOpen}
         />
-      )}
       <Toaster />
     </div>
   )

@@ -5,20 +5,19 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Button } from "../Button";
 import { Close } from "@mui/icons-material";
-
+import { Modal } from "@mui/material";
 
 interface IProps {
   columns: any[];
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setRefresh?: React.Dispatch<React.SetStateAction<boolean>>;
+  modalOpen: boolean;
 }
 
-const JoinHouse: React.FC<IProps> = ({ columns, setModalOpen, setRefresh }) => {
+const JoinHouse: React.FC<IProps> = ({ columns, setModalOpen, setRefresh, modalOpen }) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [formData, setFormData] = useState<{ [key: string]: any }>({});
   const token = localStorage.getItem("token");
-
-
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -58,6 +57,7 @@ const JoinHouse: React.FC<IProps> = ({ columns, setModalOpen, setRefresh }) => {
   };
 
   return (
+    <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
     <div className="join-house">
       <div className="join-modal-house">
         <span className="close" onClick={() => setModalOpen(false)}>
@@ -98,6 +98,7 @@ const JoinHouse: React.FC<IProps> = ({ columns, setModalOpen, setRefresh }) => {
         </form>
       </div>
     </div>
+    </Modal>
   );
 };
 

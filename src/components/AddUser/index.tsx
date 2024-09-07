@@ -5,15 +5,17 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Button } from "../Button";
 import { Close } from "@mui/icons-material";
+import { Modal } from "@mui/material";
 
 interface IProps {
   columns: any[];
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setRefresh?: React.Dispatch<React.SetStateAction<boolean>>;
   editData?: any; // Data to be edited, if applicable
+  modalOpen: boolean;
 }
 
-const AddUser: React.FC<IProps> = ({ columns, setModalOpen, setRefresh, editData }) => {
+const AddUser: React.FC<IProps> = ({ columns, setModalOpen, setRefresh, editData, modalOpen }) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [confirmPasswordError, setConfirmPasswordError] = useState<string | null>(null);
@@ -108,6 +110,7 @@ const AddUser: React.FC<IProps> = ({ columns, setModalOpen, setRefresh, editData
   };
 
   return (
+    <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
     <div className="add-user">
       <div className="modal-user">
         <span className="close" onClick={() => setModalOpen(false)}>
@@ -221,6 +224,7 @@ const AddUser: React.FC<IProps> = ({ columns, setModalOpen, setRefresh, editData
         </form>
       </div>
     </div>
+    </Modal>
   );
 };
 

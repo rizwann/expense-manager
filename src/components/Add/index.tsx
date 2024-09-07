@@ -7,7 +7,7 @@ import {
   Switch,
   Checkbox,
   FormControlLabel,
-  Select,
+  Modal,
 } from "@mui/material"
 import CustomDropdown from "../CustomDropDown"
 import { toast } from "react-toastify"
@@ -22,6 +22,7 @@ interface IProps {
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>
   setRefresh?: React.Dispatch<React.SetStateAction<boolean>>
   editData?: any // Data to be edited, if applicable
+  modalOpen: boolean
 }
 
 enum CategoryName {
@@ -43,6 +44,7 @@ const Add: React.FC<IProps> = ({
   setModalOpen,
   setRefresh,
   editData,
+  modalOpen
 }) => {
   const [stores, setStores] = useState<Store[]>([])
   const [houses, setHouses] = useState<House[]>([])
@@ -243,6 +245,12 @@ const Add: React.FC<IProps> = ({
   }
 
   return (
+    <Modal
+      open={modalOpen}
+      onClose={() => setModalOpen(false)}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
     <div className="add-expense">
       <div className="modal-expense">
         <span className="close" onClick={() => setModalOpen(false)}>
@@ -485,6 +493,7 @@ const Add: React.FC<IProps> = ({
         </form>
       </div>
     </div>
+    </Modal>
   )
 }
 

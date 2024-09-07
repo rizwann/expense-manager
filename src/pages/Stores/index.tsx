@@ -9,7 +9,6 @@ import { toast } from "react-toastify"
 import AddStore from "../../components/AddStore"
 import Button from "../components/Button"
 import Toaster from "../../components/Toaster"
-import { set } from "react-hook-form"
 import Spinner from "../../components/Spinner"
 
 type Props = {}
@@ -102,13 +101,12 @@ const Stores = (props: Props) => {
         slug="stores"
         handleDelete={handleDelete}
       />
-      {modalOpen && (
         <AddStore
           setModalOpen={setModalOpen}
           columns={config.storeFields}
           setRefresh={setRefresh}
+          modalOpen={modalOpen}
         />
-      )}
        <Toaster />
     </div>
   )

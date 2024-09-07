@@ -352,14 +352,14 @@ const Expenses = (props: Props) => {
         slug="expenses"
         handleDelete={handleDelete}
       />
-      {modalOpen && (
+     
         <Add
           setModalOpen={setModalOpen}
           slug="Expense"
           columns={config.expenseFields}
           setRefresh={setRefresh}
+          modalOpen={modalOpen}
         />
-      )}
       <Toaster />
     </div>
   )

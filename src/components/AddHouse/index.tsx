@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Button } from "../Button";
 import { CloseRounded } from "@mui/icons-material";
+import { Modal } from "@mui/material";
 
 
 interface IProps {
@@ -12,9 +13,10 @@ interface IProps {
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setRefresh?: React.Dispatch<React.SetStateAction<boolean>>;
   editData?: any; // Data to be edited, if applicable
+  modalOpen: boolean;
 }
 
-const AddHouse: React.FC<IProps> = ({ columns, setModalOpen, setRefresh, editData }) => {
+const AddHouse: React.FC<IProps> = ({ columns, setModalOpen, setRefresh, editData, modalOpen }) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [formData, setFormData] = useState<{ [key: string]: any }>({});
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -43,8 +45,6 @@ const AddHouse: React.FC<IProps> = ({ columns, setModalOpen, setRefresh, editDat
     Object.keys(formData).forEach((key) => {
       formDataToSend.append(key, formData[key]);
     });
-
-    console.log('formDataToSend',formDataToSend);
 
     try {
       if (editData) {
@@ -90,6 +90,7 @@ const AddHouse: React.FC<IProps> = ({ columns, setModalOpen, setRefresh, editDat
   };
 
   return (
+    <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
     <div className="add-house">
       <div className="modal-house">
         <span className="close" onClick={() => setModalOpen(false)}>
@@ -156,6 +157,7 @@ const AddHouse: React.FC<IProps> = ({ columns, setModalOpen, setRefresh, editDat
         </form>
       </div>
     </div>
+    </Modal>
   );
 };
 

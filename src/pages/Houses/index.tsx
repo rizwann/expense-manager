@@ -153,20 +153,20 @@ const Houses = (props: Props) => {
         handleDelete={handleDelete}
         handleLeaveHouse={handleLeaveHouse}
       />
-      {modalOpen && (
         <AddHouse
           setModalOpen={setModalOpen}
           columns={config.houseFields}
           setRefresh={setRefresh}
+          modalOpen={modalOpen}
         />
-      )}
-      {joinHouseModal && (
+
         <JoinHouse
           setModalOpen={setJoinHouseModal}
           columns={config.houseFields.filter((field) => field.field === "code")}
           setRefresh={setRefresh}
+          modalOpen={joinHouseModal}
         />
-      )}
+
       <Toaster />
     </div>
   )
