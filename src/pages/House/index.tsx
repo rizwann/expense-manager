@@ -107,14 +107,13 @@ const HouseDetail = () => {
          
         </div>
       </div>
-      {modalOpen && (
         <AddHouse
           columns={config.houseFields}
           setModalOpen={setModalOpen}
           editData={house}
           setRefresh={setRefresh}
+          modalOpen={modalOpen}
         />
-      )}
       <ToastContainer />
     </div>
   )

@@ -66,7 +66,6 @@ const ChartBox: React.FC<ChartBoxProps> = ({
           )
           chartData = res?.last6Months
           iData = res
-          console.log("heda", res?.last6Months)
           break
         case "popularStore":
           const resStore = await fetchPopularStoreExpenses(

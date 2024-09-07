@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Button } from "../Button";
 import { Close } from "@mui/icons-material";
 import { Modal } from "@mui/material";
+import { set } from "react-hook-form";
 
 interface IProps {
   columns: any[];
@@ -94,6 +95,8 @@ const AddUser: React.FC<IProps> = ({ columns, setModalOpen, setRefresh, editData
       }
       setRefresh && setRefresh((prev) => !prev);
       setModalOpen(false);
+      setFormData({})
+      setImagePreview(null);
     } catch (error: any) {
       if (error.response) {
         setErrorMessage(

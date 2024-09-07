@@ -99,16 +99,18 @@ const Add: React.FC<IProps> = ({
         store.name.toLowerCase().includes(searchTerm.toLowerCase())
       )
       setFilteredStores(filtered)
-      setShowSuggestions(true)
+      // setShowSuggestions(true)
     } else {
       setShowSuggestions(false)
     }
   }, [searchTerm, stores])
+
   const handleStoreSelect = (storeId: string, storeName: string) => {
     setSelectedStore(storeId)
     setSearchTerm(storeName) // Set the searchTerm to the store name when selected
     setShowSuggestions(false) // Hide the suggestions after selection
   }
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       // Ensure containerRef.current is defined and not null
@@ -125,6 +127,7 @@ const Add: React.FC<IProps> = ({
       document.removeEventListener("mousedown", handleClickOutside)
     }
   }, [])
+  
   useEffect(() => {
     if (selectedHouse) {
       const fetchHouseUsers = async () => {
@@ -200,8 +203,9 @@ const Add: React.FC<IProps> = ({
         data[key] = value
       }
     })
-    ;(data.storeId = selectedStore),
-      (data.paymentPerson = paidByMe ? userId : selectedPayer)
+
+    data.storeId = selectedStore
+    data.paymentPerson = paidByMe ? userId : selectedPayer
 
     try {
       if (editData) {
@@ -229,6 +233,13 @@ const Add: React.FC<IProps> = ({
       }
       setRefresh && setRefresh((prev) => !prev)
       setModalOpen(false)
+      // Reset the form data
+      setFormData({})
+      setSelectedUsers([])
+      setSelectedPayer(null)
+      setSearchTerm("")
+      setSelectedStore(null)
+      setSelectedHouse(null)
     } catch (error: any) {
       if (error.response) {
         setErrorMessage(

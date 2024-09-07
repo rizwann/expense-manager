@@ -235,7 +235,7 @@ const Home = (props: Props) => {
           )}
         </div>
         <div className="box box7">
-          {selectedHouseData && <BigChart selectedHouse={selectedHouseData} />}
+          {selectedHouseData && <BigChart dataKey="expenses" selectedHouse={selectedHouseData} />}
         </div>
         <div className="box box8">
           {selectedHouseData && (

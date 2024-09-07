@@ -34,7 +34,6 @@ const PieChartBox: React.FC<PieChartBoxProps> = ({ user, selectedHouse }) => {
     fetchChartData()
   }, [user, token])
 
-  console.log("voda", data)
   return (
     <div className="pieChartBox">
       <h1>In-house Expenses by Store</h1>

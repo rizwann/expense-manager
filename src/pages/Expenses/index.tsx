@@ -11,11 +11,9 @@ import { toast } from "react-toastify"
 import { useAuth } from "../../hooks/useAuth"
 import Spinner from "../../components/Spinner"
 import Toaster from "../../components/Toaster"
-import { set } from "react-hook-form"
 
 type Props = {}
 
-// Define the columns
 const columns: GridColDef[] = [
   {
     field: "image",
@@ -205,7 +203,6 @@ const Expenses = (props: Props) => {
   // Fetch expenses on component mount and when houses change
   useEffect(() => {
     if (houses.length > 0) {
-      console.log("lewrafetching expenses")
       fetchExpenses()
     }
   }, [houses, refresh])

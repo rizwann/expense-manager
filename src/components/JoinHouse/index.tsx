@@ -41,6 +41,7 @@ const JoinHouse: React.FC<IProps> = ({ columns, setModalOpen, setRefresh, modalO
       
       setRefresh && setRefresh((prev) => !prev);
       setModalOpen(false);
+      setFormData({})
     } catch (error: any) {
       if (error.response) {
         setErrorMessage(

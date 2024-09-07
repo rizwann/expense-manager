@@ -74,7 +74,8 @@ const AddStore: React.FC<IProps> = ({ columns, setModalOpen, setRefresh, editDat
         toast.success("Store created successfully!");
       }
       setRefresh && setRefresh((prev) => !prev);
-      setModalOpen(false);
+      setModalOpen(false)
+      setFormData({})
     } catch (error: any) {
       if (error.response) {
         setErrorMessage(

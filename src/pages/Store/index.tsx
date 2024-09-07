@@ -89,14 +89,13 @@ const StoreDetail = () => {
          
         </div>
       </div>
-      {modalOpen && (
         <AddStore
           columns={config.storeFields}
           setModalOpen={setModalOpen}
           editData={store}
           setRefresh={setRefresh}
+          modalOpen={modalOpen}
         />
-      )}
       <ToastContainer />
     </div>
   )

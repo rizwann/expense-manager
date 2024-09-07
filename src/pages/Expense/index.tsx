@@ -120,15 +120,14 @@ const ExpenseDetail = () => {
           </label>
         </div>
       </div>
-      {modalOpen && (
         <Add
           slug="Expense"
           columns={config.expenseFields}
           setModalOpen={setModalOpen}
-          editData={expense} // Pass expense data for editing
+          editData={expense} 
+          modalOpen={modalOpen}
           setRefresh={setRefresh}
         />
-      )}
       <Toaster />
     </div>
   )

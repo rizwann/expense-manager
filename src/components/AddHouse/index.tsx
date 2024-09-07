@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Button } from "../Button";
 import { CloseRounded } from "@mui/icons-material";
 import { Modal } from "@mui/material";
+import { set } from "react-hook-form";
 
 
 interface IProps {
@@ -74,6 +75,7 @@ const AddHouse: React.FC<IProps> = ({ columns, setModalOpen, setRefresh, editDat
       }
       setRefresh && setRefresh((prev) => !prev);
       setModalOpen(false);
+      setFormData({})
     } catch (error: any) {
       if (error.response) {
         setErrorMessage(
