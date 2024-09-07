@@ -383,36 +383,36 @@ const Add: React.FC<IProps> = ({
                               >
                                 <input
                                   type="text"
-                                  placeholder="Search store..."
+                                  placeholder="Search Store..."
                                   value={searchTerm}
                                   onChange={(e) =>
                                     setSearchTerm(e.target.value)
                                   }
-                                  onFocus={() => setShowSuggestions(true)} // Show suggestions when input is focused
+                                  onFocus={() => setShowSuggestions(true)}
                                   className="w-full px-4 py-2 text-white bg-gray-800 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                                 {showSuggestions &&
                                   filteredStores.length > 0 && (
-                                    <ul className="absolute z-10 w-full mt-1 overflow-y-auto bg-gray-800 border border-gray-600 rounded-md shadow-lg max-h-60">
+                                    <ul className="absolute z-10 w-full gap-1 mt-1 overflow-y-auto bg-gray-800 border border-gray-600 rounded-md shadow-lg max-h-60">
                                       {filteredStores.map((store) => (
                                         <li
                                           key={store._id}
                                           onClick={() => {
-                                            setShowSuggestions(false) // Close suggestions after selecting
+                                            setShowSuggestions(false)
                                             handleStoreSelect(
                                               store._id,
                                               store.name
                                             )
                                           }}
-                                          className="flex items-center gap-3 px-4 py-2 text-white cursor-pointer hover:bg-gray-700"
+                                          className="flex items-center gap-2 px-4 py-2 text-white cursor-pointer hover:bg-gray-700"
                                         >
                                           <img
                                             src={store.image || "/app.svg"}
                                             alt={store.name}
                                             className="w-8 h-8 rounded-full"
                                           />
-                                          <div className="text-sm">
-                                            {store.name}
+                                          <div className="text-xs">
+                                            {store.name.length > 9 ? store.name.substring(0, 9) + "..." : store.name}
                                           </div>
                                         </li>
                                       ))}
