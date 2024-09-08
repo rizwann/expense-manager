@@ -11,6 +11,7 @@ import { toast } from "react-toastify"
 import { useAuth } from "../../hooks/useAuth"
 import Spinner from "../../components/Spinner"
 import Toaster from "../../components/Toaster"
+import { set } from "react-hook-form"
 
 type Props = {}
 
@@ -132,6 +133,7 @@ const Expenses = (props: Props) => {
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null)
   const [selectedYear, setSelectedYear] = useState<string | null>(null)
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+  const [selectedStore, setSelectedStore] = useState<string | null>(null)
   const [refresh, setRefresh] = useState(false)
   const [spinner, setSpinner] = useState(false)
   const { user } = useAuth()
@@ -195,6 +197,7 @@ const Expenses = (props: Props) => {
       setSelectedMonth(null)
       setSelectedYear(null)
       setSelectedCategory(null)
+      setSelectedStore(null)
       setMyself(false)
     } catch (error) {
       console.error("Error fetching expenses:", error)
@@ -247,10 +250,16 @@ const Expenses = (props: Props) => {
           (expense) => expense.category === selectedCategory
         )
       }
+
+      if (selectedStore) {
+        filtered = filtered.filter(
+          (expense) => expense.storeName === selectedStore
+        )
+      }
   
       setFilteredExpenses(filtered)
     }
-  }, [selectedHouse, myself, selectedMonth, selectedYear, expenses, user, selectedCategory])
+  }, [selectedHouse, myself, selectedMonth, selectedYear, expenses, user, selectedCategory, selectedStore])
 
   const handleDelete = async (id: string, name: string) => {
     try {
@@ -330,6 +339,22 @@ const Expenses = (props: Props) => {
           ).map((category) => (
             <option key={category} value={category}>
               {category}
+            </option>
+          ))}
+        </select>
+
+        {/* Store Selector */}
+        <select
+          className="dark-input"
+          value={selectedStore || ""}
+          onChange={(e) => setSelectedStore(e.target.value)}
+        >
+          <option value="">All Stores</option>
+          {Array.from(
+            new Set(expenses.map((expense) => expense.storeName))
+          ).map((store) => (
+            <option key={store} value={store}>
+              {store}
             </option>
           ))}
         </select>
