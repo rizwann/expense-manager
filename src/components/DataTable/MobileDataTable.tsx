@@ -203,9 +203,11 @@ const MobileDataTable: React.FC<Props> = ({
               </div>
             </div>
           ))}
-
+            <div className="flex items-center">
+              <span className="mr-2">Total Entries: {filteredRows?.length}</span>
+            </div>
           {/* Pagination */}
-          <div className="flex items-center justify-between gap-3 mt-4 pagination-container">
+          <div className="flex items-center justify-between gap-3 mt-2 pagination-container">
             <div className="flex items-center">
               <label htmlFor="rowsPerPage" className="mr-2">Rows per page:</label>
               <select

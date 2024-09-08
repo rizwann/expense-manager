@@ -131,6 +131,7 @@ const Expenses = (props: Props) => {
   const [selectedHouse, setSelectedHouse] = useState<string | null>(null)
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null)
   const [selectedYear, setSelectedYear] = useState<string | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [refresh, setRefresh] = useState(false)
   const [spinner, setSpinner] = useState(false)
   const { user } = useAuth()
@@ -193,6 +194,7 @@ const Expenses = (props: Props) => {
       setSelectedHouse(null)
       setSelectedMonth(null)
       setSelectedYear(null)
+      setSelectedCategory(null)
       setMyself(false)
     } catch (error) {
       console.error("Error fetching expenses:", error)
@@ -239,10 +241,16 @@ const Expenses = (props: Props) => {
             new Date(expense.date).getFullYear() === parseInt(selectedYear)
         )
       }
+
+      if (selectedCategory) {
+        filtered = filtered.filter(
+          (expense) => expense.category === selectedCategory
+        )
+      }
   
       setFilteredExpenses(filtered)
     }
-  }, [selectedHouse, myself, selectedMonth, selectedYear, expenses, user])
+  }, [selectedHouse, myself, selectedMonth, selectedYear, expenses, user, selectedCategory])
 
   const handleDelete = async (id: string, name: string) => {
     try {
@@ -306,6 +314,22 @@ const Expenses = (props: Props) => {
           {houses.map((house) => (
             <option key={house._id} value={house.code}>
               {house.description}
+            </option>
+          ))}
+        </select>
+
+        {/* Category Selector */}
+        <select
+          className="dark-input"
+          value={selectedCategory || ""}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+        >
+          <option value="">All Categories</option>
+          {Array.from(
+            new Set(expenses.map((expense) => expense.category))
+          ).map((category) => (
+            <option key={category} value={category}>
+              {category}
             </option>
           ))}
         </select>
