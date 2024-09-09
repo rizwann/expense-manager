@@ -29,7 +29,6 @@ function PasswordResetForm() {
   // get the token from the url query string. url should be something like: http://localhost:3000/reset-password/1234567890?token=hf873hjkhfd
   const token = new URLSearchParams(window.location.search).get("token") || "";
 
-  console.log(id, token);
   // const newPassword = watch("newPassword");
   // const confirmPassword = watch("confirmPassword");
   const passwordPattern = /^(?=.*[a-zA-Z0-9])(?=.*[^a-zA-Z0-9]).{6,}$/;

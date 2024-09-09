@@ -52,8 +52,6 @@ const LoadingSkeleton = () => {
 
 const App = () => {
   const { user } = useAuth()
-  console.log(user, "user from app")
-
   const Layout = () => {
     const navigate = useNavigate()
     const location = useLocation()

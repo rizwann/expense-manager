@@ -58,8 +58,6 @@ const BarChartBox: React.FC<BarChartBoxProps> = ({
     fetchChartData()
   }, [user, token, type])
 
-  console.log(chartData)
-
   return (
     <div className="barchart-box">
       <h1>{title}</h1>

@@ -62,7 +62,6 @@ const Home = (props: Props) => {
       setLoading(false)
     }
   }
-  console.log(user, "user")
   useEffect(() => {
     fetchHouses()
   }, [selectedHouseLocal])

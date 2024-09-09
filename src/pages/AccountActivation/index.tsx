@@ -22,7 +22,6 @@ const ActivationPage: React.FC = () => {
     setError(null);
 
     try {
-        console.log("token", token)
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/api/auth/activate/${id}/${token}`
       );

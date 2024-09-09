@@ -59,7 +59,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
   useEffect(() => {
     const user = (localStorage.getItem("user") !== "undefined" && localStorage.getItem("user") !== null) ? JSON.parse(localStorage.getItem("user") as string) : null;
-    console.log("userfromlewra", user)
     if (token && user) {
       const getUpdatedUser = async () => {
         try {
@@ -69,7 +68,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             },
           });
 
-          console.log(response.data);
           setUser(response.data);
           if (response.data?.houseCodes.length > 0) {
             try {
@@ -242,7 +240,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           `${APP_URL}/api/houses/${code}`
         );
         setSelectedHouse(response.data);
-        console.log(response.data);
       }
     } catch (error) {
       console.log(error);

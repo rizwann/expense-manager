@@ -14,14 +14,12 @@ import "./bigChart.scss"
 import { useEffect, useState } from "react"
 import {
   fetchPopularCategoryExpenses,
-  fetchSixMonthsExpensesByCategory,
 } from "../../utils/chartDataFetch"
 
 const categories = Object.values(CategoryName).map((item) => {
   const color = "#" + Math.floor(Math.random() * 16777215).toString(16)
   return { name: item, color: color }
 })
-console.log(categories)
 
 type Props = {
   selectedHouse: House

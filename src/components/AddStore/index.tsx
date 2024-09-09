@@ -45,8 +45,6 @@ const AddStore: React.FC<IProps> = ({ columns, setModalOpen, setRefresh, editDat
       formDataToSend.append(key, formData[key]);
     });
 
-    console.log('formDataToSend',formDataToSend);
-
     try {
       if (editData) {
         await axios.put(

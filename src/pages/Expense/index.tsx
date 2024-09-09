@@ -100,7 +100,7 @@ const ExpenseDetail = () => {
           </label>
           <label>
             Cost:
-            <span>${expense.cost}</span>
+            <span>€{expense.cost}</span>
           </label>
           <label>
             Involved Users:
