@@ -44,7 +44,7 @@ const Add: React.FC<IProps> = ({
   setModalOpen,
   setRefresh,
   editData,
-  modalOpen
+  modalOpen,
 }) => {
   const [stores, setStores] = useState<Store[]>([])
   const [houses, setHouses] = useState<House[]>([])
@@ -127,7 +127,7 @@ const Add: React.FC<IProps> = ({
       document.removeEventListener("mousedown", handleClickOutside)
     }
   }, [])
-  
+
   useEffect(() => {
     if (selectedHouse) {
       const fetchHouseUsers = async () => {
@@ -165,7 +165,7 @@ const Add: React.FC<IProps> = ({
       )
       setSelectedHouse(selectedHouse || null)
     }
-  }, [editData, houses, userId])
+  }, [editData, houses, userId, modalOpen])
 
   useEffect(() => {
     if (editData && selectedHouse) {
@@ -254,256 +254,278 @@ const Add: React.FC<IProps> = ({
       toast.error(errorMessage)
     }
   }
-
+  const handleCloseModal = () => {
+    setModalOpen(false)
+   if (!editData) {
+      setFormData({})
+      setSelectedUsers([])
+      setSelectedPayer(null)
+      setSearchTerm("")
+      setSelectedStore(null)
+      setSelectedHouse(null)
+      setErrorMessage(null)
+      setFilteredStores([])
+      setShowSuggestions(false)
+    }
+  }
   return (
     <Modal
       open={modalOpen}
-      onClose={() => setModalOpen(false)}
+      onClose={handleCloseModal}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-    <div className="add-expense">
-      <div className="modal-expense">
-        <span className="close" onClick={() => setModalOpen(false)}>
-          <Close />
-        </span>
-        <h1>{editData ? `Edit ${slug}` : `Add New ${slug}`}</h1>
-        <form
-          onSubmit={handleSubmit}
-          style={{ display: "contents", marginTop: "20px" }}
-        >
-          <div className="item-container">
-            {columns
-              .filter((item) => item.field !== "id")
-              .map((column) => {
-                return (
-                  <div className="item" key={column.field}>
-                    {(() => {
-                      switch (column.control) {
-                        case "text":
-                          return (
-                            <input
-                              type={
-                                column.type === "number" ? "number" : "text"
-                              }
-                              placeholder={column.headerName}
-                              name={column.field}
-                              value={formData[column.field] || ""}
-                              onChange={(e) =>
-                                setFormData((prev) => ({
-                                  ...prev,
-                                  [column.field]: e.target.value,
-                                }))
-                              }
-                              required={
-                                column.field === "cost" ||
-                                column.field === "description"
-                              }
-                            />
-                          )
-                        case "date":
-                          return (
-                            <div className="switch-container">
-                              {!editData && (
-                                <div>
-                                  <FormControlLabel
-                                    control={
-                                      <Switch
-                                        checked={selectCustomTime}
-                                        onChange={() =>
-                                          setSelectCustomTime(!selectCustomTime)
-                                        }
-                                        inputProps={{
-                                          "aria-label": "controlled",
-                                        }}
-                                      />
-                                    }
-                                    label="Custom Time"
-                                  />
-                                  <Collapse
-                                    in={selectCustomTime}
-                                    style={{ marginTop: "10px" }}
-                                  >
-                                    <input
-                                      type="datetime-local"
-                                      placeholder={column.headerName}
-                                      name={column.field}
-                                      value={formData[column.field] || ""}
-                                      onChange={(e) =>
-                                        setFormData((prev) => ({
-                                          ...prev,
-                                          [column.field]: e.target.value,
-                                        }))
-                                      }
-                                    />
-                                  </Collapse>
-                                </div>
-                              )}
-                              <div>
+      <div className="add-expense">
+        <div className="modal-expense">
+          <span className="close" onClick={handleCloseModal}>
+            <Close />
+          </span>
+          <h1>{editData ? `Edit ${slug}` : `Add New ${slug}`}</h1>
+          <form
+            onSubmit={handleSubmit}
+            style={{ display: "contents", marginTop: "20px" }}
+          >
+            <div className="item-container">
+              {columns
+                .filter((item) => item.field !== "id")
+                .map((column) => {
+                  return (
+                    <div className="item" key={column.field}>
+                      {(() => {
+                        switch (column.control) {
+                          case "text":
+                            return (
+                              <input
+                                type={
+                                  column.type === "number" ? "number" : "text"
+                                }
+                                placeholder={column.headerName}
+                                name={column.field}
+                                value={formData[column.field] || ""}
+                                onChange={(e) =>
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    [column.field]: e.target.value,
+                                  }))
+                                }
+                                required={
+                                  column.field === "cost" ||
+                                  column.field === "description"
+                                }
+                              />
+                            )
+                          case "date":
+                            return (
+                              <div className="switch-container">
                                 {!editData && (
-                                  <div className="item">
+                                  <div>
                                     <FormControlLabel
                                       control={
-                                        <Checkbox
-                                          checked={paidByMe}
+                                        <Switch
+                                          checked={selectCustomTime}
                                           onChange={() =>
-                                            setPaidByMe(!paidByMe)
+                                            setSelectCustomTime(
+                                              !selectCustomTime
+                                            )
                                           }
                                           inputProps={{
                                             "aria-label": "controlled",
                                           }}
                                         />
                                       }
-                                      label="Paid by me"
+                                      label="Custom Time"
                                     />
-                                    <Collapse in={!paidByMe}>
-                                      <select
-                                        name="paymentPerson"
-                                        value={selectedPayer || ""}
+                                    <Collapse
+                                      in={selectCustomTime}
+                                      style={{ marginTop: "10px" }}
+                                    >
+                                      <input
+                                        type="datetime-local"
+                                        placeholder={column.headerName}
+                                        name={column.field}
+                                        value={formData[column.field] || ""}
                                         onChange={(e) =>
-                                          setSelectedPayer(e.target.value)
+                                          setFormData((prev) => ({
+                                            ...prev,
+                                            [column.field]: e.target.value,
+                                          }))
                                         }
-                                        required={!paidByMe}
-                                      >
-                                        <option value="" disabled>
-                                          Select Payer
-                                        </option>
-                                        {houseUsers
-                                          .filter((u) => u._id !== userId)
-                                          .map((user) => (
-                                            <option
-                                              key={user._id}
-                                              value={user._id}
-                                            >
-                                              {user.username}
-                                            </option>
-                                          ))}
-                                      </select>
+                                      />
                                     </Collapse>
                                   </div>
                                 )}
-                              </div>
-                            </div>
-                          )
-                        case "select":
-                          if (column.field === "storeName") {
-                            return (
-                              <div
-                                className="relative w-full"
-                                ref={containerRef}
-                              >
-                                <input
-                                  type="text"
-                                  placeholder="Search Store..."
-                                  value={searchTerm}
-                                  onChange={(e) =>
-                                    setSearchTerm(e.target.value)
-                                  }
-                                  onFocus={() => setShowSuggestions(true)}
-                                  className="w-full px-4 py-2 text-white bg-gray-800 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
-                                {showSuggestions &&
-                                  filteredStores.length > 0 && (
-                                    <ul className="absolute z-10 w-full gap-1 mt-1 overflow-y-auto bg-gray-800 border border-gray-600 rounded-md shadow-lg max-h-60">
-                                      {filteredStores.map((store) => (
-                                        <li
-                                          key={store._id}
-                                          onClick={() => {
-                                            setShowSuggestions(false)
-                                            handleStoreSelect(
-                                              store._id,
-                                              store.name
-                                            )
-                                          }}
-                                          className="flex items-center gap-2 px-4 py-2 text-white cursor-pointer hover:bg-gray-700"
-                                        >
-                                          <img
-                                            src={store.image || "/app.svg"}
-                                            alt={store.name}
-                                            className="w-8 h-8 rounded-full"
+                                <div>
+                                  {!editData && (
+                                    <div className="item">
+                                      <FormControlLabel
+                                        control={
+                                          <Checkbox
+                                            checked={paidByMe}
+                                            onChange={() =>
+                                              setPaidByMe(!paidByMe)
+                                            }
+                                            inputProps={{
+                                              "aria-label": "controlled",
+                                            }}
                                           />
-                                          <div className="text-xs">
-                                            {store.name.length > 9 ? store.name.substring(0, 9) + "..." : store.name}
-                                          </div>
-                                        </li>
-                                      ))}
-                                    </ul>
+                                        }
+                                        label="Paid by me"
+                                      />
+                                      <Collapse in={!paidByMe}>
+                                        <select
+                                          name="paymentPerson"
+                                          value={selectedPayer || ""}
+                                          onChange={(e) =>
+                                            setSelectedPayer(e.target.value)
+                                          }
+                                          required={!paidByMe}
+                                        >
+                                          <option value="" disabled>
+                                            Select Payer
+                                          </option>
+                                          {houseUsers
+                                            .filter((u) => u._id !== userId)
+                                            .map((user) => (
+                                              <option
+                                                key={user._id}
+                                                value={user._id}
+                                              >
+                                                {user.username}
+                                              </option>
+                                            ))}
+                                        </select>
+                                      </Collapse>
+                                    </div>
                                   )}
+                                </div>
                               </div>
                             )
-                          } else if (column.field === "category") {
-                            return (
-                              <select
-                                name={column.field}
-                                value={formData.category || ""}
-                                onChange={(e) =>
-                                  setFormData((prev) => ({
-                                    ...prev,
-                                    category: e.target.value,
-                                  }))
-                                }
-                                required
-                              >
-                                <option value="" disabled>
-                                  Select Category
-                                </option>
-                                {Object.values(CategoryName).map((category) => (
-                                  <option key={category} value={category}>
-                                    {category}
+                          case "select":
+                            if (column.field === "storeName") {
+                              return (
+                                <div
+                                  className="relative w-full"
+                                  ref={containerRef}
+                                >
+                                  <input
+                                    type="text"
+                                    placeholder="Search Store..."
+                                    value={searchTerm}
+                                    onChange={(e) =>
+                                      setSearchTerm(e.target.value)
+                                    }
+                                    onFocus={() => setShowSuggestions(true)}
+                                    className="w-full px-4 py-2 text-white bg-gray-800 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                  />
+                                  {showSuggestions &&
+                                    filteredStores.length > 0 && (
+                                      <ul className="absolute z-10 w-full gap-1 mt-1 overflow-y-auto bg-gray-800 border border-gray-600 rounded-md shadow-lg max-h-60">
+                                        {filteredStores.map((store) => (
+                                          <li
+                                            key={store._id}
+                                            onClick={() => {
+                                              setShowSuggestions(false)
+                                              handleStoreSelect(
+                                                store._id,
+                                                store.name
+                                              )
+                                            }}
+                                            className="flex items-center gap-2 px-4 py-2 text-white cursor-pointer hover:bg-gray-700"
+                                          >
+                                            <img
+                                              src={store.image || "/app.svg"}
+                                              alt={store.name}
+                                              className="w-8 h-8 rounded-full"
+                                            />
+                                            <div className="text-xs">
+                                              {store.name.length > 9
+                                                ? store.name.substring(0, 9) +
+                                                  "..."
+                                                : store.name}
+                                            </div>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    )}
+                                </div>
+                              )
+                            } else if (column.field === "category") {
+                              return (
+                                <select
+                                  name={column.field}
+                                  value={formData.category || ""}
+                                  onChange={(e) =>
+                                    setFormData((prev) => ({
+                                      ...prev,
+                                      category: e.target.value,
+                                    }))
+                                  }
+                                  required
+                                >
+                                  <option value="" disabled>
+                                    Select Category
                                   </option>
-                                ))}
-                              </select>
-                            )
-                          } else if (column.field === "house") {
-                            return (
-                              <select
-                                name={"houseCode"}
-                                value={selectedHouse?.code || ""}
-                                onChange={(e) => {
-                                  const selectedHouse = houses.find(
-                                    (house) => house.code === e.target.value
-                                  )
-                                  setSelectedHouse(selectedHouse || null)
-                                }}
-                                required
-                              >
-                                <option value="" disabled>
-                                  Select House
-                                </option>
-                                {houses.map((house) => (
-                                  <option key={house._id} value={house.code}>
-                                    {house.description}
+                                  {Object.values(CategoryName).map(
+                                    (category) => (
+                                      <option key={category} value={category}>
+                                        {category}
+                                      </option>
+                                    )
+                                  )}
+                                </select>
+                              )
+                            } else if (column.field === "house") {
+                              return (
+                                <select
+                                  name={"houseCode"}
+                                  value={selectedHouse?.code || ""}
+                                  onChange={(e) => {
+                                    const selectedHouse = houses.find(
+                                      (house) => house.code === e.target.value
+                                    )
+                                    setSelectedHouse(selectedHouse || null)
+                                  }}
+                                  required
+                                >
+                                  <option value="" disabled>
+                                    Select House
                                   </option>
-                                ))}
-                              </select>
-                            )
-                          } else if (column.field === "involvedUsers") {
-                            return (
-                              <CustomDropdown
-                                options={houseUsers}
-                                label={column.headerName}
-                                name={column.field}
-                                selectedValues={selectedUsers}
-                                setSelectedValues={setSelectedUsers}
-                              />
-                            )
-                          } else {
+                                  {houses.map((house) => (
+                                    <option key={house._id} value={house.code}>
+                                      {house.description}
+                                    </option>
+                                  ))}
+                                </select>
+                              )
+                            } else if (column.field === "involvedUsers") {
+                              return (
+                                <CustomDropdown
+                                  options={houseUsers}
+                                  label={column.headerName}
+                                  name={column.field}
+                                  selectedValues={selectedUsers}
+                                  setSelectedValues={setSelectedUsers}
+                                />
+                              )
+                            } else {
+                              return null
+                            }
+                          default:
                             return null
-                          }
-                        default:
-                          return null
-                      }
-                    })()}
-                  </div>
-                )
-              })}
-          </div>
+                        }
+                      })()}
+                    </div>
+                  )
+                })}
+            </div>
 
-          {errorMessage && <div className="error-message">{errorMessage}</div>}
-          <Button type="submit" text={editData ? "Update" : "Create"} />
-        </form>
+            {errorMessage && (
+              <div className="error-message">{errorMessage}</div>
+            )}
+            <Button type="submit" text={editData ? "Update" : "Create"} />
+          </form>
+        </div>
       </div>
-    </div>
     </Modal>
   )
 }
