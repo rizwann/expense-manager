@@ -120,22 +120,22 @@ const Home = (props: Props) => {
             onClick={() => setCreateHouseModal(true)}
           />
         </div>
-        {joinHouseModal && (
+      
           <JoinHouse
             setModalOpen={setJoinHouseModal}
             columns={config.houseFields.filter(
               (field) => field.field === "code"
             )}
             setRefresh={setRefresh}
+            modalOpen={joinHouseModal}
           />
-        )}
-        {createHouseModal && (
+    
           <AddHouse
             setModalOpen={setCreateHouseModal}
             columns={config.houseFields}
             setRefresh={setRefresh}
+            modalOpen={createHouseModal}
           />
-        )}
       </div>
     )
   }
