@@ -31,6 +31,7 @@ interface AuthContextType {
   setEmailSent: React.Dispatch<React.SetStateAction<boolean>>;
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
   setErrorMessage: React.Dispatch<React.SetStateAction<string | null>>;
+  loading: boolean;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(
@@ -46,6 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [expiredError, setExpiredError] = useState<string | null>(null);
   const [selectedHouse, setSelectedHouse] = useState<House | null>(null);
   const [refresh, setRefresh] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true)
 
   const APP_URL = import.meta.env.VITE_API_URL;
   // Check if the user is already authenticated
@@ -58,11 +60,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
   });
   useEffect(() => {
-    const user = (localStorage.getItem("user") !== "undefined" && localStorage.getItem("user") !== null) ? JSON.parse(localStorage.getItem("user") as string) : null;
-    if (token && user) {
+    const userFromLS = (localStorage.getItem("user") !== "undefined" && localStorage.getItem("user") !== null) ? JSON.parse(localStorage.getItem("user") as string) : null;
+    if (token && userFromLS) {
       const getUpdatedUser = async () => {
         try {
-          const response = await axios.get(`${APP_URL}/api/user/${user?._id}`, {
+          const response = await axios.get(`${APP_URL}/api/user/${userFromLS?._id}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -89,14 +91,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } catch (error) {
           console.log(error);
           logout()
+        } finally {
+          setLoading(false)
         }
       };
       getUpdatedUser();
-      setUser(user);
+      // setUser(userFromLS);
+    } else {
+      setLoading(false)
     }
   }, [APP_URL, token, refresh]);
 
-  console.log(user);
 
   const login = async (data: LoginFormInput) => {
     try {
@@ -108,14 +113,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         : { username: data.usernameOrEmail, password: data.password };
 
       const response = await axios.post(`${APP_URL}/api/auth/login`, loginData);
-      console.log("login");
       const token = response.data.token;
       localStorage.setItem("token", token);
-      console.log(response.data);
       setUser(response.data.user);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      localStorage.setItem("user", JSON.stringify(response.data.user))
     } catch (error: any) {
       setErrorMessage(error.response.data.message);
     }
@@ -125,7 +126,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
-    console.log("logout");
   };
 
   const registration = async (data: RegistrationFormInput) => {
@@ -265,7 +265,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         selectedHouse,
         setEmailSent,
         setRefresh,
-        setErrorMessage
+        setErrorMessage,
+        loading
       }}
     >
       {children}
