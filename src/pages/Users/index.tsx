@@ -10,7 +10,7 @@ import AddUser from "../../components/AddUser"
 import { config } from "../../utils/config"
 import Button from "../components/Button"
 import Spinner from "../../components/Spinner"
-type Props = {}
+import { useAuth } from "../../hooks/useAuth"
 
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 90 },
@@ -52,7 +52,7 @@ const columns: GridColDef[] = [
             <div className="houses">
               {params.row.houseNames.slice(0, 2).map((house: any) => {
                 return (
-                  <div className="house">
+                  <div className="house" key={house}>
                     <p>{house}</p>
                   </div>
                 )
@@ -74,7 +74,7 @@ const columns: GridColDef[] = [
 
 const Users = () => {
   const [modalOpen, setModalOpen] = useState(false)
-  const token = localStorage.getItem("token")
+  const { getToken } = useAuth()
   const [refresh, setRefresh] = useState(false)
   const [users, setUsers] = useState<IUser[]>([])
   const [spinner, setSpinner] = useState(false)
@@ -83,6 +83,7 @@ const Users = () => {
     //fetch users
     const fetchStores = async () => {
       setSpinner(true)
+      const token = await getToken()
       const usersApi = `${import.meta.env.VITE_API_URL}/api/user/all`
       try {
         const data = await axios.get<IUser[]>(usersApi, {
@@ -101,9 +102,10 @@ const Users = () => {
     }
 
     fetchStores()
-  }, [refresh, token])
+  }, [refresh])
 
   const handleDelete = async (id: string, name: string) => {
+    const token = await getToken()
     try {
       await axios.delete(`${import.meta.env.VITE_API_URL}/api/user/${id}`, {
         headers: {

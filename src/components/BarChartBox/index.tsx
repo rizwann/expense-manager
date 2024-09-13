@@ -12,6 +12,7 @@ import {
   fetchUserContribution,
   fetchUserSixMonthsExpenses,
 } from "../../utils/chartDataFetch"
+import { useAuth } from "../../hooks/useAuth"
 
 interface BarChartBoxProps {
   title: string
@@ -31,11 +32,12 @@ const BarChartBox: React.FC<BarChartBoxProps> = ({
   type,
   selectedHouse,
 }) => {
-  const token = localStorage.getItem("token")
+  const {getToken} = useAuth()
   const [chartData, setChartData] = useState<object[]>([])
 
   useEffect(() => {
     const fetchChartData = async () => {
+      const token = await getToken()
       let chartData
       switch (type) {
         case "contribution":
@@ -56,7 +58,7 @@ const BarChartBox: React.FC<BarChartBoxProps> = ({
       setChartData(chartData)
     }
     fetchChartData()
-  }, [user, token, type])
+  }, [user, type])
 
   return (
     <div className="barchart-box">
@@ -67,7 +69,7 @@ const BarChartBox: React.FC<BarChartBoxProps> = ({
             <Tooltip
               labelStyle={{ display: "none" }}
               cursor={{ fill: "none" }}
-              content={({ active, payload, label }) => {
+              content={({ active, payload }) => {
                 if (active && payload && payload.length) {
                   return (
                     <div

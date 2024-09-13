@@ -1,13 +1,11 @@
+// @ts-nocheck
 import {
-  Area,
-  AreaChart,
   Bar,
   BarChart,
   Cell,
   ResponsiveContainer,
   Tooltip,
   XAxis,
-  YAxis,
 } from "recharts"
 import { CategoryName, House } from "../../types"
 import "./bigChart.scss"
@@ -15,6 +13,7 @@ import { useEffect, useState } from "react"
 import {
   fetchPopularCategoryExpenses,
 } from "../../utils/chartDataFetch"
+import { useAuth } from "../../hooks/useAuth"
 
 const categories = Object.values(CategoryName).map((item) => {
   const color = "#" + Math.floor(Math.random() * 16777215).toString(16)
@@ -28,15 +27,16 @@ type Props = {
 
 const BigChart: React.FC<Props> = ({ selectedHouse, dataKey }) => {
   const [data, setData] = useState<object[]>([])
-  const token = localStorage.getItem("token")
+  const {getToken} = useAuth()
 
   useEffect(() => {
     const fetchData = async () => {
+      const token = await getToken()
       const response = await fetchPopularCategoryExpenses(
         selectedHouse,
         token || ""
       )
-      // Add color from categories to each data item
+
       const enrichedData = response.result.map((item: any) => {
         const category = categories.find((cat) => cat.name === item.name)
         return { ...item, color: category ? category.color : "#8884d8" } // Default color if not found
@@ -44,7 +44,7 @@ const BigChart: React.FC<Props> = ({ selectedHouse, dataKey }) => {
       setData(enrichedData)
     }
     fetchData()
-  }, [selectedHouse, token])
+  }, [selectedHouse])
 
   return (
     <div className="bigchart-box">

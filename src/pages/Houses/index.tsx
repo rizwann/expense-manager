@@ -13,8 +13,6 @@ import Spinner from "../../components/Spinner"
 import JoinHouse from "../../components/JoinHouse"
 import { useAuth } from "../../hooks/useAuth"
 
-type Props = {}
-
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 100 },
   {
@@ -54,19 +52,19 @@ const columns: GridColDef[] = [
   },
 ]
 
-const Houses = (props: Props) => {
+const Houses = () => {
   const [modalOpen, setModalOpen] = useState(false)
   const [joinHouseModal, setJoinHouseModal] = useState(false)
   const [houses, setHouses] = useState<House[]>([])
-  const token = localStorage.getItem("token")
   const [refresh, setRefresh] = useState(false)
   const [spinner, setSpinner] = useState(false)
-  const {user, setRefresh: setUserReload} = useAuth()
+  const {user, setRefresh: setUserReload, getToken} = useAuth()
   const isAdmin = user ? !!(user.username === 'RizwanKabir') : false
 
   useEffect(() => {
     //fetch Houses
     const fetchHouses = async () => {
+      const token = await getToken()
       const houseApi = isAdmin ? `${import.meta.env.VITE_API_URL}/api/houses/all` : `${import.meta.env.VITE_API_URL}/api/houses`
       setSpinner(true)
       try {
@@ -84,9 +82,10 @@ const Houses = (props: Props) => {
       }
     }
     fetchHouses()
-  }, [refresh, token])
+  }, [refresh])
 
   const handleDelete = async (id: string, name: string) => {
+    const token = await getToken()
     try {
       await axios.delete(`${import.meta.env.VITE_API_URL}/api/houses/${id}`, {
         headers: {
@@ -107,6 +106,7 @@ const Houses = (props: Props) => {
   }
 
   const handleLeaveHouse = async (id: string, name: string) => {
+    const token = await getToken()
     const houseCode = id
     try {
       await axios.post

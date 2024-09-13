@@ -82,7 +82,11 @@ const MobileDataTable: React.FC<Props> = ({
       default:
         if ( col.field === "date") {
           const date = new Date(row[col.field])
-          const formattedDate = date.toLocaleDateString()
+          const formattedDate = date.toLocaleDateString("en-DE", {
+            month: "short",
+            day: "numeric",
+            year: "2-digit",
+          })
           const formattedTime = date.toLocaleTimeString()
           return `${formattedDate} ${formattedTime}`
         } else if (col.field === "cost") {

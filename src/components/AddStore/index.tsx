@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css"
 import { Button } from "../Button"
 import { Close } from "@mui/icons-material"
 import { Modal } from "@mui/material"
+import { useAuth } from "../../hooks/useAuth"
 
 interface IProps {
   columns: any[]
@@ -22,10 +23,10 @@ const AddStore: React.FC<IProps> = ({
   editData,
   modalOpen,
 }) => {
+  const { getToken } = useAuth()
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [formData, setFormData] = useState<{ [key: string]: any }>({})
   const [imagePreview, setImagePreview] = useState<string | null>(null)
-  const token = localStorage.getItem("token")
 
   useEffect(() => {
     if (editData) {
@@ -46,6 +47,7 @@ const AddStore: React.FC<IProps> = ({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const token = await getToken()
     const formDataToSend = new FormData()
     Object.keys(formData).forEach((key) => {
       formDataToSend.append(key, formData[key])

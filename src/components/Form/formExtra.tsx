@@ -24,13 +24,13 @@ export default function FormExtra() {
         />
         <label
           htmlFor="show-password"
-          className="block ml-2 text-sm text-gray-300"
+          className="block ml-2 text-xs text-gray-300"
         >
           Show Password
         </label>
       </div>
 
-      <div className="text-sm">
+      <div className="text-xs">
         <Link
           to="/forgot-password"
           className="font-medium text-purple-400 hover:text-purple-300"

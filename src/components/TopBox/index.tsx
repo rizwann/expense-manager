@@ -3,6 +3,7 @@ import { Expense, IUser } from "../../types"
 import "./topBox.scss"
 import axios from "axios"
 import { NavLink } from "react-router-dom"
+import { useAuth } from "../../hooks/useAuth"
 
 interface IProps {
   user: IUser
@@ -11,10 +12,11 @@ interface IProps {
 
 const TopBox: React.FC<IProps> = ({ user, houseCode }) => {
   const [expenses, setExpenses] = useState<Expense[]>([])
-  const token = localStorage.getItem("token")
+  const {getToken} = useAuth()
 
   useEffect(() => {
     const fetchExpenses = async () => {
+      const token = await getToken()
       try {
         const URI = `${import.meta.env.VITE_API_URL}/api/expenses/house/${
           houseCode
@@ -31,7 +33,7 @@ const TopBox: React.FC<IProps> = ({ user, houseCode }) => {
       }
     }
     fetchExpenses()
-  }, [user, token])
+  }, [user])
 
   return (
     <div className="top-box">

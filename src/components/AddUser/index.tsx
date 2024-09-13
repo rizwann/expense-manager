@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css"
 import { Button } from "../Button"
 import { Close } from "@mui/icons-material"
 import { Modal } from "@mui/material"
-import { set } from "react-hook-form"
+import { useAuth } from "../../hooks/useAuth"
 
 interface IProps {
   columns: any[]
@@ -30,7 +30,7 @@ const AddUser: React.FC<IProps> = ({
   >(null)
   const [formData, setFormData] = useState<{ [key: string]: any }>({})
   const [imagePreview, setImagePreview] = useState<string | null>(null)
-  const token = localStorage.getItem("token")
+  const { getToken, setRefresh: setReload } = useAuth()
   const updatedColumns = editData
     ? columns.filter(
         (item) =>
@@ -74,7 +74,7 @@ const AddUser: React.FC<IProps> = ({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log("passwordError", passwordError)
+    const token = await getToken()
     if (!editData && passwordError) return
 
     const formDataToSend = new FormData()
@@ -109,6 +109,7 @@ const AddUser: React.FC<IProps> = ({
         toast.success("User created successfully!")
       }
       setRefresh && setRefresh((prev) => !prev)
+      setReload((prev) => !prev)
       setModalOpen(false)
       setFormData({})
       setImagePreview(null)

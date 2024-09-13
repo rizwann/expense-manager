@@ -13,7 +13,6 @@ disabled?: boolean
 
 const CustomDropdown: React.FC<CustomDropdownProps> = ({
   options,
-  label,
   name,
   selectedValues,
   setSelectedValues,

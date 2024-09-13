@@ -39,8 +39,6 @@ function PasswordResetForm() {
     verifyPasswordReset(id, token);
   }, [id, token, verifyPasswordReset]);
 
-  console.log(verified);
-
   const onSubmit: SubmitHandler<PasswordResetFormInput> = (data) => {
     // Passwords match, you can proceed with resetting the password
     try {

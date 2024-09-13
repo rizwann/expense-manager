@@ -73,7 +73,6 @@ interface IProps {
 // ];
 
 const Single: React.FC<IProps> = ({
-  id,
   image,
   title,
   info,

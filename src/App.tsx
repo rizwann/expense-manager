@@ -56,7 +56,7 @@ const App = () => {
     const navigate = useNavigate()
     const location = useLocation()
     const [isOpen, setIsOpen] = useState(false)
-    
+  
     useEffect(() => {
       if(!loading){
         if (!user && location.pathname !== "/login") {
@@ -70,11 +70,14 @@ const App = () => {
     }
 
     return (
-      <ThemeProvider theme={darkTheme}>
+      <ThemeProvider theme={darkTheme}
+      >
         <CssBaseline />
         <div className="main">
           <Navbar setIsOpen={setIsOpen} />
-          <div className="main-container">
+          <div className="main-container" style={{
+            paddingTop: 'env(safe-area-inset-top)'
+          }}>
             <MobileMenu isOpen={isOpen} setIsOpen={setIsOpen} />
             <div className="content-container">
               <Outlet />

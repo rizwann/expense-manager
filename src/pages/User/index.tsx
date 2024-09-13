@@ -7,6 +7,7 @@ import Button from "../components/Button"
 import AddUser from "../../components/AddUser"
 import { config } from "../../utils/config"
 import Toaster from "../../components/Toaster"
+import { useAuth } from "../../hooks/useAuth"
 
 const SingleUser: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -14,12 +15,13 @@ const SingleUser: React.FC = () => {
   const [info, setInfo] = useState<object>({})
   const [modalOpen, setModalOpen] = useState(false)
   const [refresh, setRefresh] = useState(false)
-  const token = localStorage.getItem("token")
+  const { getToken } = useAuth()
   const openEditModal = () => {
     setModalOpen(true)
   }
   useEffect(() => {
     const getUser = async () => {
+      const token = await getToken()
       const usersApi = `${import.meta.env.VITE_API_URL}/api/user/${id}`
       const data = await axios.get<IUser>(usersApi, {
         headers: {
