@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import FormAction from "../Form/formAction";
 import { inputClassName } from "../Login";
@@ -15,7 +14,6 @@ export type RegistrationFormInput = {
 
 function Registration() {
   const { registration, errorMessage, setErrorMessage } = useAuth();
-  const navigate = useNavigate();
 
   const {
     register,

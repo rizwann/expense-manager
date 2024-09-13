@@ -8,12 +8,13 @@ import { Store } from "../../types"
 import { config } from "../../utils/config"
 import Loading from "../../components/Loading"
 import AddStore from "../../components/AddStore"
+import { useAuth } from "../../hooks/useAuth"
 
 const StoreDetail = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const [store, setStore] = useState<Store | null>(null)
-  const token = localStorage.getItem("token")
+  const { getToken } = useAuth()
   const [modalOpen, setModalOpen] = useState(false)
   const [refresh, setRefresh] = useState(false)
 
@@ -24,6 +25,7 @@ const StoreDetail = () => {
 
   useEffect(() => {
     const fetchStore = async () => {
+      const token = await getToken()
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/api/stores/${id}`,
@@ -41,7 +43,7 @@ const StoreDetail = () => {
     }
 
     fetchStore()
-  }, [id, token, refresh])
+  }, [id, refresh])
 
   if (!store) {
     return <Loading />

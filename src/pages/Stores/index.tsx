@@ -10,8 +10,7 @@ import AddStore from "../../components/AddStore"
 import Button from "../components/Button"
 import Toaster from "../../components/Toaster"
 import Spinner from "../../components/Spinner"
-
-type Props = {}
+import { useAuth } from "../../hooks/useAuth"
 
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 200 },
@@ -40,16 +39,17 @@ const columns: GridColDef[] = [
   },
 ]
 
-const Stores = (props: Props) => {
+const Stores = () => {
   const [modalOpen, setModalOpen] = useState(false)
   const [stores, setStores] = useState<Store[]>([])
-  const token = localStorage.getItem("token")
+  const { getToken } = useAuth()
   const [refresh, setRefresh] = useState(false)
   const [spinner, setSpinner] = useState(false)
 
   useEffect(() => {
     //fetch stores
     const fetchStores = async () => {
+      const token = await getToken()
       const storeApi = `${import.meta.env.VITE_API_URL}/api/stores`
       setSpinner(true)
      try{
@@ -68,9 +68,10 @@ const Stores = (props: Props) => {
     }
 
     fetchStores()
-  }, [refresh, token])
+  }, [refresh])
 
   const handleDelete = async (id: string, name: string) => {
+    const token = await getToken()
     try {
       await axios.delete(`${import.meta.env.VITE_API_URL}/api/stores/${id}`, {
         headers: {

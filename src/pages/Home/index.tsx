@@ -31,13 +31,11 @@ import axios from "axios"
 import { House } from "../../types"
 import { motion } from "framer-motion"
 import { Home as HomeIcon } from "@mui/icons-material"
-type Props = {}
 
-const Home = (props: Props) => {
+const Home = () => {
   const [joinHouseModal, setJoinHouseModal] = useState(false)
   const [createHouseModal, setCreateHouseModal] = useState(false)
-  const { user, selectedHouse, setRefresh } = useAuth()
-  const token = localStorage.getItem("token")
+  const { user, selectedHouse, setRefresh, getToken } = useAuth()
   const [loading, setLoading] = useState(true)
   const [houses, setHouses] = useState<House[]>([])
   const [selectedHouseLocal, setSelectedHouseLocal] = useState<string>(
@@ -46,6 +44,7 @@ const Home = (props: Props) => {
   const isAdmin = user ? !!(user.username === "RizwanKabir") : false
   const fetchHouses = async () => {
     setLoading(true)
+    const token = await getToken()
     const houseApi = isAdmin
       ? `${import.meta.env.VITE_API_URL}/api/houses/all`
       : `${import.meta.env.VITE_API_URL}/api/houses`
@@ -68,7 +67,7 @@ const Home = (props: Props) => {
 
   const handleHouseChange = (
     event: SelectChangeEvent<string>,
-    child: ReactNode
+    _child: ReactNode
   ) => {
     setSelectedHouseLocal(event.target.value as string)
   }
@@ -93,6 +92,7 @@ const Home = (props: Props) => {
           justifyContent: "center",
           alignItems: "center",
           height: "100vh",
+          marginTop: "-80px",
         }}
       >
         <div className="text-center">

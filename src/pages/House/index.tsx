@@ -8,12 +8,13 @@ import { House } from "../../types"
 import { config } from "../../utils/config"
 import Loading from "../../components/Loading"
 import AddHouse from "../../components/AddHouse"
+import { useAuth } from "../../hooks/useAuth"
 
 const HouseDetail = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const [house, setHouse] = useState<House | null>(null)
-  const token = localStorage.getItem("token")
+  const { getToken } = useAuth()
   const [modalOpen, setModalOpen] = useState(false)
   const [refresh, setRefresh] = useState(false)
 
@@ -24,6 +25,7 @@ const HouseDetail = () => {
 
   useEffect(() => {
     const fetchHouse = async () => {
+      const token = await getToken()
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/api/houses/house/${id}`,
@@ -43,7 +45,7 @@ const HouseDetail = () => {
     }
 
     fetchHouse()
-  }, [id, token, refresh])
+  }, [id, refresh])
 
   if (!house) {
     return <Loading />

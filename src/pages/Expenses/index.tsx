@@ -12,8 +12,6 @@ import { useAuth } from "../../hooks/useAuth"
 import Spinner from "../../components/Spinner"
 import Toaster from "../../components/Toaster"
 
-type Props = {}
-
 const columns: GridColDef[] = [
   {
     field: "image",
@@ -70,7 +68,7 @@ const columns: GridColDef[] = [
             <div className="houses">
               {params.row.involvedUsers.slice(0, 2).map((user: any) => {
                 return (
-                  <div className="house">
+                  <div className="house" key={user}>
                     <p>{user}</p>
                   </div>
                 )
@@ -121,11 +119,11 @@ const columns: GridColDef[] = [
   },
 ]
 
-const Expenses = (props: Props) => {
+const Expenses = () => {
   const [modalOpen, setModalOpen] = useState(false)
   const [expenses, setExpenses] = useState<Expense[]>([])
   const [filteredExpenses, setFilteredExpenses] = useState<Expense[]>([])
-  const [mobileExpenses, setMobileExpenses] = useState<Expense[]>([])
+  // const [mobileExpenses, setMobileExpenses] = useState<Expense[]>([])
   const [myself, setMyself] = useState(false)
   const [houses, setHouses] = useState<House[]>([])
   const [selectedHouse, setSelectedHouse] = useState<string | null>(null)
@@ -135,12 +133,13 @@ const Expenses = (props: Props) => {
   const [selectedStore, setSelectedStore] = useState<string | null>(null)
   const [refresh, setRefresh] = useState(false)
   const [spinner, setSpinner] = useState(false)
-  const { user } = useAuth()
-  const token = localStorage.getItem("token")
+  const { user, getToken } = useAuth()
+
 
   // Fetch houses
   useEffect(() => {
     const fetchHouses = async () => {
+      const token = await getToken()
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/api/houses`,
@@ -157,10 +156,11 @@ const Expenses = (props: Props) => {
     }
 
     fetchHouses()
-  }, [token])
+  }, [])
 
   // Fetch expenses from all houses
   const fetchExpenses = async () => {
+    const token = await getToken()
     setSpinner(true)
     try {
       const allExpenses: Expense[] = []
@@ -260,7 +260,8 @@ const Expenses = (props: Props) => {
     }
   }, [selectedHouse, myself, selectedMonth, selectedYear, expenses, user, selectedCategory, selectedStore])
 
-  const handleDelete = async (id: string, name: string) => {
+  const handleDelete = async (id: string, _name: string) => {
+    const token = await getToken()
     try {
       await axios.delete(`${import.meta.env.VITE_API_URL}/api/expenses/${id}`, {
         headers: {
@@ -278,22 +279,22 @@ const Expenses = (props: Props) => {
       )
     }
   }
-  useEffect(() => {
-      const mobileExpenses = filteredExpenses.map((expense) => {
-        return {
-          ...expense,
-          date: new Date(expense.date).toLocaleDateString("en-DE", {
-            hour: "2-digit",
-            minute: "2-digit",
-            month: "short",
-            day: "numeric",
-          }),
-        }
-      })
+  // useEffect(() => {
+  //     const mobileExpenses = filteredExpenses.map((expense) => {
+  //       return {
+  //         ...expense,
+  //         date: new Date(expense.date).toLocaleDateString("en-DE", {
+  //           hour: "2-digit",
+  //           minute: "2-digit",
+  //           month: "short",
+  //           day: "numeric",
+  //         }),
+  //       }
+  //     })
   
-      setMobileExpenses(mobileExpenses)
+  //     // setMobileExpenses(mobileExpenses)
     
-  } , [])
+  // } , [])
   
   return (
     <div className="expenses">

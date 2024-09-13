@@ -39,42 +39,45 @@ const darkTheme = createTheme({
 
 const LoadingSkeleton = () => {
   return (
-    <div className="h-screen p-4 bg-gray-100 border rounded">
-      <div className="h-10 mb-4 bg-gray-300 rounded"></div>
+    <div className="h-screen p-4 border rounded bg-stone-800">
+      <div className="h-10 mb-4 rounded bg-stone-900"></div>
       <div className="flex gap-4">
-        <div className="flex-1 h-40 bg-gray-300 rounded"></div>
-        <div className="h-40 bg-gray-300 rounded flex-3"></div>
+        <div className="flex-1 h-40 rounded bg-stone-900"></div>
+        <div className="h-40 rounded bg-stone-950 flex-3"></div>
       </div>
-      <div className="h-10 mt-4 bg-gray-300 rounded"></div>
+      <div className="h-10 mt-4 rounded bg-stone-950"></div>
     </div>
   )
 }
 
 const App = () => {
-  const { user } = useAuth()
+  const { user, loading } = useAuth()
   const Layout = () => {
     const navigate = useNavigate()
     const location = useLocation()
-    const [loading, setLoading] = useState(true)
     const [isOpen, setIsOpen] = useState(false)
+  
     useEffect(() => {
-      if (!user && location.pathname !== "/login") {
-        navigate("/login")
-      } else {
-        setLoading(false)
+      if(!loading){
+        if (!user && location.pathname !== "/login") {
+          navigate("/login")
+        } 
       }
-    }, [user, navigate, location])
+    }, [user, navigate, location, loading])
 
     if (loading) {
       return <LoadingSkeleton />
     }
 
     return (
-      <ThemeProvider theme={darkTheme}>
+      <ThemeProvider theme={darkTheme}
+      >
         <CssBaseline />
         <div className="main">
           <Navbar setIsOpen={setIsOpen} />
-          <div className="main-container">
+          <div className="main-container" style={{
+            paddingTop: 'env(safe-area-inset-top)'
+          }}>
             <MobileMenu isOpen={isOpen} setIsOpen={setIsOpen} />
             <div className="content-container">
               <Outlet />

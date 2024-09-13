@@ -15,8 +15,7 @@ const ExpenseDetail = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const [expense, setExpense] = useState<Expense | null>(null)
-  const { user } = useAuth()
-  const token = localStorage.getItem("token")
+  const { user, getToken } = useAuth()
   const [modalOpen, setModalOpen] = useState(false)
   const [refresh, setRefresh] = useState(false)
 
@@ -28,6 +27,7 @@ const ExpenseDetail = () => {
   // Fetch the expense details by ID
   useEffect(() => {
     const fetchExpense = async () => {
+      const token = await getToken()
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/api/expenses/${id}`,
@@ -45,7 +45,7 @@ const ExpenseDetail = () => {
     }
 
     fetchExpense()
-  }, [id, token, refresh])
+  }, [id, refresh])
 
   if (!expense) {
     return <Loading />

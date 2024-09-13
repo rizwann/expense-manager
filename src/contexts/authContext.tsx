@@ -1,6 +1,6 @@
-// auth-context.tsx
 import axios from "axios";
 import { ReactNode, createContext, useEffect, useState } from "react";
+import { Preferences } from "@capacitor/preferences";  // Import Preferences
 
 import { LoginFormInput } from "../components/Login";
 import { RegistrationFormInput } from "../components/Registration";
@@ -31,6 +31,10 @@ interface AuthContextType {
   setEmailSent: React.Dispatch<React.SetStateAction<boolean>>;
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
   setErrorMessage: React.Dispatch<React.SetStateAction<string | null>>;
+  setResetLink: React.Dispatch<React.SetStateAction<string | null>>;
+  loading: boolean;
+  getUserFromPreferences: () => Promise<IUser | null>;
+  getToken: () => Promise<string | null>;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(
@@ -46,32 +50,46 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [expiredError, setExpiredError] = useState<string | null>(null);
   const [selectedHouse, setSelectedHouse] = useState<House | null>(null);
   const [refresh, setRefresh] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const APP_URL = import.meta.env.VITE_API_URL;
-  // Check if the user is already authenticated
 
-  const token = localStorage.getItem("token");
+  // Helper function to get token from Capacitor Preferences
+  const getToken = async () => {
+    const { value } = await Preferences.get({ key: "token" });
+    return value;
+  };
+
+  // Helper function to get user from Capacitor Preferences
+  const getUserFromPreferences = async () => {
+    const { value } = await Preferences.get({ key: "user" });
+    return value ? JSON.parse(value) : null;
+  };
 
   const axiosInstance = axios.create({
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${getToken()}`,  // Fetch the token dynamically
     },
   });
+
   useEffect(() => {
-    const user = (localStorage.getItem("user") !== "undefined" && localStorage.getItem("user") !== null) ? JSON.parse(localStorage.getItem("user") as string) : null;
-    if (token && user) {
-      const getUpdatedUser = async () => {
+    const initializeAuth = async () => {
+      const token = await getToken();
+      const userFromPreferences = await getUserFromPreferences();
+
+      if (token && userFromPreferences) {
         try {
-          const response = await axios.get(`${APP_URL}/api/user/${user?._id}`, {
+          const response = await axios.get(`${APP_URL}/api/user/${userFromPreferences?._id}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           });
 
           setUser(response.data);
+
           if (response.data?.houseCodes.length > 0) {
             try {
-              const res = await axios.get<House>(
+              const houseResponse = await axios.get<House>(
                 `${APP_URL}/api/houses/${response.data?.houseCodes[0]}`,
                 {
                   headers: {
@@ -79,28 +97,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                   },
                 }
               );
-              setSelectedHouse(res.data);
+              setSelectedHouse(houseResponse.data);
             } catch (error) {
               console.log(error);
             }
           }
 
-          localStorage.setItem("user", JSON.stringify(response.data));
+          await Preferences.set({
+            key: "user",
+            value: JSON.stringify(response.data),
+          });
         } catch (error) {
           console.log(error);
-          logout()
+          logout();
+        } finally {
+          setLoading(false);
         }
-      };
-      getUpdatedUser();
-      setUser(user);
-    }
-  }, [APP_URL, token, refresh]);
-
-  console.log(user);
+      } else {
+        setLoading(false);
+      }
+    };
+    initializeAuth();
+  }, [APP_URL, refresh]);
 
   const login = async (data: LoginFormInput) => {
     try {
-      //check if data is email or username
       const isEmail = data.usernameOrEmail.includes("@");
 
       const loginData = isEmail
@@ -108,24 +129,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         : { username: data.usernameOrEmail, password: data.password };
 
       const response = await axios.post(`${APP_URL}/api/auth/login`, loginData);
-      console.log("login");
       const token = response.data.token;
-      localStorage.setItem("token", token);
-      console.log(response.data);
-      setUser(response.data.user);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await Preferences.set({ key: "token", value: token });
+      await Preferences.set({
+        key: "user",
+        value: JSON.stringify(response.data.user),
+      });
+      setUser(response.data.user);
+      if(response.data.user.houseCodes.length > 0){
+        const house = response.data.user.houses[0]
+        setSelectedHouse(house)
+      }
     } catch (error: any) {
       setErrorMessage(error.response.data.message);
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+  const logout = async () => {
+    await Preferences.remove({ key: "token" });
+    await Preferences.remove({ key: "user" });
     setUser(null);
-    console.log("logout");
   };
 
   const registration = async (data: RegistrationFormInput) => {
@@ -137,14 +161,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         name: data.name,
       };
 
-      const response = await axios.post(
-        `${APP_URL}/api/auth/register`,
-        registerData
-      );
-
-      console.log(response.data);
-
-      // redirect to success page and then login the user
+      await axios.post(`${APP_URL}/api/auth/register`, registerData);
 
       const loginData = {
         usernameOrEmail: data.username,
@@ -152,11 +169,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       };
 
       await login(loginData);
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       setErrorMessage(error.response.data.message);
-      console.log(error);
     }
   };
 
@@ -166,26 +180,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         email: data.email,
       };
 
-      const response = await axios.post(
-        `${APP_URL}/forgot-password`,
-        resetPasswordData
-      );
+      await axios.post(`${APP_URL}/forgot-password`, resetPasswordData);
 
-      console.log(response);
       logout();
       setEmailSent(true);
-
-      // redirect to success page and then login the user
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       setEmailSent(false);
-      console.log(error.response);
-      if (error.response) {
-        setErrorMessage(error.response.data.message);
-      } else {
-        setErrorMessage(error.message + "!! 😿 " + "Please try again.");
-      }
+      setErrorMessage(error.response ? error.response.data.message : error.message);
     }
   };
 
@@ -193,52 +194,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       await axios.get(`${APP_URL}/reset-password/${id}/${token}`);
       setVerified(true);
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      console.log(error);
       setVerified(false);
-      if (error.response) {
-        setExpiredError(error.response.data.message);
-      } else {
-        setExpiredError(error.message + "!! 😿 " + "Please try again.");
-      }
+      setExpiredError(error.response ? error.response.data.message : error.message);
     }
   };
-  const changeFortgotPW = async (
-    data: PasswordResetFormInput,
-    id: string,
-    token: string
-  ) => {
+
+  const changeFortgotPW = async (data: PasswordResetFormInput, id: string, token: string) => {
     const changePasswordData = {
       password: data.newPassword,
     };
+
     logout();
     try {
-      const response = await axios.post(
-        `${APP_URL}/reset-password/${id}/${token}`,
-        changePasswordData
-      );
-
+      const response = await axios.post(`${APP_URL}/reset-password/${id}/${token}`, changePasswordData);
       console.log(response);
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      console.log(error);
-      if (error.response) {
-        setExpiredError(error.response.data.message);
-      } else {
-        setExpiredError(error.message + "!! 😿 " + "Please try again.");
-      }
+      setExpiredError(error.response ? error.response.data.message : error.message);
     }
   };
 
   const changeHouse = async (code: string | null) => {
     try {
       if (code) {
-        const response = await axiosInstance.get<House>(
-          `${APP_URL}/api/houses/${code}`
-        );
+        const response = await axiosInstance.get<House>(`${APP_URL}/api/houses/${code}`);
         setSelectedHouse(response.data);
       }
     } catch (error) {
@@ -259,13 +238,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         verifyPasswordReset,
         changeFortgotPW,
         resetLink,
+        setResetLink,
         emailSent,
         verified,
         changeHouse,
         selectedHouse,
         setEmailSent,
         setRefresh,
-        setErrorMessage
+        setErrorMessage,
+        loading,
+        getUserFromPreferences,
+        getToken
       }}
     >
       {children}

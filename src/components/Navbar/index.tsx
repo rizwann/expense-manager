@@ -4,7 +4,7 @@ import "./navbar.scss"
 import { NavLink, useNavigate } from "react-router-dom"
 import { GridMenuIcon } from "@mui/x-data-grid"
 import Menu from "../Menu"
-import { TuneRounded } from "@mui/icons-material"
+import { Device } from "@capacitor/device"
 
 interface IProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -14,8 +14,10 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
   const { logout, user } = useAuth()
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
+  const [isIOSApp, setIsIOSApp] = useState(false)
   const navigate = useNavigate()
   const preferencesRef = useRef<HTMLDivElement>(null)
+
 
   const toggleMenu = () => {
     setIsOpen((prev) => !prev)
@@ -42,6 +44,18 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
   }
 
   useEffect(() => {
+    const checkDevice = async () => {
+      const info = await Device.getInfo()
+      if (info.platform === "ios") {
+        setIsIOSApp(true)
+      } else {
+        setIsIOSApp(false)
+      }
+    }
+    checkDevice()
+  }, [])
+
+  useEffect(() => {
     if (isPreferencesOpen) {
       document.addEventListener("mousedown", handleClickOutside)
     } else {
@@ -58,7 +72,9 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
   }
 
   return (
-    <div className="navbar">
+    <div className="navbar" style={{
+      paddingTop: isIOSApp ? 'env(safe-area-inset-top)' : '20px'
+    }}>
       {isLoggingOut && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
           <div className="relative flex flex-col items-center text-white">

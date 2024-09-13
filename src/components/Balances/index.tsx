@@ -27,8 +27,8 @@ const getCurrentMonth = () => new Date().toLocaleString('default', { month: 'lon
 const years = Array.from({ length: 5 }, (_, i) => getCurrentYear() - i);
 
 const TransactionSummary: React.FC = () => {
-  const { selectedHouse, user } = useAuth()
-  const token = localStorage.getItem("token")
+  const { selectedHouse, user, getToken } = useAuth()
+
   const [data, setData] = useState<TransactionData | null>(null)
   const [loading, setLoading] = useState(true)
   const [houses, setHouses] = useState<House[]>([])
@@ -41,6 +41,7 @@ const TransactionSummary: React.FC = () => {
 
   // Fetch houses for the dropdown
   const fetchHouses = async () => {
+    const token = await getToken()
     const houseApi = isAdmin
       ? `${import.meta.env.VITE_API_URL}/api/houses/all`
       : `${import.meta.env.VITE_API_URL}/api/houses`
@@ -60,6 +61,7 @@ const TransactionSummary: React.FC = () => {
   const fetchTransactionData = async (houseCode: string, month: string, year: number) => {
     const monthNumber = months.indexOf(month) + 1
     setLoading(true)
+    const token = await getToken()
     try {
       const response = await axios.get<TransactionData>(
         `${import.meta.env.VITE_API_URL}/api/expenses/balance/${houseCode}/${monthNumber}/${year}`,
@@ -84,7 +86,7 @@ const TransactionSummary: React.FC = () => {
 
   const handleHouseChange = (
     event: SelectChangeEvent<string>,
-    child: ReactNode
+    _child: ReactNode
   ) => {
     setSelectedHouseLocal(event.target.value as string)
   }

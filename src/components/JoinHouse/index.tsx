@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css"
 import { Button } from "../Button"
 import { Close } from "@mui/icons-material"
 import { Modal } from "@mui/material"
+import { useAuth } from "../../hooks/useAuth"
 
 interface IProps {
   columns: any[]
@@ -22,10 +23,11 @@ const JoinHouse: React.FC<IProps> = ({
 }) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [formData, setFormData] = useState<{ [key: string]: any }>({})
-  const token = localStorage.getItem("token")
+  const {getToken} = useAuth()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const token = await getToken()
     const formDataToSend = new FormData()
     Object.keys(formData).forEach((key) => {
       formDataToSend.append(key, formData[key])
@@ -91,7 +93,7 @@ const JoinHouse: React.FC<IProps> = ({
                             name={column.field}
                             value={formData[column.field] || ""}
                             onChange={(e) =>
-                              setFormData((prev) => ({
+                              setFormData((_prev) => ({
                                 code: e.target.value,
                               }))
                             }

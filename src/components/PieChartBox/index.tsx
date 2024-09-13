@@ -4,6 +4,7 @@ import { House, IUser } from "../../types"
 import { useEffect, useState } from "react"
 import { fetchHouseExpByAllStore } from "../../utils/chartDataFetch"
 import { generateContrastingColors } from "../../utils/utils"
+import { useAuth } from "../../hooks/useAuth"
 
 interface PieChartBoxProps {
   user: IUser
@@ -17,11 +18,12 @@ export type StoreData = {
 }
 
 const PieChartBox: React.FC<PieChartBoxProps> = ({ user, selectedHouse }) => {
-  const token = localStorage.getItem("token") || ""
+  const { getToken } = useAuth()
   const [data, setData] = useState<StoreData[]>([])
 
   useEffect(() => {
     const fetchChartData = async () => {
+      const token = await getToken()
       const chartData = await fetchHouseExpByAllStore(selectedHouse, token)
       const numColors = chartData.length
       const contrastingColors = generateContrastingColors(numColors)
@@ -32,7 +34,7 @@ const PieChartBox: React.FC<PieChartBoxProps> = ({ user, selectedHouse }) => {
       setData(chartData)
     }
     fetchChartData()
-  }, [user, token])
+  }, [user])
 
   return (
     <div className="pieChartBox">
@@ -43,7 +45,7 @@ const PieChartBox: React.FC<PieChartBoxProps> = ({ user, selectedHouse }) => {
           <PieChart>
             <Tooltip
               contentStyle={{ background: "white", borderRadius: "5px" }}
-              content={({ active, payload, label }) => {
+              content={({ active, payload }) => {
                 if (active && payload && payload.length) {
                   return (
                     <div

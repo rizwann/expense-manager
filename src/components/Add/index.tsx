@@ -61,14 +61,15 @@ const Add: React.FC<IProps> = ({
   const [searchTerm, setSearchTerm] = useState("")
   const [showSuggestions, setShowSuggestions] = useState(false)
 
-  const token = localStorage.getItem("token")
-  const { user } = useAuth()
+
+  const { user, getToken } = useAuth()
   const userId = user?._id
   const containerRef = useRef<HTMLDivElement>(null) // Explicitly typing the ref
   // Ref for the dropdown container
 
   useEffect(() => {
     const fetchStores = async () => {
+      const token = await getToken()
       const storeApi = `${import.meta.env.VITE_API_URL}/api/stores`
       const data = await axios.get<Store[]>(storeApi, {
         headers: {
@@ -79,6 +80,7 @@ const Add: React.FC<IProps> = ({
     }
 
     const fetchHouses = async () => {
+      const token = await getToken()
       const houseApi = `${import.meta.env.VITE_API_URL}/api/houses`
       const data = await axios.get<House[]>(houseApi, {
         headers: {
@@ -90,7 +92,7 @@ const Add: React.FC<IProps> = ({
 
     fetchStores()
     fetchHouses()
-  }, [token])
+  }, [])
 
   // Filter stores based on search term
   useEffect(() => {
@@ -131,6 +133,7 @@ const Add: React.FC<IProps> = ({
   useEffect(() => {
     if (selectedHouse) {
       const fetchHouseUsers = async () => {
+      const token = await getToken()
         try {
           const res = await axios.get<IUser[]>(
             `${import.meta.env.VITE_API_URL}/api/user/house/${
@@ -149,7 +152,7 @@ const Add: React.FC<IProps> = ({
       }
       fetchHouseUsers()
     }
-  }, [selectedHouse, token])
+  }, [selectedHouse])
 
   useEffect(() => {
     if (editData) {
@@ -170,6 +173,7 @@ const Add: React.FC<IProps> = ({
   useEffect(() => {
     if (editData && selectedHouse) {
       const fetchHouseUsers = async () => {
+      const token = await getToken()
         try {
           const res = await axios.get<IUser[]>(
             `${import.meta.env.VITE_API_URL}/api/user/house/${
@@ -188,12 +192,13 @@ const Add: React.FC<IProps> = ({
       }
       fetchHouseUsers()
     }
-  }, [editData, selectedHouse, token])
+  }, [editData, selectedHouse])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
     const data: any = {}
+    const token = await getToken()
     formData.forEach((value, key) => {
       if (key === "date" && !selectCustomTime) {
         return null

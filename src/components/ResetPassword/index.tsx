@@ -54,7 +54,7 @@ function ResetPassword() {
                 })}
               />
               {errors.email && (
-                <span className="text-red-400">{errors.email.message}</span>
+                <span className="text-red-400">nunu</span>
               )}
             </div>
             {errorMessage && <div className="text-red-400">{errorMessage}</div>}
