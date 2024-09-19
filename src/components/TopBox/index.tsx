@@ -4,6 +4,7 @@ import "./topBox.scss"
 import axios from "axios"
 import { NavLink } from "react-router-dom"
 import { useAuth } from "../../hooks/useAuth"
+import { getImage } from "../../utils/utils"
 
 interface IProps {
   user: IUser
@@ -23,31 +24,6 @@ enum CategoryName {
   Health = "Health",
 }
 
-// add image according to category
-const getImage = (category: string) => {
-  switch (category) {
-    case CategoryName.Grocery:
-      return "/grocery.png"
-    case CategoryName.Restaurant:
-      return "/restaurant.png"
-    case CategoryName.Clothing:
-      return "/clothing.png"
-    case CategoryName.Entertainment:
-      return "/entertainment.png"
-    case CategoryName.Butcher:
-      return "/butcher.png"
-    case CategoryName.Travel:
-      return "/travel.png"
-    case CategoryName.Electronics:
-      return "/electronics.png"
-    case CategoryName.Utilities:
-      return "/utilities.png"
-    case CategoryName.Health:
-      return "/health.png"
-    default:
-      return "/others.png"
-  }
-}
 
 const TopBox: React.FC<IProps> = ({ user, houseCode }) => {
   const [expenses, setExpenses] = useState<Expense[]>([])

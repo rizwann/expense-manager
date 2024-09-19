@@ -130,7 +130,7 @@ const Expenses = () => {
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null)
   const [selectedYear, setSelectedYear] = useState<string | null>(null)
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
-  const [selectedStore, setSelectedStore] = useState<string | null>(null)
+  // const [selectedStore, setSelectedStore] = useState<string | null>(null)
   const [refresh, setRefresh] = useState(false)
   const [spinner, setSpinner] = useState(false)
   const { user, getToken } = useAuth()
@@ -196,7 +196,7 @@ const Expenses = () => {
       setSelectedMonth(null)
       setSelectedYear(null)
       setSelectedCategory(null)
-      setSelectedStore(null)
+      // setSelectedStore(null)
       setMyself(false)
     } catch (error) {
       console.error("Error fetching expenses:", error)
@@ -250,15 +250,15 @@ const Expenses = () => {
         )
       }
 
-      if (selectedStore) {
-        filtered = filtered.filter(
-          (expense) => expense.storeName === selectedStore
-        )
-      }
+      // if (selectedStore) {
+      //   filtered = filtered.filter(
+      //     (expense) => expense.storeName === selectedStore
+      //   )
+      // }
   
       setFilteredExpenses(filtered)
     }
-  }, [selectedHouse, myself, selectedMonth, selectedYear, expenses, user, selectedCategory, selectedStore])
+  }, [selectedHouse, myself, selectedMonth, selectedYear, expenses, user, selectedCategory])
 
   const handleDelete = async (id: string, _name: string) => {
     const token = await getToken()
@@ -344,7 +344,7 @@ const Expenses = () => {
         </select>
 
         {/* Store Selector */}
-        <select
+        {/* <select
           className="dark-input"
           value={selectedStore || ""}
           onChange={(e) => setSelectedStore(e.target.value)}
@@ -357,7 +357,7 @@ const Expenses = () => {
               {store}
             </option>
           ))}
-        </select>
+        </select> */}
 
         {/* Month Selector */}
         <select
