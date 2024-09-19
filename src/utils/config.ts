@@ -36,6 +36,11 @@ const expenseFields = [
     headerName: "Date",
     control: "date",
   },
+  {
+    field: "receipt",
+    headerName: "Receipt",
+    control: "file",
+  },
 ]
 
 const storeFields = [

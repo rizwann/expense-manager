@@ -78,7 +78,7 @@ const ExpenseDetail = () => {
         <div className="image">
       <h1>Expense Details</h1>
           <img
-            src={expense.storeImg}
+            src={expense.receipt || "/app.svg"}
             alt={expense.storeName}
             onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) =>
               (e.currentTarget.src = "/app.svg")

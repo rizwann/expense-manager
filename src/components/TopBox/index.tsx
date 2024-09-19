@@ -10,6 +10,45 @@ interface IProps {
   houseCode: string
 }
 
+enum CategoryName {
+  Other = "Other",
+  Grocery = "Grocery",
+  Restaurant = "Restaurant",
+  Clothing = "Clothing",
+  Entertainment = "Entertainment",
+  Butcher = "Butcher",
+  Travel = "Travel",
+  Electronics = "Electronics",
+  Utilities = "Utilities",
+  Health = "Health",
+}
+
+// add image according to category
+const getImage = (category: string) => {
+  switch (category) {
+    case CategoryName.Grocery:
+      return "/grocery.png"
+    case CategoryName.Restaurant:
+      return "/restaurant.png"
+    case CategoryName.Clothing:
+      return "/clothing.png"
+    case CategoryName.Entertainment:
+      return "/entertainment.png"
+    case CategoryName.Butcher:
+      return "/butcher.png"
+    case CategoryName.Travel:
+      return "/travel.png"
+    case CategoryName.Electronics:
+      return "/electronics.png"
+    case CategoryName.Utilities:
+      return "/utilities.png"
+    case CategoryName.Health:
+      return "/health.png"
+    default:
+      return "/others.png"
+  }
+}
+
 const TopBox: React.FC<IProps> = ({ user, houseCode }) => {
   const [expenses, setExpenses] = useState<Expense[]>([])
   const {getToken} = useAuth()
@@ -49,11 +88,14 @@ const TopBox: React.FC<IProps> = ({ user, houseCode }) => {
               
             >
               <NavLink className="user" to={`/expenses/${expense._id}`}>
-                <img  src={expense?.storeImg}
+                <img  src={
+                  getImage(expense.category)
+                }
             alt={user?.name || "user"}
-            onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) =>
-              (e.currentTarget.src = "/storeName.svg")
-            }/>
+            // onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) =>
+            //   (e.currentTarget.src = "/storeName.svg")
+            // }
+            />
 
                 <div className="user-texts">
                   <span className="storename">{expense.storeName}</span>

@@ -208,12 +208,12 @@ const Home = () => {
             />
           )}
         </div>
-        <div className="box box4">
+        {/* <div className="box box4">
           {selectedHouseData && (
             <PieChartBox user={user} selectedHouse={selectedHouseData} />
           )}
-        </div>
-        <div className="box box5">
+        </div> */}
+        {/* <div className="box box5">
           {selectedHouseData && (
             <ChartBox
               {...chartBoxConversion}
@@ -222,7 +222,7 @@ const Home = () => {
               selectedHouse={selectedHouseData}
             />
           )}
-        </div>
+        </div> */}
         <div className="box box6">
           {selectedHouseData && (
             <ChartBox

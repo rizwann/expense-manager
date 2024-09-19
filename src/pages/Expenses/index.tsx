@@ -20,8 +20,8 @@ const columns: GridColDef[] = [
     renderCell: (params) => (
       <img
         src={
-          params.row.storeImg
-            ? params.row.storeImg
+          params.row.receipt
+            ? params.row.receipt
             : "/noavatar.png "
         }
         alt="store"

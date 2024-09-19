@@ -13,6 +13,7 @@ import {
   fetchUserSixMonthsExpenses,
 } from "../../utils/chartDataFetch"
 import { useAuth } from "../../hooks/useAuth"
+import React from "react"
 
 interface BarChartBoxProps {
   title: string
@@ -102,7 +103,7 @@ const BarChartBox: React.FC<BarChartBoxProps> = ({
                 return null
               }}
             />
-            <XAxis dataKey="firstName" />
+            <XAxis dataKey="name" />
             <Bar dataKey={dataKey} fill={color} />
           </BarChart>
         </ResponsiveContainer>

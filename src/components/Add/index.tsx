@@ -15,6 +15,7 @@ import "react-toastify/dist/ReactToastify.css"
 import { useAuth } from "../../hooks/useAuth"
 import Button from "../../pages/components/Button"
 import { Close } from "@mui/icons-material"
+import React from "react"
 
 interface IProps {
   slug: string
@@ -46,7 +47,6 @@ const Add: React.FC<IProps> = ({
   editData,
   modalOpen,
 }) => {
-  const [stores, setStores] = useState<Store[]>([])
   const [houses, setHouses] = useState<House[]>([])
   const [houseUsers, setHouseUsers] = useState<IUser[]>([])
   const [selectCustomTime, setSelectCustomTime] = useState(false)
@@ -56,29 +56,16 @@ const Add: React.FC<IProps> = ({
   const [selectedPayer, setSelectedPayer] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [formData, setFormData] = useState<{ [key: string]: any }>({})
-  const [filteredStores, setFilteredStores] = useState<Store[]>([])
   const [selectedStore, setSelectedStore] = useState<string | null>(null)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [showSuggestions, setShowSuggestions] = useState(false)
+  const [storeName, setStoreName] = useState("")
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
 
 
   const { user, getToken } = useAuth()
   const userId = user?._id
-  const containerRef = useRef<HTMLDivElement>(null) // Explicitly typing the ref
-  // Ref for the dropdown container
+
 
   useEffect(() => {
-    const fetchStores = async () => {
-      const token = await getToken()
-      const storeApi = `${import.meta.env.VITE_API_URL}/api/stores`
-      const data = await axios.get<Store[]>(storeApi, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      setStores(data.data)
-    }
-
     const fetchHouses = async () => {
       const token = await getToken()
       const houseApi = `${import.meta.env.VITE_API_URL}/api/houses`
@@ -90,44 +77,7 @@ const Add: React.FC<IProps> = ({
       setHouses(data.data)
     }
 
-    fetchStores()
     fetchHouses()
-  }, [])
-
-  // Filter stores based on search term
-  useEffect(() => {
-    if (searchTerm.length > 0) {
-      const filtered = stores.filter((store) =>
-        store.name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-      setFilteredStores(filtered)
-      // setShowSuggestions(true)
-    } else {
-      setShowSuggestions(false)
-    }
-  }, [searchTerm, stores])
-
-  const handleStoreSelect = (storeId: string, storeName: string) => {
-    setSelectedStore(storeId)
-    setSearchTerm(storeName) // Set the searchTerm to the store name when selected
-    setShowSuggestions(false) // Hide the suggestions after selection
-  }
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      // Ensure containerRef.current is defined and not null
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        setShowSuggestions(false) // Close suggestions when clicking outside
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
   }, [])
 
   useEffect(() => {
@@ -161,12 +111,15 @@ const Add: React.FC<IProps> = ({
       setPaidByMe(editData.paymentPerson === userId)
       setSelectedPayer(editData.paymentPerson || null)
       const selectedStoreName = editData.storeName
-      setSearchTerm(selectedStoreName || "")
+      setStoreName(selectedStoreName || "")
 
       const selectedHouse = houses.find(
         (house) => house.code === editData.houseCode
       )
       setSelectedHouse(selectedHouse || null)
+      if (editData.receipt) {
+        setImagePreview(editData.receipt)
+      }
     }
   }, [editData, houses, userId, modalOpen])
 
@@ -196,10 +149,14 @@ const Add: React.FC<IProps> = ({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const formData = new FormData(e.currentTarget)
+    const formDataToSend = new FormData(e.currentTarget)
     const data: any = {}
     const token = await getToken()
-    formData.forEach((value, key) => {
+
+    // Object.keys(formDataToSend).forEach((key) => {
+    //   formDataToSend.append(key, formDataToSend[key])
+    // })
+    formDataToSend.forEach((value, key) => {
       if (key === "date" && !selectCustomTime) {
         return null
       } else if (key === "involvedUsers") {
@@ -209,9 +166,9 @@ const Add: React.FC<IProps> = ({
       }
     })
 
-    data.storeId = selectedStore
+    data.storeName = storeName
     data.paymentPerson = paidByMe ? userId : selectedPayer
-
+console.log("submitted Expense Data", data)
     try {
       if (editData) {
         await axios.put(
@@ -220,6 +177,7 @@ const Add: React.FC<IProps> = ({
           {
             headers: {
               Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
             },
           }
         )
@@ -231,6 +189,7 @@ const Add: React.FC<IProps> = ({
           {
             headers: {
               Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
             },
           }
         )
@@ -242,9 +201,10 @@ const Add: React.FC<IProps> = ({
       setFormData({})
       setSelectedUsers([])
       setSelectedPayer(null)
-      setSearchTerm("")
+      setStoreName("")
       setSelectedStore(null)
       setSelectedHouse(null)
+      setImagePreview(null)
     } catch (error: any) {
       if (error.response) {
         setErrorMessage(
@@ -259,18 +219,24 @@ const Add: React.FC<IProps> = ({
       toast.error(errorMessage)
     }
   }
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      setFormData((prev) => ({ ...prev, receipt: file }))
+      setImagePreview(URL.createObjectURL(file))
+    }
+  }
   const handleCloseModal = () => {
     setModalOpen(false)
    if (!editData) {
       setFormData({})
       setSelectedUsers([])
       setSelectedPayer(null)
-      setSearchTerm("")
+      setStoreName("")
       setSelectedStore(null)
       setSelectedHouse(null)
       setErrorMessage(null)
-      setFilteredStores([])
-      setShowSuggestions(false)
+      setImagePreview(null)
     }
   }
   return (
@@ -405,53 +371,66 @@ const Add: React.FC<IProps> = ({
                                 </div>
                               </div>
                             )
+                            case "file":
+                        return (
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              flexDirection: "column",
+                            }}
+                          >
+                            <input
+                              type="file"
+                              name={column.field}
+                              onChange={handleImageChange}
+                              id="imageUpload"
+                            />
+                            <label
+                              style={{ marginTop: "10px" }}
+                              htmlFor="imageUpload"
+                            >
+                              Upload Receipt
+                            </label>
+
+                            {(imagePreview || editData?.receipt) && (
+                              <div className="image-preview">
+                                <img
+                                  src={
+                                    imagePreview
+                                      ? imagePreview
+                                      : editData?.receipt
+                                      ? editData?.receipt
+                                      : "/app.svg"
+                                  }
+                                  alt="Image Preview"
+                                  onError={(
+                                    e: React.SyntheticEvent<
+                                      HTMLImageElement,
+                                      Event
+                                    >
+                                  ) => (e.currentTarget.src = "/app.svg")}
+                                />
+                              </div>
+                            )}
+                          </div>
+                        )
                           case "select":
                             if (column.field === "storeName") {
                               return (
                                 <div
                                   className="relative w-full"
-                                  ref={containerRef}
                                 >
                                   <input
                                     type="text"
                                     placeholder="Search Store..."
-                                    value={searchTerm}
-                                    onChange={(e) =>
-                                      setSearchTerm(e.target.value)
-                                    }
-                                    onFocus={() => setShowSuggestions(true)}
+                                    value={storeName}
+                                    onChange={(e) => setStoreName(e.target.value)}
                                     className="w-full px-4 py-2 text-white bg-gray-800 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    required
                                   />
-                                  {showSuggestions &&
-                                    filteredStores.length > 0 && (
-                                      <ul className="absolute z-10 w-full gap-1 mt-1 overflow-y-auto bg-gray-800 border border-gray-600 rounded-md shadow-lg max-h-60">
-                                        {filteredStores.map((store) => (
-                                          <li
-                                            key={store._id}
-                                            onClick={() => {
-                                              setShowSuggestions(false)
-                                              handleStoreSelect(
-                                                store._id,
-                                                store.name
-                                              )
-                                            }}
-                                            className="flex items-center gap-2 px-4 py-2 text-white cursor-pointer hover:bg-gray-700"
-                                          >
-                                            <img
-                                              src={store.image || "/app.svg"}
-                                              alt={store.name}
-                                              className="w-8 h-8 rounded-full"
-                                            />
-                                            <div className="text-xs">
-                                              {store.name.length > 9
-                                                ? store.name.substring(0, 9) +
-                                                  "..."
-                                                : store.name}
-                                            </div>
-                                          </li>
-                                        ))}
-                                      </ul>
-                                    )}
+                                  
                                 </div>
                               )
                             } else if (column.field === "category") {

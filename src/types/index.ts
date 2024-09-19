@@ -40,7 +40,7 @@ export type Store = {
 export type Expense = {
   _id: string;
   storeName: string;
-  storeImg: string;
+  receipt: string;
   storeId: string;
   cost: number;
   category: string;
