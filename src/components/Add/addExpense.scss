@@ -16,7 +16,6 @@
     padding: 40px;
     margin-top: 30px;
     border-radius: 15px;
-    background: #2c2c2c;
     background: linear-gradient(145deg, #2a2a2a, #3a3a3a);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
     position: relative;
@@ -56,14 +55,12 @@
     form {
       width: 100%;
       display: flex;
-      flex-direction: column;
-      gap: 20px; // Ensure the gap is applied correctly
+ 
 
       .item {
         width: 100%;
         display: flex;
         flex-direction: column;
-        gap: 10px;
 
         label {
           font-size: 16px;
@@ -83,6 +80,11 @@
             border-color: #3498db;
             box-shadow: 0 0 10px rgba(52, 152, 219, 0.7);
           }
+          @media (max-width: 415px) {
+            padding: 10px;
+            font-size: 15px;
+            max-width: 100%;
+          }
         }
 
         select {
@@ -92,9 +94,21 @@
         }
         .image-preview {
           margin-top: 5px;
+          height: 230px;
+          width: 300px;
+          margin: 0 auto;
+          border-radius: 15px;
+          @media (max-width: 415px) {
+            height: 160px;
+            width: 230px;
+          }
+          @media (max-height: 820px) {
+            height: 120px;
+            width: 200px;
+          }
           img {
-            max-width: 100%;
-            max-height: 100px;
+            width: 100%;
+            height: 100%;
             border-radius: 15px;
             border: 2px solid #444;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
@@ -111,8 +125,15 @@
       .item-container {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 30px;
         justify-content: space-between;
+        @media (max-width: 574px) {
+          gap: 20px;
+        }
+        @media (max-width: 415px) {
+          gap: 10px;
+          width: calc(100%);
+        }
 
         .item {
           flex: 1 1 45%;
@@ -202,7 +223,7 @@
       }
 
       form {
-        gap: 10px;
+        gap: 5px;
         .item-container {
           .item {
             width: 100%;
@@ -216,6 +237,11 @@
     }
   }
   @media (max-height: 680px) {
+    .modal-expense {
+      height: 100%;
+    }
+  }
+  @media (max-height: 800px) {
     .modal-expense {
       height: 100%;
     }

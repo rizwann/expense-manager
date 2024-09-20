@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import axios from "axios"
+import Zoom from "react-medium-image-zoom";
+import 'react-medium-image-zoom/dist/styles.css';
 import "./expenseDetail.scss"
 import { useAuth } from "../../hooks/useAuth"
 import { toast } from "react-toastify"
@@ -10,6 +12,7 @@ import { config } from "../../utils/config"
 import Add from "../../components/Add"
 import Loading from "../../components/Loading"
 import Toaster from "../../components/Toaster"
+import { DownloadOutlined } from "@mui/icons-material";
 
 const ExpenseDetail = () => {
   const { id } = useParams<{ id: string }>()
@@ -18,6 +21,7 @@ const ExpenseDetail = () => {
   const { user, getToken } = useAuth()
   const [modalOpen, setModalOpen] = useState(false)
   const [refresh, setRefresh] = useState(false)
+  const [isZoomed, setIsZoomed] = useState(false);
 
   // Open modal in edit mode
   const openEditModal = () => {
@@ -53,6 +57,36 @@ const ExpenseDetail = () => {
 
   const isEditable = user?.username === expense.user
 
+
+  const handleDownload = () => {
+    if(!expense.receipt) {
+      toast.error("No receipt found for this expense.");
+    } else {
+      fetch(expense.receipt, {
+        method: 'GET',
+        headers: {},
+      })
+        .then((response) => response.blob())
+        .then((blob) => {
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', `${expense.storeName}_${new Date(expense.date).toLocaleString(
+            "en-DE",
+            {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            }
+          )}.png`); // Set filename
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+        });
+    }
+
+  };
+
   return (
     <div className="expense-detail">
       <div className="expense-header">
@@ -75,16 +109,38 @@ const ExpenseDetail = () => {
         {isEditable && <Button text={"Edit"} onClick={() => openEditModal()} />}
       </div>
       <div className="content">
-        <div className="image">
+      <div className="image">
       <h1>Expense Details</h1>
-          <img
-            src={expense.receipt || "/app.svg"}
-            alt={expense.storeName}
-            onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) =>
-              (e.currentTarget.src = "/app.svg")
-            }
-          />
+      <img
+        src={expense.receipt || "/app.svg"}
+        alt={expense.storeName}
+        onClick={() => {
+          expense.receipt && setIsZoomed(true)
+        }} // Open zoom modal on click
+        onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) =>
+          (e.currentTarget.src = "/app.svg")
+        }
+        className="image-preview"
+      />
+      <button className="download-btn" onClick={handleDownload}>
+        <DownloadOutlined/> Download Image
+      </button>
+
+      {/* Custom Modal for Zoom */}
+      {isZoomed && (
+        <div className="modal-overlay" onClick={() => setIsZoomed(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <img src={expense.receipt || "/app.svg"} alt={expense.storeName} />
+          </div>
+          {/* // Close button */}
+          <button
+          className="close-btn"
+            onClick={() => setIsZoomed(false)}>
+            Close
+            </button>
         </div>
+      )}
+    </div>
         <div className="details">
           <label>
             Store Name:
