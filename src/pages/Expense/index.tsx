@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import axios from "axios"
-import Zoom from "react-medium-image-zoom";
 import 'react-medium-image-zoom/dist/styles.css';
 import "./expenseDetail.scss"
 import { useAuth } from "../../hooks/useAuth"

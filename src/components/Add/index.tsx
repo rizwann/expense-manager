@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import "./addExpense.scss"
-import { House, IUser, Store } from "../../types"
+import { House, IUser } from "../../types"
 import axios from "axios"
 import {
   Collapse,
@@ -56,7 +56,6 @@ const Add: React.FC<IProps> = ({
   const [selectedPayer, setSelectedPayer] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [formData, setFormData] = useState<{ [key: string]: any }>({})
-  const [selectedStore, setSelectedStore] = useState<string | null>(null)
   const [storeName, setStoreName] = useState("")
   const [imagePreview, setImagePreview] = useState<string | null>(null)
 
@@ -202,7 +201,6 @@ console.log("submitted Expense Data", data)
       setSelectedUsers([])
       setSelectedPayer(null)
       setStoreName("")
-      setSelectedStore(null)
       setSelectedHouse(null)
       setImagePreview(null)
     } catch (error: any) {
@@ -233,7 +231,6 @@ console.log("submitted Expense Data", data)
       setSelectedUsers([])
       setSelectedPayer(null)
       setStoreName("")
-      setSelectedStore(null)
       setSelectedHouse(null)
       setErrorMessage(null)
       setImagePreview(null)
@@ -386,6 +383,9 @@ console.log("submitted Expense Data", data)
                               name={column.field}
                               onChange={handleImageChange}
                               id="imageUpload"
+                              //only image
+                              accept="image/*"
+                              
                             />
                             <label
                               style={{ marginTop: "10px" }}

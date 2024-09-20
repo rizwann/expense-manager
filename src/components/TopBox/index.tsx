@@ -11,20 +11,6 @@ interface IProps {
   houseCode: string
 }
 
-enum CategoryName {
-  Other = "Other",
-  Grocery = "Grocery",
-  Restaurant = "Restaurant",
-  Clothing = "Clothing",
-  Entertainment = "Entertainment",
-  Butcher = "Butcher",
-  Travel = "Travel",
-  Electronics = "Electronics",
-  Utilities = "Utilities",
-  Health = "Health",
-}
-
-
 const TopBox: React.FC<IProps> = ({ user, houseCode }) => {
   const [expenses, setExpenses] = useState<Expense[]>([])
   const {getToken} = useAuth()

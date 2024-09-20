@@ -3,13 +3,11 @@ import BarChartBox from "../../components/BarChartBox"
 import BigChart from "../../components/BigChart"
 import ChartBox from "../../components/ChartBox"
 import JoinHouse from "../../components/JoinHouse"
-import PieChartBox from "../../components/PieChartBox"
 import TopBox from "../../components/TopBox"
 import { useAuth } from "../../hooks/useAuth"
 import {
   barChartBoxAllUser,
   barChartBoxUserExpenseLastSixMonths,
-  chartBoxConversion,
   chartBoxHouseExpense,
   chartBoxStoreExpense,
   chartBoxUserExpense,
