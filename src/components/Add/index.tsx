@@ -152,9 +152,9 @@ const Add: React.FC<IProps> = ({
     const data: any = {}
     const token = await getToken()
 
-    // Object.keys(formDataToSend).forEach((key) => {
-    //   formDataToSend.append(key, formDataToSend[key])
-    // })
+    Object.keys(formDataToSend).forEach((key) => {
+      formDataToSend.append(key, formDataToSend[key])
+    })
     formDataToSend.forEach((value, key) => {
       if (key === "date" && !selectCustomTime) {
         return null
@@ -167,10 +167,10 @@ const Add: React.FC<IProps> = ({
 
     data.storeName = storeName
     data.paymentPerson = paidByMe ? userId : selectedPayer
-console.log("submitted Expense Data", data)
+    data.receipt = formData.receipt
     try {
       if (editData) {
-        await axios.put(
+        await axios.post(
           `${import.meta.env.VITE_API_URL}/api/expenses/${editData._id}`,
           data,
           {
