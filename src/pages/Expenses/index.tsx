@@ -11,6 +11,7 @@ import { toast } from "react-toastify"
 import { useAuth } from "../../hooks/useAuth"
 import Spinner from "../../components/Spinner"
 import Toaster from "../../components/Toaster"
+import { getImage } from "../../utils/utils"
 
 const columns: GridColDef[] = [
   {
@@ -20,9 +21,7 @@ const columns: GridColDef[] = [
     renderCell: (params) => (
       <img
         src={
-          params.row.receipt
-            ? params.row.receipt
-            : "/noavatar.png "
+        getImage(params.row.category)
         }
         alt="store"
         onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) =>
@@ -135,7 +134,6 @@ const Expenses = () => {
   const [spinner, setSpinner] = useState(false)
   const { user, getToken } = useAuth()
 
-
   // Fetch houses
   useEffect(() => {
     const fetchHouses = async () => {
@@ -162,7 +160,7 @@ const Expenses = () => {
   const fetchExpenses = async () => {
     const token = await getToken()
     setSpinner(true)
-    try {
+  
       const allExpenses: Expense[] = []
       // Loop through each house to fetch its expenses
       for (const house of houses) {
@@ -191,6 +189,7 @@ const Expenses = () => {
       }
       setSpinner(false)
       setExpenses(allExpenses) // Set all combined expenses to state
+      setFilteredExpenses(allExpenses) // Set all combined expenses to state
       // set all the filter to null
       setSelectedHouse(null)
       setSelectedMonth(null)
@@ -198,10 +197,7 @@ const Expenses = () => {
       setSelectedCategory(null)
       // setSelectedStore(null)
       setMyself(false)
-    } catch (error) {
-      console.error("Error fetching expenses:", error)
-      setSpinner(false)
-    }
+   
   }
 
   // Fetch expenses on component mount and when houses change
@@ -255,10 +251,14 @@ const Expenses = () => {
       //     (expense) => expense.storeName === selectedStore
       //   )
       // }
+      // sort the expenses by date
+      const sortedExpenses = [...filtered].sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      )
+      setFilteredExpenses(sortedExpenses)
   
-      setFilteredExpenses(filtered)
     }
-  }, [selectedHouse, myself, selectedMonth, selectedYear, expenses, user, selectedCategory])
+  }, [selectedHouse, myself, selectedMonth, selectedYear, expenses, selectedCategory])
 
   const handleDelete = async (id: string, _name: string) => {
     const token = await getToken()
@@ -279,22 +279,6 @@ const Expenses = () => {
       )
     }
   }
-  // useEffect(() => {
-  //     const mobileExpenses = filteredExpenses.map((expense) => {
-  //       return {
-  //         ...expense,
-  //         date: new Date(expense.date).toLocaleDateString("en-DE", {
-  //           hour: "2-digit",
-  //           minute: "2-digit",
-  //           month: "short",
-  //           day: "numeric",
-  //         }),
-  //       }
-  //     })
-  
-  //     // setMobileExpenses(mobileExpenses)
-    
-  // } , [])
   
   return (
     <div className="expenses">

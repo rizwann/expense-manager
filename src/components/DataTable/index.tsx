@@ -7,19 +7,18 @@ import DesktopDataTable from './DesktopDataTable';
 type Props = {
   columns: GridColDef[];
   rows: object[];
-  mobileRows?: object[];
   slug: string;
   handleDelete: (id: string, name: string) => void;
   handleLeaveHouse?: (id: string, name: string) => void;
 };
 
-const DataTable: React.FC<Props> = ({ columns, rows, slug, handleDelete, mobileRows, handleLeaveHouse }) => {
+const DataTable: React.FC<Props> = ({ columns, rows, slug, handleDelete, handleLeaveHouse }) => {
   const isMobile = useMediaQuery(768);
 
-  const data = slug === 'expenses' && mobileRows ? mobileRows : rows;
+  // const data = slug === 'expenses' && mobileRows ? mobileRows : rows;
 
   return isMobile ? (
-    <MobileDataTable columns={columns} rows={data} slug={slug} handleDelete={handleDelete}
+    <MobileDataTable columns={columns} rows={rows} slug={slug} handleDelete={handleDelete}
     handleLeaveHouse={handleLeaveHouse ? handleLeaveHouse : undefined}
     />
   ) : (
