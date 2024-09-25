@@ -30,6 +30,7 @@ import Balances from "./pages/Balances"
 import ActivationPage from "./pages/AccountActivation"
 import MobileMenu from "./components/MobileMenu"
 import About from "./pages/About"
+import AcceptUserPage from "./pages/AcceptUser"
 
 const darkTheme = createTheme({
   palette: {
@@ -113,6 +114,7 @@ const App = () => {
     { path: "/forgot-password", element: <ForgotPasswordPage /> },
     { path: "/reset-password/:id", element: <ResetPasswordPage /> },
     { path: "/auth/activate/:id", element: <ActivationPage /> }, // Activation route
+    { path: "/accept-user/:id/:houseCode/:ownId", element: <AcceptUserPage /> }, // Accept user route
     { path: "*", element: <NotFoundPage /> }, // Add another wildcard route for undefined paths
   ])
 
