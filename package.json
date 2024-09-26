@@ -13,6 +13,8 @@
     "@capacitor/android": "^6.1.2",
     "@capacitor/core": "^6.1.2",
     "@capacitor/device": "^6.0.1",
+    "@capacitor/filesystem": "^6.0.1",
+    "@capacitor/http": "^0.0.2",
     "@capacitor/ios": "^6.1.2",
     "@capacitor/preferences": "^6.0.2",
     "@emotion/react": "^11.13.3",

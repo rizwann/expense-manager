@@ -295,7 +295,7 @@
     tslib "^2.4.0"
     xml2js "^0.5.0"
 
-"@capacitor/core@^6.0.0", "@capacitor/core@^6.1.0", "@capacitor/core@^6.1.2":
+"@capacitor/core@^6.0.0", "@capacitor/core@^6.1.0", "@capacitor/core@^6.1.2", "@capacitor/core@latest":
   version "6.1.2"
   resolved "https://registry.npmjs.org/@capacitor/core/-/core-6.1.2.tgz"
   integrity sha512-xFy1/4qLFLp5WCIzIhtwUuVNNoz36+V7/BzHmLqgVJcvotc4MMjswW/TshnPQaLLujEOaLkA4h8ZJ0uoK3ImGg==
@@ -306,6 +306,18 @@
   version "6.0.1"
   resolved "https://registry.npmjs.org/@capacitor/device/-/device-6.0.1.tgz"
   integrity sha512-Tlz67DAO5GKb5YAfupXiENZxDww6mHnG9iKI+8D5SVF82VLpEv5r9qwKtiounuQB2y2HWiHV8tlOk7DqnLVUqQ==
+
+"@capacitor/filesystem@^6.0.1":
+  version "6.0.1"
+  resolved "https://registry.npmjs.org/@capacitor/filesystem/-/filesystem-6.0.1.tgz"
+  integrity sha512-eHhXm6tzBIQhErzFnfOE6eA1U+15DHc2212/COfzzGGRk/dyGympoVV3ct2YPVzvpTSxMEW3xFocORv/xD9gFg==
+
+"@capacitor/http@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.npmjs.org/@capacitor/http/-/http-0.0.2.tgz"
+  integrity sha512-3UPqYOmVkAQjCWWowSDGPnBkXY7znbPE7lNs8nhwTmE2E5fXTvjHM8PV15zOyn+nenY7zEu9Air49fGjrX+Tjg==
+  dependencies:
+    "@capacitor/core" latest
 
 "@capacitor/ios@^6.1.2":
   version "6.1.2"
