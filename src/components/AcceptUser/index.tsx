@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { CircularProgress } from "@mui/material";
@@ -6,7 +6,6 @@ import { CheckCircle } from "@mui/icons-material";
 import { motion } from "framer-motion";
 import Confetti from "react-confetti";
 import { Preferences } from "@capacitor/preferences";
-import { House } from "../../types";
 
 type AcceptUserProps = {
     id: string;

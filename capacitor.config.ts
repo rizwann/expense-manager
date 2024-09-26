@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.expenseman.app',
+  appId: 'app.expense-man.netlify',
   appName: 'Expense Manager',
   webDir: 'dist',
   server: {
