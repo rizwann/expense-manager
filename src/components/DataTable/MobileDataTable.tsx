@@ -4,13 +4,14 @@ import { Link } from "react-router-dom"
 import ConfirmationModal from "../Modal/Confirmation"
 import { GridColDef } from "@mui/x-data-grid"
 import { Expense, House, IUser, Store } from "../../types"
+import Clear from "@mui/icons-material/Clear"
 
 type Props = {
   columns: GridColDef[]
   rows: IUser[] | Expense[] | Store[] | House[] | any[]
   slug: string
   handleDelete: (id: string, name: string) => void
-  handleLeaveHouse?: (id: string, name: string) => void;
+  handleLeaveHouse?: (id: string, name: string) => void
 }
 
 const MobileDataTable: React.FC<Props> = ({
@@ -18,23 +19,23 @@ const MobileDataTable: React.FC<Props> = ({
   rows,
   slug,
   handleDelete,
-  handleLeaveHouse
+  handleLeaveHouse,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [name, setName] = useState<string>("")
-  const [leaveHouseId, setLeaveHouseId] = useState<string | null>(null);
-  const [leaveHouseName, setLeaveHouseName] = useState<string>('');
-  const [isLeaveHouseModalOpen, setIsLeaveHouseModalOpen] = useState(false);
+  const [leaveHouseId, setLeaveHouseId] = useState<string | null>(null)
+  const [leaveHouseName, setLeaveHouseName] = useState<string>("")
+  const [isLeaveHouseModalOpen, setIsLeaveHouseModalOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState<string>("")
   const [filteredRows, setFilteredRows] = useState(rows)
 
   // Pagination states
-  const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
 
   // Calculate the total number of pages
-  const totalPages = Math.ceil(filteredRows.length / rowsPerPage);
+  const totalPages = Math.ceil(filteredRows.length / rowsPerPage)
 
   useEffect(() => {
     setFilteredRows(
@@ -64,9 +65,12 @@ const MobileDataTable: React.FC<Props> = ({
             {row[col.field].length > 0 ? (
               <div>
                 {row[col.field].slice(0, 2).map((house: any, idX: number) => {
-                  return <span key={idX}>{house}{
-                    idX < row[col.field].length - 1 ? ", " : ""
-                  } </span>
+                  return (
+                    <span key={idX}>
+                      {house}
+                      {idX < row[col.field].length - 1 ? ", " : ""}{" "}
+                    </span>
+                  )
                 })}
                 {row[col.field].length > 2 && (
                   <span className="more">
@@ -80,7 +84,7 @@ const MobileDataTable: React.FC<Props> = ({
           </>
         )
       default:
-        if ( col.field === "date") {
+        if (col.field === "date") {
           const date = new Date(row[col.field])
           const formattedDate = date.toLocaleDateString("en-DE", {
             month: "short",
@@ -90,9 +94,12 @@ const MobileDataTable: React.FC<Props> = ({
           const formattedTime = date.toLocaleTimeString()
           return `${formattedDate} ${formattedTime}`
         } else if (col.field === "cost") {
-          return <span style={{ color: "green" }}>{`€${row[col.field].toFixed(2)}`}</span>
-        }
-        else {
+          return (
+            <span style={{ color: "green" }}>{`€${row[col.field].toFixed(
+              2
+            )}`}</span>
+          )
+        } else {
           return row[col.field]
         }
     }
@@ -107,9 +114,9 @@ const MobileDataTable: React.FC<Props> = ({
   }
   const handleLeaveHouseConfirm = () => {
     if (leaveHouseId && handleLeaveHouse) {
-      handleLeaveHouse(leaveHouseId, leaveHouseName);
-      setIsLeaveHouseModalOpen(false);
-      setLeaveHouseId(null);
+      handleLeaveHouse(leaveHouseId, leaveHouseName)
+      setIsLeaveHouseModalOpen(false)
+      setLeaveHouseId(null)
     }
   }
 
@@ -119,36 +126,51 @@ const MobileDataTable: React.FC<Props> = ({
   }
 
   const handleLeaveHouseCloseModal = () => {
-    setIsLeaveHouseModalOpen(false);
-    setLeaveHouseId(null);
+    setIsLeaveHouseModalOpen(false)
+    setLeaveHouseId(null)
   }
 
   // Pagination logic
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
+    setCurrentPage(page)
+  }
 
-  const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setRowsPerPage(Number(event.target.value));
-    setCurrentPage(1); // Reset to first page when changing rows per page
-  };
+  const handleRowsPerPageChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setRowsPerPage(Number(event.target.value))
+    setCurrentPage(1) // Reset to first page when changing rows per page
+  }
 
   const paginatedRows = filteredRows.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
-  );
+  )
 
   return (
     <div className="card-container">
-      {filteredRows.length > 0 && <div className="search-container">
+      <div className="search-container">
         <input
           type="text"
           placeholder="Search..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-      </div>}
-      
+        {searchTerm && (
+          <Clear
+            onClick={() => setSearchTerm("")}
+            className="clear-search"
+            fontSize="small"
+            style={{
+              cursor: "pointer",
+              position: "absolute",
+              right: "10px",
+              top: "50%",
+              transform: "translateY(-50%)",
+            }}
+          />
+        )}
+      </div>
       {filteredRows.length > 0 ? (
         <>
           {paginatedRows.map((row) => (
@@ -165,36 +187,44 @@ const MobileDataTable: React.FC<Props> = ({
                       className="delete"
                       onClick={() => {
                         setDeleteId(row._id)
-                        if (slug === 'Houses'){
-                          setName(row.description);
+                        if (slug === "Houses") {
+                          setName(row.description)
                         } else {
-                        setName(row.name);
+                          setName(row.name)
                         }
                         setIsModalOpen(true)
                       }}
                     >
                       <img src="/delete.svg" alt="Delete" />
                     </div>
-                    { slug === "Houses" && <div
-                      className="leave"
-                      onClick={() => {
-                        setLeaveHouseId(row.code);
-                        setLeaveHouseName(row.description);
-                        setIsLeaveHouseModalOpen(true);
-                      }}
-                    >
-                      <img src="/leave.svg" alt="Leave" />
-                    </div>}
+                    {slug === "Houses" && (
+                      <div
+                        className="leave"
+                        onClick={() => {
+                          setLeaveHouseId(row.code)
+                          setLeaveHouseName(row.description)
+                          setIsLeaveHouseModalOpen(true)
+                        }}
+                      >
+                        <img src="/leave.svg" alt="Leave" />
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="card-body">
                   {columns.map(
                     (col) =>
-                      col.field !== "name" && col.field !== "description" && col.field !== "image" &&
-                      col.field !== "id" && col.field !== "houseNames" && (
+                      col.field !== "name" &&
+                      col.field !== "description" &&
+                      col.field !== "image" &&
+                      col.field !== "id" &&
+                      col.field !== "houseNames" && (
                         <div key={col.field} className="card-item">
                           <div className="card-item-header">
-                            <img src={`/${col.field}.svg`} alt={col.headerName} />
+                            <img
+                              src={`/${col.field}.svg`}
+                              alt={col.headerName}
+                            />
                             <span>{col.headerName}:</span>
                           </div>
                           <span className="card-item-value">
@@ -207,13 +237,15 @@ const MobileDataTable: React.FC<Props> = ({
               </div>
             </div>
           ))}
-            <div className="flex items-center">
-              <span className="mr-2">Total Entries: {filteredRows?.length}</span>
-            </div>
+          <div className="flex items-center">
+            <span className="mr-2">Total Entries: {filteredRows?.length}</span>
+          </div>
           {/* Pagination */}
           <div className="flex items-center justify-between gap-3 mt-2 pagination-container">
             <div className="flex items-center">
-              <label htmlFor="rowsPerPage" className="mr-2">Rows per page:</label>
+              <label htmlFor="rowsPerPage" className="mr-2">
+                Rows per page:
+              </label>
               <select
                 id="rowsPerPage"
                 value={rowsPerPage}
@@ -234,7 +266,9 @@ const MobileDataTable: React.FC<Props> = ({
               >
                 &larr;
               </button>
-              <span>{currentPage} of {totalPages}</span>
+              <span>
+                {currentPage} of {totalPages}
+              </span>
               <button
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
@@ -256,7 +290,7 @@ const MobileDataTable: React.FC<Props> = ({
         title="Confirm Delete"
         message="Are you sure you want to delete this record?"
       />
-       <ConfirmationModal
+      <ConfirmationModal
         open={isLeaveHouseModalOpen}
         onClose={handleLeaveHouseCloseModal}
         onConfirm={handleLeaveHouseConfirm}
