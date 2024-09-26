@@ -29,6 +29,7 @@ import axios from "axios"
 import { House } from "../../types"
 import { motion } from "framer-motion"
 import { Home as HomeIcon } from "@mui/icons-material"
+import Toaster from "../../components/Toaster"
 
 const Home = () => {
   const [joinHouseModal, setJoinHouseModal] = useState(false)
@@ -62,6 +63,17 @@ const Home = () => {
   useEffect(() => {
     fetchHouses()
   }, [selectedHouseLocal])
+    // Effect to call setRefresh every 10 seconds
+    useEffect(() => {
+      if (!(user?.houseCodes.length > 0)) {
+        const interval = setInterval(() => {
+          setRefresh((prev) => !prev)
+        }, 30000) // 30 seconds in milliseconds
+    
+        // Cleanup the interval on component unmount
+        return () => clearInterval(interval)
+      }
+    }, [setRefresh])
 
   const handleHouseChange = (
     event: SelectChangeEvent<string>,
@@ -80,7 +92,9 @@ const Home = () => {
   const selectedHouseData = houses?.find(
     (house) => house.code === selectedHouseLocal
   )
-  if (!user) return null
+
+  if (!user) null
+
   if (!(user.houseCodes.length > 0)) {
     return (
       <div
@@ -93,6 +107,7 @@ const Home = () => {
           marginTop: "-80px",
         }}
       >
+        <Toaster />
         <div className="text-center">
           <Typography
             variant="h5"
@@ -118,22 +133,19 @@ const Home = () => {
             onClick={() => setCreateHouseModal(true)}
           />
         </div>
-      
-          <JoinHouse
-            setModalOpen={setJoinHouseModal}
-            columns={config.houseFields.filter(
-              (field) => field.field === "code"
-            )}
-            setRefresh={setRefresh}
-            modalOpen={joinHouseModal}
-          />
-    
-          <AddHouse
-            setModalOpen={setCreateHouseModal}
-            columns={config.houseFields}
-            setRefresh={setRefresh}
-            modalOpen={createHouseModal}
-          />
+
+        <JoinHouse
+          setModalOpen={setJoinHouseModal}
+          columns={config.houseFields.filter((field) => field.field === "code")}
+          modalOpen={joinHouseModal}
+        />
+
+        <AddHouse
+          setModalOpen={setCreateHouseModal}
+          columns={config.houseFields}
+          setRefresh={setRefresh}
+          modalOpen={createHouseModal}
+        />
       </div>
     )
   }
@@ -169,11 +181,19 @@ const Home = () => {
           >
             {houses.map((house) => (
               <MenuItem key={house.code} value={house.code}>
-                {house.image ? <img src={house.image} className="mr-2 text-gray-500 ring-4 ring-gray-500" 
-                style={{width: "20px", height: "20px", borderRadius: "50%"}}
-                />:
-                <HomeIcon className="mr-2 text-gray-500"/>
-                }
+                {house.image ? (
+                  <img
+                    src={house.image}
+                    className="mr-2 text-gray-500 ring-4 ring-gray-500"
+                    style={{
+                      width: "20px",
+                      height: "20px",
+                      borderRadius: "50%",
+                    }}
+                  />
+                ) : (
+                  <HomeIcon className="mr-2 text-gray-500" />
+                )}
                 {house.description}
               </MenuItem>
             ))}
@@ -232,7 +252,9 @@ const Home = () => {
           )}
         </div>
         <div className="box box7">
-          {selectedHouseData && <BigChart dataKey="expenses" selectedHouse={selectedHouseData} />}
+          {selectedHouseData && (
+            <BigChart dataKey="expenses" selectedHouse={selectedHouseData} />
+          )}
         </div>
         <div className="box box8">
           {selectedHouseData && (
@@ -256,6 +278,7 @@ const Home = () => {
           )}
         </div>
       </div>
+      <Toaster />
     </div>
   )
 }

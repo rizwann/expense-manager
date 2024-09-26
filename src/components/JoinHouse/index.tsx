@@ -44,7 +44,7 @@ const JoinHouse: React.FC<IProps> = ({
           },
         }
       )
-      toast.success("Request to join the sent successfully!")
+      toast.success("Request to join the → House ←  sent successfully!")
 
       setRefresh && setRefresh((prev) => !prev)
       setModalOpen(false)

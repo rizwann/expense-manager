@@ -140,14 +140,14 @@ const MobileDataTable: React.FC<Props> = ({
 
   return (
     <div className="card-container">
-      <div className="search-container">
+      {filteredRows.length > 0 && <div className="search-container">
         <input
           type="text"
           placeholder="Search..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-      </div>
+      </div>}
       
       {filteredRows.length > 0 ? (
         <>
