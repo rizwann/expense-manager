@@ -15,6 +15,7 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
   const [isIOSApp, setIsIOSApp] = useState(false)
+  const [showDownloadApp, setShowDownloadApp] = useState(false)
   const navigate = useNavigate()
   const preferencesRef = useRef<HTMLDivElement>(null)
 
@@ -50,6 +51,12 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
         setIsIOSApp(true)
       } else {
         setIsIOSApp(false)
+      }
+
+      if (info.platform === "web") {
+        setShowDownloadApp(true)
+      } else {
+        setShowDownloadApp(false)
       }
     }
     checkDevice()
@@ -122,9 +129,9 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
             <NavLink to="/about" onClick={handlePreferenceItemClick}>
               <li>About</li>
             </NavLink>
-            <NavLink to="/app-download" onClick={handlePreferenceItemClick}>
+            { showDownloadApp &&  <NavLink to="/app-download" onClick={handlePreferenceItemClick}>
               <li>Download App</li>
-            </NavLink>
+            </NavLink>}
             <li onClick={handleLogout}>Sign Out</li>
           </ul>
         </div>
