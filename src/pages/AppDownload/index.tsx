@@ -1,10 +1,24 @@
+import { Device } from "@capacitor/device"
 import { ArrowLeft, CloudDownload } from "@mui/icons-material"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 const DownloadApp = () => {
   const [isDownloading, setIsDownloading] = useState(false)
   const navigate = useNavigate()
+  const [isIOSApp, setIsIOSApp] = useState(false)
+
+  useEffect(() => {
+    const checkDevice = async () => {
+      const info = await Device.getInfo()
+      if (info.platform === "ios") {
+        setIsIOSApp(true)
+      } else {
+        setIsIOSApp(false)
+      }
+    }
+    checkDevice()
+  }, [])
 
   const handleDownload = () => {
     setIsDownloading(true)
@@ -14,7 +28,11 @@ const DownloadApp = () => {
   }
 
   return (
-    <div className="relative flex items-center justify-center min-h-screen p-4 text-white bg-gray-900">
+    <div className="relative flex items-center justify-center min-h-screen p-4 text-white bg-gray-900"
+    style={{
+      paddingTop: isIOSApp ? 'env(safe-area-inset-top)' : '20px'
+    }}
+    >
       <button
         onClick={() => navigate("/")}
         className="absolute flex items-center p-2 text-white bg-gray-700 rounded-lg top-4 left-4 hover:bg-gray-600"
