@@ -122,6 +122,9 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
             <NavLink to="/about" onClick={handlePreferenceItemClick}>
               <li>About</li>
             </NavLink>
+            <NavLink to="/app-download" onClick={handlePreferenceItemClick}>
+              <li>Download App</li>
+            </NavLink>
             <li onClick={handleLogout}>Sign Out</li>
           </ul>
         </div>
