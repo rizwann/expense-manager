@@ -9,11 +9,15 @@ import { getImage } from "../../utils/utils"
 interface IProps {
   user: IUser
   houseCode: string
+  month: number
+  year: number
 }
 
-const TopBox: React.FC<IProps> = ({ user, houseCode }) => {
+const TopBox: React.FC<IProps> = ({ user, houseCode, month, year }) => {
   const [expenses, setExpenses] = useState<Expense[]>([])
+  const [lastTenExpenses, setLastTenExpenses] = useState<Expense[]>([])
   const {getToken} = useAuth()
+  const selectedMonth = month - 1
 
   useEffect(() => {
     const fetchExpenses = async () => {
@@ -27,8 +31,8 @@ const TopBox: React.FC<IProps> = ({ user, houseCode }) => {
             Authorization: `Bearer ${token}`,
           },
         })
-        const lastTenExpenses = response.data.slice(0, 10)
-        setExpenses(lastTenExpenses)
+       
+        setExpenses(response.data)
       } catch (error) {
         console.error("Error fetching expenses:", error)
       }
@@ -36,28 +40,33 @@ const TopBox: React.FC<IProps> = ({ user, houseCode }) => {
     fetchExpenses()
   }, [user])
 
+  useEffect(() => {
+    const lastExpenses = expenses
+      ?.filter(
+        (expense) =>
+          new Date(expense.date).getMonth() === selectedMonth &&
+          new Date(expense.date).getFullYear() === year
+      )
+      .slice(0, 10)
+    setLastTenExpenses(lastExpenses)
+  }, [month, year, expenses])
+
   return (
     <div className="top-box">
       <h1>Expenses</h1>
       <div className="list">
-        {expenses?.map((expense) => {
+        {lastTenExpenses?.map((expense) => {
           const date = new Date(expense.date).toLocaleDateString("en-DE", {
             month: "short",
             day: "numeric",
           })
           return (
-            <div className="list-item" key={expense._id}
-              
-            >
+            <div className="list-item" key={expense._id}>
               <NavLink className="user" to={`/expenses/${expense._id}`}>
-                <img  src={
-                  getImage(expense.category)
-                }
-            alt={user?.name || "user"}
-            // onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) =>
-            //   (e.currentTarget.src = "/storeName.svg")
-            // }
-            />
+                <img
+                  src={getImage(expense.category)}
+                  alt={user?.name || "user"}
+                />
 
                 <div className="user-texts">
                   <span className="storename">{expense.storeName}</span>

@@ -30,6 +30,14 @@ import { House } from "../../types"
 import { motion } from "framer-motion"
 import { Home as HomeIcon } from "@mui/icons-material"
 import Toaster from "../../components/Toaster"
+import { months } from "../../menu-item"
+
+// Helper function to get the current year and month
+const getCurrentYear = () => new Date().getFullYear();
+const getCurrentMonth = () => new Date().toLocaleString('default', { month: 'long' });
+
+const years = Array.from({ length: 5 }, (_, i) => getCurrentYear() - i);
+
 
 const Home = () => {
   const [joinHouseModal, setJoinHouseModal] = useState(false)
@@ -37,6 +45,8 @@ const Home = () => {
   const { user, selectedHouse, setRefresh, getToken } = useAuth()
   const [loading, setLoading] = useState(true)
   const [houses, setHouses] = useState<House[]>([])
+  const [selectedMonth, setSelectedMonth] = useState<string>(getCurrentMonth())
+  const [selectedYear, setSelectedYear] = useState<number>(getCurrentYear())
   const [selectedHouseLocal, setSelectedHouseLocal] = useState<string>(
     selectedHouse?.code || ""
   )
@@ -81,7 +91,19 @@ const Home = () => {
   ) => {
     setSelectedHouseLocal(event.target.value as string)
   }
-
+  const handleMonthChange = (
+    event: SelectChangeEvent<string>,
+    _child: ReactNode
+  ) => {
+    setSelectedMonth(event.target.value as string)
+  }
+  const handleYearChange = (
+    event: SelectChangeEvent<number>,
+    _child: ReactNode
+  ) => {
+    setSelectedYear(event.target.value as number)
+  }
+  
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -158,12 +180,12 @@ const Home = () => {
         alignItems: "center",
       }}
     >
-      <motion.div
-        className="w-full max-w-xs m-3"
-        initial={{ y: -50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-      >
+       <motion.div
+          className="flex flex-col items-center justify-between w-[70%] gap-5 p-4 mb-2 text-white md:flex-row "
+          initial={{ y: -50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
         <FormControl variant="outlined" className="w-full max-w-xs mb-6">
           <InputLabel id="select-house-label">Select House</InputLabel>
           <Select
@@ -199,11 +221,49 @@ const Home = () => {
             ))}
           </Select>
         </FormControl>
+           {/* Month Select */}
+           <FormControl variant="outlined" className="w-full max-w-xs mb-6">
+          <InputLabel id="select-month-label">Select Month</InputLabel>
+          <Select
+            labelId="select-month-label"
+            value={selectedMonth}
+            onChange={handleMonthChange}
+            label="Select Month"
+            className="text-white bg-gray-800"
+          >
+            {months.map((month) => (
+              <MenuItem key={month} value={month}>
+                {month}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        {/* Year Select */}
+        <FormControl variant="outlined" className="w-full mb-4">
+            <InputLabel id="select-year-label">Select Year</InputLabel>
+            <Select
+              labelId="select-year-label"
+              value={selectedYear}
+              onChange={handleYearChange}
+              label="Select Year"
+              className="text-white bg-gray-800"
+            >
+              {years.map((year) => (
+                <MenuItem key={year} value={year}>
+                  {year}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
       </motion.div>
       <div className="home">
         <div className="box box1">
           {selectedHouseData && (
-            <TopBox user={user} houseCode={selectedHouseData?.code} />
+            <TopBox user={user} houseCode={selectedHouseData?.code}
+            month={months.indexOf(selectedMonth) + 1}
+            year={selectedYear}
+            />
           )}
         </div>
         <div className="box box2">
@@ -213,6 +273,8 @@ const Home = () => {
               user={user}
               type="weeklyUser"
               selectedHouse={selectedHouseData}
+              month={months.indexOf(selectedMonth) + 1}
+              year={selectedYear}
             />
           )}
         </div>
@@ -223,6 +285,8 @@ const Home = () => {
               user={user}
               type="houseExpenses"
               selectedHouse={selectedHouseData}
+              month={months.indexOf(selectedMonth) + 1}
+              year={selectedYear}
             />
           )}
         </div>
@@ -241,19 +305,23 @@ const Home = () => {
             />
           )}
         </div> */}
-        <div className="box box6">
+         <div className="box box6">
           {selectedHouseData && (
             <ChartBox
               {...chartBoxStoreExpense}
               user={user}
               type="popularCategory"
               selectedHouse={selectedHouseData}
+              month={months.indexOf(selectedMonth) + 1}
+              year={selectedYear}
             />
           )}
         </div>
         <div className="box box7">
           {selectedHouseData && (
-            <BigChart dataKey="expenses" selectedHouse={selectedHouseData} />
+            <BigChart dataKey="expenses" selectedHouse={selectedHouseData} 
+            month={months.indexOf(selectedMonth) + 1} year={selectedYear}
+            />
           )}
         </div>
         <div className="box box8">
@@ -263,6 +331,8 @@ const Home = () => {
               user={user}
               type={"userSixMonths"}
               selectedHouse={selectedHouseData}
+              month={months.indexOf(selectedMonth) + 1}
+              year={selectedYear}
             />
           )}
         </div>
@@ -274,10 +344,14 @@ const Home = () => {
               user={user}
               type={"contribution"}
               selectedHouse={selectedHouseData}
+              month={months.indexOf(selectedMonth) + 1}
+              year={selectedYear}
             />
           )}
         </div>
+       
       </div>
+      
       <Toaster />
     </div>
   )

@@ -9,9 +9,9 @@ export type lastSixMonthsResponse = {
 }
 
 
-export const fetchUserContribution = async (house: House, token: string) => {
+export const fetchUserContribution = async (house: House, token: string, month: number, year: number) => {
     try {
-      const URI = `${API_URL}/house/expenses/contributions/${house.code}`
+      const URI = `${API_URL}/house/expenses/contributions/${house.code}/${month}/${year}`
       const response = await axios.get<object[]>(URI, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -74,9 +74,9 @@ export const fetchUserSixMonthsExpenses = async (house: House, token: string) =>
       }
 
 
-    export const fetchUserMonthlyComparison = async (house: House, token: string) => {
+    export const fetchUserMonthlyComparison = async (house: House, token: string, month: number, year: number) => {
       try {
-        const URI = `${API_URL}/user/expenses/comparison/${house.code}`
+        const URI = `${API_URL}/user/expenses/comparison/${house.code}/${month}/${year}`
         const response = await axios.get<Tdata>(URI, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -93,9 +93,9 @@ export const fetchUserSixMonthsExpenses = async (house: House, token: string) =>
     }
   }
 
-  export const fetchHouseLastSixMonthsExpenses = async (house: House, token: string) => {
+  export const fetchHouseLastSixMonthsExpenses = async (house: House, token: string, month: number, year: number) => {
     try {
-      const URI = `${API_URL}/house/expenses/half-yearly/${house.code}`
+      const URI = `${API_URL}/house/expenses/half-yearly/${house.code}/${month}/${year}`
       const response = await axios.get<lastSixMonthsResponse>(URI, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -124,9 +124,9 @@ export const fetchUserSixMonthsExpenses = async (house: House, token: string) =>
   }
   }
 
-export const fetchPopularCategoryExpenses = async (house: House, token: string) => {
+export const fetchPopularCategoryExpenses = async (house: House, token: string, month: number, year: number) => {
     try {
-      const URI = `${API_URL}/expenses/category/${house.code}`
+      const URI = `${API_URL}/expenses/category/${house.code}/${month}/${year}`
       const response = await axios.get<object>(URI, {
         headers: {
           Authorization: `Bearer ${token}`,

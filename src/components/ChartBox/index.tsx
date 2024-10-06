@@ -26,6 +26,8 @@ interface ChartBoxProps {
   type: string
   user: IUser
   selectedHouse: House
+  month: number
+  year: number
 }
 
 export type Tdata = {
@@ -42,6 +44,8 @@ const ChartBox: React.FC<ChartBoxProps> = ({
   type,
   user,
   selectedHouse,
+  month,
+  year
 }) => {
   const {getToken} = useAuth()
   const [chartData, setChartData] = useState<object[]>([])
@@ -59,13 +63,14 @@ const ChartBox: React.FC<ChartBoxProps> = ({
       switch (type) {
         case "weeklyUser":
           chartData = await fetchUserWeekly(selectedHouse, token || "")
-          iData = await fetchUserMonthlyComparison(selectedHouse, token || "")
+          iData = await fetchUserMonthlyComparison(selectedHouse, token || "", month, year)
 
           break
         case "houseExpenses":
           const res = await fetchHouseLastSixMonthsExpenses(
             selectedHouse,
-            token || ""
+            token || "",
+            month, year
           )
           // @ts-ignore
           chartData = res?.last6Months
@@ -89,7 +94,8 @@ const ChartBox: React.FC<ChartBoxProps> = ({
           case "popularCategory":
           const resCat = await fetchPopularCategoryExpenses(
             selectedHouse,
-            token || ""
+            token || "",
+            month, year
           )
           chartData = resCat?.result
           iData = {
@@ -108,7 +114,7 @@ const ChartBox: React.FC<ChartBoxProps> = ({
       setData(iData)
     }
     fetchChartData()
-  }, [user, type])
+  }, [user, type, month, year])
 
   let cardText
   switch (type) {
@@ -133,7 +139,7 @@ const ChartBox: React.FC<ChartBoxProps> = ({
           <span>{title}</span>
         </div>
         <Typography className="text-green-400 " variant="h4">
-          €{data?.totalExpensesThisMonth}
+          €{data?.totalExpensesThisMonth || 0}
         </Typography>
         {(type === "popularStore" || type === "popularCategory") && (
           <div className="flex items-center gap-2 mb-2">

@@ -14,6 +14,7 @@ import {
   fetchPopularCategoryExpenses,
 } from "../../utils/chartDataFetch"
 import { useAuth } from "../../hooks/useAuth"
+import { set } from "react-hook-form"
 
 const categories = Object.values(CategoryName).map((item) => {
   const color = "#" + Math.floor(Math.random() * 16777215).toString(16)
@@ -23,9 +24,11 @@ const categories = Object.values(CategoryName).map((item) => {
 type Props = {
   selectedHouse: House
   dataKey: string
+  month: number
+  year: number
 }
 
-const BigChart: React.FC<Props> = ({ selectedHouse, dataKey }) => {
+const BigChart: React.FC<Props> = ({ selectedHouse, dataKey, month, year }) => {
   const [data, setData] = useState<object[]>([])
   const {getToken} = useAuth()
 
@@ -34,17 +37,21 @@ const BigChart: React.FC<Props> = ({ selectedHouse, dataKey }) => {
       const token = await getToken()
       const response = await fetchPopularCategoryExpenses(
         selectedHouse,
-        token || ""
+        token || "",
+        month,
+        year
       )
-
-      const enrichedData = response.result.map((item: any) => {
+      if (response.length === 0) {
+        setData([])
+      }
+      const enrichedData = response?.result.map((item: any) => {
         const category = categories.find((cat) => cat.name === item.name)
         return { ...item, color: category ? category.color : "#8884d8" } // Default color if not found
       })
       setData(enrichedData)
     }
     fetchData()
-  }, [selectedHouse])
+  }, [selectedHouse, month, year])
 
   return (
     <div className="bigchart-box">

@@ -14,6 +14,7 @@ import {
 } from "../../utils/chartDataFetch"
 import { useAuth } from "../../hooks/useAuth"
 import React from "react"
+import { months } from "../../menu-item"
 
 interface BarChartBoxProps {
   title: string
@@ -23,6 +24,8 @@ interface BarChartBoxProps {
   user: IUser
   type: string
   selectedHouse: House
+  month: number
+  year: number
 }
 
 const BarChartBox: React.FC<BarChartBoxProps> = ({
@@ -32,9 +35,13 @@ const BarChartBox: React.FC<BarChartBoxProps> = ({
   user,
   type,
   selectedHouse,
+  month,
+  year
 }) => {
   const {getToken} = useAuth()
   const [chartData, setChartData] = useState<object[]>([])
+
+  const monthName = months[month  - 1]
 
   useEffect(() => {
     const fetchChartData = async () => {
@@ -42,7 +49,7 @@ const BarChartBox: React.FC<BarChartBoxProps> = ({
       let chartData
       switch (type) {
         case "contribution":
-          chartData = await fetchUserContribution(selectedHouse, token || "")
+          chartData = await fetchUserContribution(selectedHouse, token || "", month, year)
           break
         case "userSixMonths":
           chartData = await fetchUserSixMonthsExpenses(
@@ -52,18 +59,18 @@ const BarChartBox: React.FC<BarChartBoxProps> = ({
           break
 
         default:
-          chartData = await fetchUserContribution(selectedHouse, token || "")
+          chartData = await fetchUserContribution(selectedHouse, token || "", month, year)
           break
       }
 
       setChartData(chartData)
     }
     fetchChartData()
-  }, [user, type])
+  }, [user, type, month, year])
 
   return (
     <div className="barchart-box">
-      <h1>{title}</h1>
+      <h1>{type === 'contribution' ? `Member Contributions of ${monthName}` : title}</h1>
       <div className="chart">
         <ResponsiveContainer width="99%" height={150}>
           <BarChart data={chartData}>
