@@ -7,6 +7,7 @@ export enum CategoryName {
   Butcher = "Butcher",
   Travel = "Travel",
   Electronics = "Electronics",
+  Furniture = "Furniture",
   Utilities = "Utilities",
   Health = "Health",
 }

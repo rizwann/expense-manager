@@ -36,6 +36,8 @@ export const getImage = (category: string) => {
       return "/utilities.png"
     case CategoryName.Health:
       return "/health.png"
+    case CategoryName.Furniture:
+      return "/furniture.png"
     default:
       return "/others.png"
   }
