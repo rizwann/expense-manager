@@ -157,8 +157,12 @@ const Add: React.FC<IProps> = ({
       formDataToSend.append(key, formDataToSend[key])
     })
     formDataToSend.forEach((value, key) => {
-      if (key === "date" && !selectCustomTime) {
-        return null
+      if (key === "date") {
+        if (selectCustomTime) {
+          const localDateTime = new Date(value as string)
+          const utcDateTime = localDateTime.toISOString()
+          data[key] = utcDateTime
+        }
       } else if (key === "involvedUsers") {
         data[key] = selectedUsers
       } else {
