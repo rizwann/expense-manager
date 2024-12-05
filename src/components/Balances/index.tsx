@@ -24,7 +24,8 @@ import { months } from "../../menu-item"
 const getCurrentYear = () => new Date().getFullYear();
 const getCurrentMonth = () => new Date().toLocaleString('default', { month: 'long' });
 
-const years = Array.from({ length: 5 }, (_, i) => getCurrentYear() - i);
+const years: any[] = Array.from({ length: 6 }, (_, i) => getCurrentYear() - i)
+years.unshift('All Years')
 
 const TransactionSummary: React.FC = () => {
   const { selectedHouse, user, getToken } = useAuth()
@@ -58,13 +59,14 @@ const TransactionSummary: React.FC = () => {
   }
 
   // Fetch transaction data for selected house, month, and year
-  const fetchTransactionData = async (houseCode: string, month: string, year: number) => {
-    const monthNumber = months.indexOf(month) + 1
+  const fetchTransactionData = async (houseCode: string, month: string, year: any) => {
+    const monthNumber = month === "All Months" ? 'all' : months.indexOf(month)
+    const selectedYear = year === 'All Years' ? 'all' : year
     setLoading(true)
     const token = await getToken()
     try {
       const response = await axios.get<TransactionData>(
-        `${import.meta.env.VITE_API_URL}/api/expenses/balance/${houseCode}/${monthNumber}/${year}`,
+        `${import.meta.env.VITE_API_URL}/api/expenses/balance/${houseCode}/${monthNumber}/${selectedYear}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

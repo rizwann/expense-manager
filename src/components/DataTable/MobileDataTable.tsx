@@ -147,6 +147,11 @@ const MobileDataTable: React.FC<Props> = ({
     currentPage * rowsPerPage
   )
 
+  const totalCost = filteredRows.reduce(
+    (acc: number, row: any) => acc + row.cost,
+    0
+  )
+
   return (
     <div className="card-container">
       <div className="search-container">
@@ -237,8 +242,11 @@ const MobileDataTable: React.FC<Props> = ({
               </div>
             </div>
           ))}
-          <div className="flex items-center">
+          <div className="flex items-center justify-between">
             <span className="mr-2">Total Entries: {filteredRows?.length}</span>
+            <span className="mr-2">Total Cost: {
+              <span style={{ color: "green" }}>{`€${totalCost.toFixed(2)}`}</span>
+            }</span>
           </div>
           {/* Pagination */}
           <div className="flex items-center justify-between gap-3 mt-2 pagination-container">
