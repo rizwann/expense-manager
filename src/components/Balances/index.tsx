@@ -60,7 +60,7 @@ const TransactionSummary: React.FC = () => {
 
   // Fetch transaction data for selected house, month, and year
   const fetchTransactionData = async (houseCode: string, month: string, year: any) => {
-    const monthNumber = month === "All Months" ? 'all' : months.indexOf(month)
+    const monthNumber = month === "All Months" ? 'all' : months.indexOf(month) + 1
     const selectedYear = year === 'All Years' ? 'all' : year
     setLoading(true)
     const token = await getToken()
@@ -132,7 +132,6 @@ const TransactionSummary: React.FC = () => {
     (acc, expense) => acc + expense,
     0
   )
-
   return (
     <motion.div
       className="p-6 mx-auto text-white rounded-lg shadow-lg max-w-7xl"
@@ -211,7 +210,7 @@ const TransactionSummary: React.FC = () => {
               label="Select Month"
               className="text-white bg-gray-800"
             >
-              {months.map((month) => (
+              {["All Months",...months].map((month) => (
                 <MenuItem key={month} value={month}>
                   {month}
                 </MenuItem>
