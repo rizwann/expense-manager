@@ -1,11 +1,17 @@
 import axios from "axios"
-import { House } from "../types"
+import { CategoryData, House } from "../types"
 import { StoreData } from "../components/PieChartBox"
 import { Tdata } from "../components/ChartBox"
 const API_URL = `${import.meta.env.VITE_API_URL}/api/chart`
 export type lastSixMonthsResponse = {
   last6Months: object[],
   percentage: number,
+}
+export type lastSixMonthsCatResponse = {
+  finalResult: object[],
+  last6Months: object[],
+  response: object[],
+  catComparison: CategoryData[]
 }
 
 
@@ -142,12 +148,12 @@ export const fetchPopularCategoryExpenses = async (house: House, token: string, 
 export const fetchSixMonthsExpensesByCategory = async (house: House, token: string) => {
     try {
       const URI = `${API_URL}/expenses/category/half-yearly/${house.code}`
-      const response = await axios.get<object[]>(URI, {
+      const response = await axios.get<lastSixMonthsCatResponse>(URI, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
-      return response.data
+      return response.data.catComparison
     } catch (error) {
       console.error("Error fetching expenses:", error)
       return []

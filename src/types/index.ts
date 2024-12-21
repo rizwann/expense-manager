@@ -78,6 +78,10 @@ export interface TransactionData {
   transactions: Transaction[];
 }
 
+export interface CategoryData {
+  name: string
+  expenses: { month: string, expenses: number }[]
+}
 
 
 // make a type by combinging all of the above types

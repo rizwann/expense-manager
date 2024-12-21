@@ -9,7 +9,6 @@ import {
   barChartBoxAllUser,
   barChartBoxUserExpenseLastSixMonths,
   chartBoxHouseExpense,
-  chartBoxStoreExpense,
   chartBoxUserExpense,
 } from "../../menu-item"
 import "./home.scss"
@@ -31,6 +30,7 @@ import { motion } from "framer-motion"
 import { Home as HomeIcon } from "@mui/icons-material"
 import Toaster from "../../components/Toaster"
 import { months } from "../../menu-item"
+import CategoryExpenseViewer from "../../components/Categories"
 
 // Helper function to get the current year and month
 const getCurrentYear = () => new Date().getFullYear();
@@ -305,7 +305,7 @@ const Home = () => {
             />
           )}
         </div> */}
-         <div className="box box6">
+         {/* <div className="box box6">
           {selectedHouseData && (
             <ChartBox
               {...chartBoxStoreExpense}
@@ -315,6 +315,11 @@ const Home = () => {
               month={months.indexOf(selectedMonth) + 1}
               year={selectedYear}
             />
+          )}
+        </div> */}
+          <div className="box box6">
+          {selectedHouseData && (
+           <CategoryExpenseViewer selectedHouse={selectedHouseData}/>
           )}
         </div>
         <div className="box box7">
