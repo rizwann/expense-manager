@@ -14,6 +14,7 @@ import {
 import { House, IUser } from "../../types"
 import { Typography } from "@mui/material"
 import { useAuth } from "../../hooks/useAuth"
+import { getCurrencySymbol } from "../../utils/utils"
 
 interface ChartBoxProps {
   title: string
@@ -139,7 +140,7 @@ const ChartBox: React.FC<ChartBoxProps> = ({
           <span>{title}</span>
         </div>
         <Typography className="text-green-400 " variant="h4">
-          €{data?.totalExpensesThisMonth || 0}
+          {getCurrencySymbol(selectedHouse)}{data?.totalExpensesThisMonth || 0}
         </Typography>
         {(type === "popularStore" || type === "popularCategory") && (
           <div className="flex items-center gap-2 mb-2">

@@ -50,6 +50,16 @@ const columns: GridColDef[] = [
     width: 180,
     type: "array",
   },
+  {
+    field: "timeZone",
+    headerName: "Time Zone",
+    width: 120,
+  },
+  {
+    field: "currency",
+    headerName: "Currency",
+    width: 120,
+  }
 ]
 
 const Houses = () => {

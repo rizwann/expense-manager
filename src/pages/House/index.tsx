@@ -106,6 +106,14 @@ const HouseDetail = () => {
               })}
             </div>
           </label>
+          <label>
+            Time Zone:
+            <span>{house.timeZone}</span>
+          </label>
+          <label>
+            Currency:
+            <span>{house.currency}</span>
+          </label>
          
         </div>
       </div>

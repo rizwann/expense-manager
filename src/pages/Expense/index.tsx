@@ -6,12 +6,13 @@ import "./expenseDetail.scss"
 import { useAuth } from "../../hooks/useAuth"
 import { toast } from "react-toastify"
 import Button from "../components/Button"
-import { Expense } from "../../types"
+import { Expense, House } from "../../types"
 import { config } from "../../utils/config"
 import Add from "../../components/Add"
 import Loading from "../../components/Loading"
 import Toaster from "../../components/Toaster"
 import { DownloadOutlined } from "@mui/icons-material";
+import { getCurrencySymbol } from "../../utils/utils";
 
 const ExpenseDetail = () => {
   const { id } = useParams<{ id: string }>()
@@ -21,6 +22,7 @@ const ExpenseDetail = () => {
   const [modalOpen, setModalOpen] = useState(false)
   const [refresh, setRefresh] = useState(false)
   const [isZoomed, setIsZoomed] = useState(false);
+  const [house, setHouse] = useState<House | null>(null)
 
   // Open modal in edit mode
   const openEditModal = () => {
@@ -41,6 +43,12 @@ const ExpenseDetail = () => {
           }
         )
         setExpense(response.data)
+        const houseResponse = await axios.get(`${import.meta.env.VITE_API_URL}/api/houses/${response.data.houseCode}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        setHouse(houseResponse.data)
       } catch (error) {
         console.error("Error fetching expense:", error)
         toast.error("Failed to load expense details.")
@@ -85,7 +93,6 @@ const ExpenseDetail = () => {
     }
 
   };
-
   return (
     <div className="expense-detail">
       <div className="expense-header">
@@ -155,7 +162,7 @@ const ExpenseDetail = () => {
           </label>
           <label>
             Cost:
-            <span>€{expense.cost}</span>
+            <span>{house && getCurrencySymbol(house)}{expense.cost}</span>
           </label>
           <label>
             Involved Users:

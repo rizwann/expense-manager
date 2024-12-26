@@ -181,6 +181,52 @@ const AddHouse: React.FC<IProps> = ({
                             )}
                           </div>
                         )
+                      case "select":
+                        if (column.field === "timeZone") {
+                          return (
+                            <select
+                              name={column.field}
+                              value={formData[column.field] || ""}
+                              onChange={(e) =>
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  [column.field]: e.target.value,
+                                }))
+                              }
+                              required
+                            >
+                              <option value="">Select Timezone</option>
+                              {column.options.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </select>
+                          )
+                        } else if (column.field === "currency") {
+                          return (
+                            <select
+                              name={column.field}
+                              value={formData[column.field] || ""}
+                              onChange={(e) =>
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  [column.field]: e.target.value,
+                                }))
+                              }
+                              required
+                            >
+                              <option value="">Select Currency</option>
+                              {column.options.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                  {option.symbol} {option.label}
+                                </option>
+                              ))}
+                            </select>
+                          )
+                        } else {
+                          return null
+                        }
                       default:
                         return null
                     }

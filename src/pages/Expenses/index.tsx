@@ -11,9 +11,27 @@ import { toast } from "react-toastify"
 import { useAuth } from "../../hooks/useAuth"
 import Spinner from "../../components/Spinner"
 import Toaster from "../../components/Toaster"
-import { getImage } from "../../utils/utils"
+import { getCurrencySymbolByValue, getImage } from "../../utils/utils"
 
-const columns: GridColDef[] = [
+
+
+const Expenses = () => {
+  const [modalOpen, setModalOpen] = useState(false)
+  const [expenses, setExpenses] = useState<Expense[]>([])
+  const [filteredExpenses, setFilteredExpenses] = useState<Expense[]>([])
+  // const [mobileExpenses, setMobileExpenses] = useState<Expense[]>([])
+  const [myself, setMyself] = useState(false)
+  const [houses, setHouses] = useState<House[]>([])
+  const [selectedHouse, setSelectedHouse] = useState<string | null>(null)
+  const [selectedMonth, setSelectedMonth] = useState<string | null>(null)
+  const [selectedYear, setSelectedYear] = useState<string | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+  // const [selectedStore, setSelectedStore] = useState<string | null>(null)
+  const [refresh, setRefresh] = useState(false)
+  const [spinner, setSpinner] = useState(false)
+  const { user, getToken } = useAuth()
+
+  const columns: GridColDef[] = [
   {
     field: "image",
     headerName: "Logo",
@@ -111,28 +129,12 @@ const columns: GridColDef[] = [
     renderCell: (params) => {
       return (
         <strong style={{ color: "green" }}>
-          €{params.row.cost.toFixed(2)}
+          {getCurrencySymbolByValue(params.row.currency)}{params.row.cost.toFixed(2)}
         </strong>
       )
     }
   },
 ]
-
-const Expenses = () => {
-  const [modalOpen, setModalOpen] = useState(false)
-  const [expenses, setExpenses] = useState<Expense[]>([])
-  const [filteredExpenses, setFilteredExpenses] = useState<Expense[]>([])
-  // const [mobileExpenses, setMobileExpenses] = useState<Expense[]>([])
-  const [myself, setMyself] = useState(false)
-  const [houses, setHouses] = useState<House[]>([])
-  const [selectedHouse, setSelectedHouse] = useState<string | null>(null)
-  const [selectedMonth, setSelectedMonth] = useState<string | null>(null)
-  const [selectedYear, setSelectedYear] = useState<string | null>(null)
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
-  // const [selectedStore, setSelectedStore] = useState<string | null>(null)
-  const [refresh, setRefresh] = useState(false)
-  const [spinner, setSpinner] = useState(false)
-  const { user, getToken } = useAuth()
 
   // Fetch houses
   useEffect(() => {
@@ -178,6 +180,7 @@ const Expenses = () => {
             (expense: Expense) => ({
               ...expense,
               id: expense._id,
+              currency: house.currency,
             })
           )
 

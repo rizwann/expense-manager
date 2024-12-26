@@ -15,6 +15,7 @@ import {
 } from "../../utils/chartDataFetch"
 import { useAuth } from "../../hooks/useAuth"
 import { set } from "react-hook-form"
+import { getCurrencySymbol } from "../../utils/utils"
 
 const categories = Object.values(CategoryName).map((item) => {
   const color = "#" + Math.floor(Math.random() * 16777215).toString(16)
@@ -87,7 +88,7 @@ const BigChart: React.FC<Props> = ({ selectedHouse, dataKey, month, year }) => {
                           fontWeight: "bold",
                           marginBottom: "0px",
                         }}
-                      >{`${payload[0].value}€`}</p>
+                      >{`${payload[0].value}${getCurrencySymbol(selectedHouse)}`}</p>
                     </div>
                   )
                 }

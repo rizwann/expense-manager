@@ -19,6 +19,7 @@ import {
 import { motion } from "framer-motion"
 import { useAuth } from "../../hooks/useAuth"
 import { months } from "../../menu-item"
+import { getCurrencySymbol } from "../../utils/utils"
 
 // Helper function to get the current year and month
 const getCurrentYear = () => new Date().getFullYear();
@@ -298,7 +299,7 @@ const TransactionSummary: React.FC = () => {
                 <span>
                   {index + 1}. {user}
                 </span>
-                <span>€{total.toFixed(2)}</span>
+                <span>{getCurrencySymbol(selectedHouseData)}{total.toFixed(2)}</span>
               </li>
             ))}
           </ul>
@@ -350,7 +351,7 @@ const TransactionSummary: React.FC = () => {
           </h2>
           <div className="text-center">
             <span className="text-2xl font-bold">
-              €{totalExpenses.toFixed(2)}
+              {getCurrencySymbol(selectedHouseData)}{totalExpenses.toFixed(2)}
             </span>
           </div>
         </motion.div>
@@ -375,7 +376,7 @@ const TransactionSummary: React.FC = () => {
                   {" "}
                   {index + 1}. {from} <ArrowForward className="mx-2" /> {to}{" "}
                 </span>{" "}
-                <span>€{amount.toFixed(2)}</span>{" "}
+                <span>{getCurrencySymbol(selectedHouseData)}{amount.toFixed(2)}</span>{" "}
               </li>
             ))}{" "}
           </ul>{" "}
@@ -394,7 +395,7 @@ const TransactionSummary: React.FC = () => {
                 <span className="mr-2">
                   {index + 1}. {from} <ArrowForward className="mx-2" /> {to}
                 </span>
-                <span>€{amount.toFixed(2)}</span>
+                <span>{getCurrencySymbol(selectedHouseData)}{amount.toFixed(2)}</span>
               </li>
             ))}
           </ul>

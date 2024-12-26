@@ -3,7 +3,7 @@ import "./pieChartBox.scss"
 import { House, IUser } from "../../types"
 import { useEffect, useState } from "react"
 import { fetchHouseExpByAllStore } from "../../utils/chartDataFetch"
-import { generateContrastingColors } from "../../utils/utils"
+import { generateContrastingColors, getCurrencySymbol } from "../../utils/utils"
 import { useAuth } from "../../hooks/useAuth"
 
 interface PieChartBoxProps {
@@ -70,7 +70,7 @@ const PieChartBox: React.FC<PieChartBoxProps> = ({ user, selectedHouse }) => {
                           fontWeight: "bold",
                           marginBottom: "0px",
                         }}
-                      >{`${payload[0].value}€`}</p>
+                      >{`${payload[0].value}${getCurrencySymbol(selectedHouse)}`}</p>
                     </div>
                   )
                 }

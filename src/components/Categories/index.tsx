@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import { CategoryData, CategoryName, House } from "../../types"
 import { fetchSixMonthsExpensesByCategory } from "../../utils/chartDataFetch"
 import { useAuth } from "../../hooks/useAuth"
+import { getCurrencySymbol } from "../../utils/utils"
 
 interface CategoryExpenseViewerProps {
   selectedHouse: House
@@ -72,7 +73,7 @@ useEffect(() => {
               >
                 <span>{expense.month}</span>
                 <span className="font-medium text-green-300">
-                  €{expense.expenses.toFixed(2)}
+                  {getCurrencySymbol(selectedHouse)}{expense.expenses.toFixed(2)}
                 </span>
               </li>
             ))}

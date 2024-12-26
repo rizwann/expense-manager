@@ -5,6 +5,7 @@ import ConfirmationModal from "../Modal/Confirmation"
 import { GridColDef } from "@mui/x-data-grid"
 import { Expense, House, IUser, Store } from "../../types"
 import Clear from "@mui/icons-material/Clear"
+import { getCurrencySymbolByValue } from "../../utils/utils"
 
 type Props = {
   columns: GridColDef[]
@@ -95,7 +96,7 @@ const MobileDataTable: React.FC<Props> = ({
           return `${formattedDate} ${formattedTime}`
         } else if (col.field === "cost") {
           return (
-            <span style={{ color: "green" }}>{`€${row[col.field].toFixed(
+            <span style={{ color: "green" }}>{`${getCurrencySymbolByValue(row.currency)}${row[col.field].toFixed(
               2
             )}`}</span>
           )
@@ -147,10 +148,17 @@ const MobileDataTable: React.FC<Props> = ({
     currentPage * rowsPerPage
   )
 
-  const totalCost = filteredRows.reduce(
-    (acc: number, row: any) => acc + row.cost,
-    0
-  )
+  const totalCost = filteredRows.reduce((acc: any, row: any) => {
+    const currency = row.currency
+    const cost = row.cost
+    if (acc[currency]) {
+      acc[currency] += cost
+    } else {
+      acc[currency] = cost
+    }
+    return acc
+  }
+  , {})
 
   return (
     <div className="card-container">
@@ -245,7 +253,13 @@ const MobileDataTable: React.FC<Props> = ({
           <div className="flex items-center justify-between">
             <span className="mr-2">Total Entries: {filteredRows?.length}</span>
             <span className="mr-2">Total Cost: {
-              <span style={{ color: "green" }}>{`€${totalCost.toFixed(2)}`}</span>
+              <span style={{ color: "green" }}>{
+                Object.entries(totalCost).map(([currency, cost]: any, idX) => {
+                  return <span className="pr-1">{getCurrencySymbolByValue(currency)}{cost.toFixed(2)}
+                    {idX < Object.entries(totalCost).length - 1 ? ", " : ""}
+                  </span>
+                })
+              }</span>
             }</span>
           </div>
           {/* Pagination */}

@@ -263,6 +263,7 @@ const Home = () => {
             <TopBox user={user} houseCode={selectedHouseData?.code}
             month={months.indexOf(selectedMonth) + 1}
             year={selectedYear}
+            selectedHouse={selectedHouseData}
             />
           )}
         </div>

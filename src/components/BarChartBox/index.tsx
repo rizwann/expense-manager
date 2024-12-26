@@ -15,6 +15,7 @@ import {
 import { useAuth } from "../../hooks/useAuth"
 import React from "react"
 import { months } from "../../menu-item"
+import { getCurrencySymbol } from "../../utils/utils"
 
 interface BarChartBoxProps {
   title: string
@@ -102,7 +103,7 @@ const BarChartBox: React.FC<BarChartBoxProps> = ({
                           fontWeight: "bold",
                           marginBottom: "0px",
                         }}
-                      >{`${payload[0].value}€`}</p>
+                      >{`${payload[0].value}${getCurrencySymbol(selectedHouse)}`}</p>
                     </div>
                   )
                 }

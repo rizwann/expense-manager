@@ -19,6 +19,8 @@ export interface House {
   image: string;
   users: string[]; // Array of user ids
   userNames: string[]; // Array of user names
+  timeZone: string;
+  currency: string;
 }
 
 export interface IUser {

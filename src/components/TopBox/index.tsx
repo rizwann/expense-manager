@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react"
-import { Expense, IUser } from "../../types"
+import { Expense, House, IUser } from "../../types"
 import "./topBox.scss"
 import axios from "axios"
 import { NavLink } from "react-router-dom"
 import { useAuth } from "../../hooks/useAuth"
-import { getImage } from "../../utils/utils"
+import { getCurrencySymbol, getImage } from "../../utils/utils"
 
 interface IProps {
   user: IUser
   houseCode: string
   month: number
   year: number
+  selectedHouse: House
 }
 
-const TopBox: React.FC<IProps> = ({ user, houseCode, month, year }) => {
+const TopBox: React.FC<IProps> = ({ user, houseCode, month, year, selectedHouse }) => {
   const [expenses, setExpenses] = useState<Expense[]>([])
   const [lastTenExpenses, setLastTenExpenses] = useState<Expense[]>([])
   const {getToken} = useAuth()
@@ -73,7 +74,7 @@ const TopBox: React.FC<IProps> = ({ user, houseCode, month, year }) => {
                   <span className="date">{date}</span>
                 </div>
               </NavLink>
-              <span className="amount">€{expense.cost.toFixed(2)}</span>
+              <span className="amount">{getCurrencySymbol(selectedHouse)}{expense.cost.toFixed(2)}</span>
             </div>
           )
         })}
