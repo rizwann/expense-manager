@@ -252,7 +252,7 @@ const MobileDataTable: React.FC<Props> = ({
           ))}
           <div className="flex items-center justify-between">
             <span className="mr-2">Total Entries: {filteredRows?.length}</span>
-            <span className="mr-2">Total Cost: {
+            {slug === "expenses" && <span className="mr-2">Total Cost: {
               <span style={{ color: "green" }}>{
                 Object.entries(totalCost).map(([currency, cost]: any, idX) => {
                   return <span className="pr-1">{getCurrencySymbolByValue(currency)}{cost.toFixed(2)}
@@ -260,7 +260,7 @@ const MobileDataTable: React.FC<Props> = ({
                   </span>
                 })
               }</span>
-            }</span>
+            }</span>}
           </div>
           {/* Pagination */}
           <div className="flex items-center justify-between gap-3 mt-2 pagination-container">
