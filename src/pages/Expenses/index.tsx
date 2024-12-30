@@ -194,12 +194,12 @@ const Expenses = () => {
       setExpenses(allExpenses) // Set all combined expenses to state
       setFilteredExpenses(allExpenses) // Set all combined expenses to state
       // set all the filter to null
-      setSelectedHouse(null)
-      setSelectedMonth(null)
-      setSelectedYear(null)
-      setSelectedCategory(null)
+      // setSelectedHouse(null)
+      // setSelectedMonth(null)
+      // setSelectedYear(null)
+      // setSelectedCategory(null)
       // setSelectedStore(null)
-      setMyself(false)
+      // setMyself(false)
    
   }
 
