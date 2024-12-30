@@ -92,7 +92,16 @@ const MobileDataTable: React.FC<Props> = ({
             day: "numeric",
             year: "2-digit",
           })
-          const formattedTime = date.toLocaleTimeString()
+          const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+          const formattedTime = date.toLocaleTimeString(
+            "en-DE",
+            timeZone === "UTC" ? { timeZoneName: "short" } : {
+              hour: "numeric",
+              minute: "numeric",
+              timeZoneName: "short",
+            }
+
+          )
           return `${formattedDate} ${formattedTime}`
         } else if (col.field === "cost") {
           return (
