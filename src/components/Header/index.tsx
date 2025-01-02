@@ -19,7 +19,7 @@ const Header: React.FC<IProps> = ({
         <img
           alt=""
           className="h-14 w-14"
-          src="https://i.ibb.co/8xr4L5n/expenses.png"
+          src={import.meta.env.VITE_LOGO_URL}
         />
       </div>
       <h2 className="mt-6 text-3xl font-extrabold text-center text-gray-100">

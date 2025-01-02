@@ -45,7 +45,7 @@ function Login() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-80">
           <div className="relative flex flex-col items-center text-white">
             <img
-              src="https://i.ibb.co/8xr4L5n/expenses.png" // Replace with your login icon or loading spinner
+              src={import.meta.env.VITE_LOGO_URL}
               alt="Logging in"
               className="w-24 h-24 mb-4 animate-spin"
             />

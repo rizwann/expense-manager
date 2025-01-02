@@ -82,6 +82,7 @@ export const fetchUserSixMonthsExpenses = async (house: House, token: string) =>
 
     export const fetchUserMonthlyComparison = async (house: House, token: string, month: number, year: number) => {
       try {
+        console.log("fetchUserMonthlyComparison", house, month, year)
         const URI = `${API_URL}/user/expenses/comparison/${house.code}/${month}/${year}`
         const response = await axios.get<Tdata>(URI, {
           headers: {
