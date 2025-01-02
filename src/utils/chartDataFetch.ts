@@ -31,9 +31,9 @@ export const fetchUserContribution = async (house: House, token: string, month: 
   }
 
 
-export const fetchUserSixMonthsExpenses = async (house: House, token: string) => {
+export const fetchUserSixMonthsExpenses = async (house: House, token: string, month: number, year: number) => {
     try {
-      const URI = `${API_URL}/user/expenses/half-yearly/${house.code}`
+      const URI = `${API_URL}/user/expenses/half-yearly/${house.code}/${month}/${year}`
       const response = await axios.get<lastSixMonthsResponse>(URI, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -146,9 +146,9 @@ export const fetchPopularCategoryExpenses = async (house: House, token: string, 
 }
   }
 
-export const fetchSixMonthsExpensesByCategory = async (house: House, token: string) => {
+export const fetchSixMonthsExpensesByCategory = async (house: House, token: string, month: number, year: number ) => {
     try {
-      const URI = `${API_URL}/expenses/category/half-yearly/${house.code}`
+      const URI = `${API_URL}/expenses/category/half-yearly/${house.code}/${month}/${year}`
       const response = await axios.get<lastSixMonthsCatResponse>(URI, {
         headers: {
           Authorization: `Bearer ${token}`,

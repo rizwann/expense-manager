@@ -55,7 +55,8 @@ const BarChartBox: React.FC<BarChartBoxProps> = ({
         case "userSixMonths":
           chartData = await fetchUserSixMonthsExpenses(
             selectedHouse,
-            token || ""
+            token || "",
+            month, year
           )
           break
 

@@ -6,9 +6,11 @@ import { getCurrencySymbol } from "../../utils/utils"
 
 interface CategoryExpenseViewerProps {
   selectedHouse: House
+  month: number
+  year: number
 }
 
-const CategoryExpenseViewer: React.FC<CategoryExpenseViewerProps> = ({selectedHouse}) => {
+const CategoryExpenseViewer: React.FC<CategoryExpenseViewerProps> = ({selectedHouse, month, year}) => {
   const [selectedCategory, setSelectedCategory] = useState<CategoryName | "">(
     CategoryName.Grocery
   )
@@ -18,19 +20,18 @@ const CategoryExpenseViewer: React.FC<CategoryExpenseViewerProps> = ({selectedHo
 useEffect(() => {
     const fetchData = async () => {
         const token = await getToken()
-        const data = await fetchSixMonthsExpensesByCategory(selectedHouse, token || "")
+        const data = await fetchSixMonthsExpensesByCategory(selectedHouse, token || "", month, year)
         setChartData(data)
-        console.log("balsal", data, typeof data)
     }
     fetchData()
-} , [selectedHouse])
+} , [selectedHouse, month, year])
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedCategory(event.target.value as CategoryName)
   }
 
   let filteredExpenses: CategoryData | undefined
     if (chartData) {
-        filteredExpenses = chartData.find((data) => data.name === selectedCategory)
+        filteredExpenses = chartData.find((data) => data.name! === selectedCategory)
     }
 
   return (
