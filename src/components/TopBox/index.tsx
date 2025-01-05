@@ -55,7 +55,7 @@ const TopBox: React.FC<IProps> = ({ user, houseCode, month, year, selectedHouse 
   return (
     <div className="top-box">
       <h1>Expenses</h1>
-      <div className="list">
+    <div className="list">
         {lastTenExpenses?.map((expense) => {
           const date = new Date(expense.date).toLocaleDateString("en-DE", {
             month: "short",

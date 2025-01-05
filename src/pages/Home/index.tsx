@@ -8,6 +8,7 @@ import { useAuth } from "../../hooks/useAuth"
 import {
   barChartBoxAllUser,
   barChartBoxUserExpenseLastSixMonths,
+  chartBoxConversion,
   chartBoxHouseExpense,
   chartBoxUserExpense,
 } from "../../menu-item"
@@ -296,16 +297,18 @@ const Home = () => {
             <PieChartBox user={user} selectedHouse={selectedHouseData} />
           )}
         </div> */}
-        {/* <div className="box box5">
+        <div className="box box5">
           {selectedHouseData && (
             <ChartBox
               {...chartBoxConversion}
               user={user}
               type="popularStore"
               selectedHouse={selectedHouseData}
+              month={months.indexOf(selectedMonth) + 1}
+              year={selectedYear}
             />
           )}
-        </div> */}
+        </div>
          {/* <div className="box box6">
           {selectedHouseData && (
             <ChartBox

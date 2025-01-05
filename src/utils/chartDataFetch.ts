@@ -82,7 +82,6 @@ export const fetchUserSixMonthsExpenses = async (house: House, token: string, mo
 
     export const fetchUserMonthlyComparison = async (house: House, token: string, month: number, year: number) => {
       try {
-        console.log("fetchUserMonthlyComparison", house, month, year)
         const URI = `${API_URL}/user/expenses/comparison/${house.code}/${month}/${year}`
         const response = await axios.get<Tdata>(URI, {
           headers: {
@@ -116,9 +115,9 @@ export const fetchUserSixMonthsExpenses = async (house: House, token: string, mo
   }
   }
 
-  export const fetchPopularStoreExpenses = async (house: House, token: string) => {
+  export const fetchPopularStoreExpenses = async (house: House, token: string, month: number, year: number) => {
     try {
-      const URI = `${API_URL}/expenses/store/${house.code}`
+      const URI = `${API_URL}/expenses/store/${house.code}/${month}/${year}`
       const response = await axios.get<object>(URI, {
         headers: {
           Authorization: `Bearer ${token}`,

@@ -80,7 +80,8 @@ const ChartBox: React.FC<ChartBoxProps> = ({
         case "popularStore":
           const resStore = await fetchPopularStoreExpenses(
             selectedHouse,
-            token || ""
+            token || "",
+            month, year
           )
          // @ts-ignore
           chartData = resStore?.result
@@ -142,28 +143,19 @@ const ChartBox: React.FC<ChartBoxProps> = ({
         <Typography className="text-green-400 " variant="h4">
           {getCurrencySymbol(selectedHouse)}{data?.totalExpensesThisMonth || 0}
         </Typography>
-        {(type === "popularStore" || type === "popularCategory") && (
+        {(type === "popularStore" || type === "popularCategory") ? (
           <div className="flex items-center gap-2 mb-2">
-            {type === "popularStore" && (
-              <img
-              style={{ width: 40, height: 40, borderRadius: 50, objectFit: "cover"
-              }}
-                src={data?.image}
-                alt="StoreImg"
-                onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) =>
-                  (e.currentTarget.src = "/app.svg")
-                }
-              />
-            )}
-             <Typography className="text-purple-400 " variant="caption">
-              {data?.popularName}
-            </Typography>
+             <p className="font-bold">
+            </p>
+             <span style={{ color: color }}>Store: </span><span className="text-green-400">{data?.popularName}</span>
           </div>
-        )}
+        ) :
         <Link to="/expenses" style={{ color: color }}>
-          {" "}
-          View All
-        </Link>
+        {" "}
+        View All
+      </Link>
+        }
+
       </div>
       <div className="chart-info">
         <div className="chart">
@@ -172,7 +164,7 @@ const ChartBox: React.FC<ChartBoxProps> = ({
               <Tooltip
                 contentStyle={{ background: "transparent", border: "none" }}
                 labelStyle={{ display: "none" }}
-                position={{ x: 10, y: 70 }}
+                position={{ x: 10, y: -10 }}
               />
               <Line
                 type="monotone"
