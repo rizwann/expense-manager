@@ -85,6 +85,9 @@ export interface CategoryData {
   expenses: { month: string, expenses: number }[]
 }
 
-
+export interface StoreNameData {
+  name: string
+  expenses: { month: string, expenses: number }[]
+}
 // make a type by combinging all of the above types
 export type General =  IUser | House | Store 

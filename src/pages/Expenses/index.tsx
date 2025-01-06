@@ -51,7 +51,7 @@ const Expenses = () => {
   {
     field: "storeName",
     headerName: "Store name",
-    width: 100,
+    width: 140,
     type: "string",
   },
   {

@@ -32,6 +32,7 @@ import { Home as HomeIcon } from "@mui/icons-material"
 import Toaster from "../../components/Toaster"
 import { months } from "../../menu-item"
 import CategoryExpenseViewer from "../../components/Categories"
+import StoreExpenseViewer from "../../components/Stores"
 
 // Helper function to get the current year and month
 const getCurrentYear = () => new Date().getFullYear();
@@ -324,6 +325,11 @@ const Home = () => {
           <div className="box box6">
           {selectedHouseData && (
            <CategoryExpenseViewer selectedHouse={selectedHouseData} month={months.indexOf(selectedMonth) + 1} year={selectedYear}/>
+          )}
+        </div>
+        <div className="box box6">
+          {selectedHouseData && (
+           <StoreExpenseViewer selectedHouse={selectedHouseData} month={months.indexOf(selectedMonth) + 1} year={selectedYear}/>
           )}
         </div>
         <div className="box box7">

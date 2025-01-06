@@ -1,5 +1,5 @@
 import axios from "axios"
-import { CategoryData, House } from "../types"
+import { CategoryData, House, StoreNameData } from "../types"
 import { StoreData } from "../components/PieChartBox"
 import { Tdata } from "../components/ChartBox"
 const API_URL = `${import.meta.env.VITE_API_URL}/api/chart`
@@ -13,6 +13,17 @@ export type lastSixMonthsCatResponse = {
   response: object[],
   catComparison: CategoryData[]
 }
+
+export type lastSixMonthsStoreResponse = {
+  storeComparison: StoreNameData[]
+  storeNames: string[]
+}
+
+type returnData = {
+  storeComparison: StoreNameData[]
+  storeNames: string[]
+}
+
 
 
 export const fetchUserContribution = async (house: House, token: string, month: number, year: number) => {
@@ -157,5 +168,23 @@ export const fetchSixMonthsExpensesByCategory = async (house: House, token: stri
     } catch (error) {
       console.error("Error fetching expenses:", error)
       return []
+  }
+}
+
+export const fetchSixMonthsExpensesByStoreName = async (house: House, token: string, month: number, year: number ) : Promise<returnData> => {
+    try {
+      const URI = `${API_URL}/expenses/store/half-yearly/${house.code}/${month}/${year}`
+      const response = await axios.get<lastSixMonthsStoreResponse>(URI, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      return response.data
+    } catch (error) {
+      console.error("Error fetching expenses:", error)
+      return {
+        storeComparison: [],
+        storeNames: []
+      }
   }
 }
