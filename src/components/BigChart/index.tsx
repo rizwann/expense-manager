@@ -96,7 +96,7 @@ const BigChart: React.FC<Props> = ({ selectedHouse, dataKey, month, year }) => {
               }}
             />
             <XAxis dataKey="name" />
-            <Bar dataKey={dataKey}>
+            <Bar dataKey={dataKey} radius={[5, 5, 0, 0]}>
               {data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />
               ))}

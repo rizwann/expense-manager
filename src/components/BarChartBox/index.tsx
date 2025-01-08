@@ -113,7 +113,7 @@ const BarChartBox: React.FC<BarChartBoxProps> = ({
               }}
             />
             <XAxis dataKey="name" />
-            <Bar dataKey={dataKey} fill={color} />
+            <Bar dataKey={dataKey} fill={color} radius={[5, 5, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>

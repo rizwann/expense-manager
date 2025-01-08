@@ -327,7 +327,7 @@ const Home = () => {
            <CategoryExpenseViewer selectedHouse={selectedHouseData} month={months.indexOf(selectedMonth) + 1} year={selectedYear}/>
           )}
         </div>
-        <div className="box box6">
+        <div className="box box10">
           {selectedHouseData && (
            <StoreExpenseViewer selectedHouse={selectedHouseData} month={months.indexOf(selectedMonth) + 1} year={selectedYear}/>
           )}
