@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import "./addExpense.scss"
 import { House, IUser } from "../../types"
 import axios from "axios"
@@ -15,7 +15,7 @@ import "react-toastify/dist/ReactToastify.css"
 import { useAuth } from "../../hooks/useAuth"
 import Button from "../../pages/components/Button"
 import { Close } from "@mui/icons-material"
-import React from "react"
+import CreatableSelect from "react-select/creatable"
 
 interface IProps {
   slug: string
@@ -53,6 +53,9 @@ const Add: React.FC<IProps> = ({
   const [selectCustomTime, setSelectCustomTime] = useState(false)
   const [selectedHouse, setSelectedHouse] = useState<House | null>(null)
   const [selectedUsers, setSelectedUsers] = useState<string[]>([])
+  const [storeOptions, setStoreOptions] = useState<
+    { value: string; label: string }[]
+  >([])
   const [paidByMe, setPaidByMe] = useState(true)
   const [selectedPayer, setSelectedPayer] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -80,6 +83,21 @@ const Add: React.FC<IProps> = ({
 
     fetchHouses()
   }, [])
+
+  useEffect(() => {
+    const fetchStoreNames = async () => {
+      const token = await getToken()
+      const storeApi = `${import.meta.env.VITE_API_URL}/api/stores/names`
+      const data = await axios.get<string[]>(storeApi, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      setStoreOptions(data.data.map((name) => ({ value: name, label: name })))
+    }
+    fetchStoreNames()
+  }
+  , [])
 
   useEffect(() => {
     if (selectedHouse) {
@@ -245,6 +263,7 @@ const Add: React.FC<IProps> = ({
       setImagePreview(null)
     }
   }
+
   return (
     <Modal
       open={modalOpen}
@@ -377,69 +396,140 @@ const Add: React.FC<IProps> = ({
                                 </div>
                               </div>
                             )
-                            case "file":
-                        return (
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              flexDirection: "column",
-                            }}
-                          >
-                            <input
-                              type="file"
-                              name={column.field}
-                              onChange={handleImageChange}
-                              id="imageUpload"
-                              //only image
-                              accept="image/*"
-                              
-                            />
-                            <label
-                              style={{ marginTop: "10px" }}
-                              htmlFor="imageUpload"
-                            >
-                              Upload Receipt
-                            </label>
-
-                            {(imagePreview || editData?.receipt) && (
-                              <div className="image-preview">
-                                <img
-                                  src={
-                                    imagePreview
-                                      ? imagePreview
-                                      : editData?.receipt
-                                      ? editData?.receipt
-                                      : "/app.svg"
-                                  }
-                                  alt="Image Preview"
-                                  onError={(
-                                    e: React.SyntheticEvent<
-                                      HTMLImageElement,
-                                      Event
-                                    >
-                                  ) => (e.currentTarget.src = "/app.svg")}
+                          case "file":
+                            return (
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  flexDirection: "column",
+                                }}
+                              >
+                                <input
+                                  type="file"
+                                  name={column.field}
+                                  onChange={handleImageChange}
+                                  id="imageUpload"
+                                  //only image
+                                  accept="image/*"
                                 />
+                                <label
+                                  style={{ marginTop: "10px" }}
+                                  htmlFor="imageUpload"
+                                >
+                                  Upload Receipt
+                                </label>
+
+                                {(imagePreview || editData?.receipt) && (
+                                  <div className="image-preview">
+                                    <img
+                                      src={
+                                        imagePreview
+                                          ? imagePreview
+                                          : editData?.receipt
+                                          ? editData?.receipt
+                                          : "/app.svg"
+                                      }
+                                      alt="Image Preview"
+                                      onError={(
+                                        e: React.SyntheticEvent<
+                                          HTMLImageElement,
+                                          Event
+                                        >
+                                      ) => (e.currentTarget.src = "/app.svg")}
+                                    />
+                                  </div>
+                                )}
                               </div>
-                            )}
-                          </div>
-                        )
+                            )
                           case "select":
                             if (column.field === "storeName") {
                               return (
-                                <div
-                                  className="relative w-full"
-                                >
-                                  <input
-                                    type="text"
+                                <div className="relative w-full">
+                                  <CreatableSelect
+                                    options={storeOptions}
+                                    onChange={(
+                                      selectedOption: {
+                                        value: string
+                                        label: string
+                                      } | null
+                                    ) => {
+                                      if (selectedOption) {
+                                        setStoreName(selectedOption.value)
+                                      } else {
+                                        setStoreName("")
+                                      }
+                                    }}
                                     placeholder="Store Name"
-                                    value={storeName}
-                                    onChange={(e) => setStoreName(e.target.value)}
-                                    className="w-full px-4 py-2 text-white bg-gray-800 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    required
+                                    className="text-black"
+                                    value={
+                                      storeName
+                                        ? storeOptions.find((option) => option.value === storeName) || { value: storeName, label: storeName }
+                                        : null
+                                    }
+                                    styles={{
+                                      control: (styles) => ({
+                                        ...styles,
+                                        padding: "6px",
+                                        background: "#444",
+                                        color: "#f0f0f0",
+                                        outline: "none",
+                                        border: "1px solid #666",
+                                        borderRadius: "5px",
+                                        transition: "border-color 0.3s ease, box-shadow 0.3s ease",
+                                        "&:focus": {
+                                          borderColor: "#3498db",
+                                          boxShadow: "0 0 10px rgba(52, 152, 219, 0.7)",
+                                        },
+                                        "@media (max-width: 415px)": {
+                                          padding: "4px",
+                                          fontSize: "15px",
+                                          maxWidth: "100%",
+                                        },
+
+                                      }),
+                                      option: (styles, { isFocused }) => ({
+                                        ...styles,
+                                        backgroundColor: isFocused
+                                          ? "#2d3748"
+                                          : "#1a202c",
+                                        color: "white",
+                                      }),
+                                      menu: (styles) => ({
+                                        ...styles,
+                                        backgroundColor: "#1a202c",
+                                      }),
+                                      singleValue: (styles) => ({
+                                        ...styles,
+                                        color: "white",
+                                      }),
+                                      input: (styles) => ({
+                                        ...styles,
+                                        color: "white",
+                                      }),
+                                      placeholder: (styles) => ({
+                                        ...styles,
+                                        color: "#A0AEC0",
+                                      }),
+                                    }}
+                                    onCreateOption={(inputValue) => {
+                                      const newOption = {
+                                        value: inputValue,
+                                        label: inputValue,
+                                      }
+                                      setStoreOptions((prevOptions) => [
+                                        ...prevOptions,
+                                        newOption,
+                                      ])
+                                      setStoreName(inputValue)
+                                    }}
+                                    components={{
+                                      DropdownIndicator: () => null,
+                                      IndicatorSeparator: () => null,
+                                    }}
+                                    formatCreateLabel={(inputValue) => `Add Store "${inputValue}"`} 
                                   />
-                                  
                                 </div>
                               )
                             } else if (column.field === "category") {
