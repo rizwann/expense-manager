@@ -59,6 +59,7 @@ const Add: React.FC<IProps> = ({
   const [formData, setFormData] = useState<{ [key: string]: any }>({})
   const [storeName, setStoreName] = useState("")
   const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [submitBtnDisabled, setSubmitBtnDisabled] = useState(false)
 
 
   const { user, getToken } = useAuth()
@@ -149,6 +150,7 @@ const Add: React.FC<IProps> = ({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setSubmitBtnDisabled(true)
     const formDataToSend = new FormData(e.currentTarget)
     const data: any = {}
     const token = await getToken()
@@ -208,6 +210,7 @@ const Add: React.FC<IProps> = ({
       setStoreName("")
       setSelectedHouse(null)
       setImagePreview(null)
+      setSubmitBtnDisabled(false)
     } catch (error: any) {
       if (error.response) {
         setErrorMessage(
@@ -220,6 +223,7 @@ const Add: React.FC<IProps> = ({
         setErrorMessage("An unexpected error occurred. Please try again.")
       }
       toast.error(errorMessage)
+      setSubmitBtnDisabled(false)
     }
   }
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -511,7 +515,7 @@ const Add: React.FC<IProps> = ({
             {errorMessage && (
               <div className="error-message">{errorMessage}</div>
             )}
-            <Button type="submit" text={editData ? "Update" : "Create"} />
+            <Button type="submit" text={editData ? "Update" : "Create"} disabled={submitBtnDisabled} />
           </form>
         </div>
       </div>

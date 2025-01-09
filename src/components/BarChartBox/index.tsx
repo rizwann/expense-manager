@@ -74,7 +74,7 @@ const BarChartBox: React.FC<BarChartBoxProps> = ({
     <div className="barchart-box">
       <h1>{type === 'contribution' ? `Member Contributions of ${monthName}` : title}</h1>
       <div className="chart">
-        <ResponsiveContainer width="99%" height={150}>
+        <ResponsiveContainer width="99%" height={350}>
           <BarChart data={chartData}>
             <Tooltip
               labelStyle={{ display: "none" }}

@@ -3,6 +3,7 @@ type Props = {
   onClick?: () => void;
   type?: "button" | "submit" | "reset";
   size?: "sm" | "md" | "lg";
+  disabled?: boolean;
 };
 
 const Button = (props: Props) => {
@@ -10,6 +11,7 @@ const Button = (props: Props) => {
     <button
       className="flex justify-center px-4 py-1 text-xs font-medium text-white bg-purple-600 border border-transparent rounded-md group hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 sm:py-2"
       onClick={props.onClick}
+      disabled={props.disabled}
       type={props.type ? props.type : "button"}
       style={{
         // size
