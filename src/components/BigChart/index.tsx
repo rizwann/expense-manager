@@ -16,11 +16,17 @@ import {
 import { useAuth } from "../../hooks/useAuth"
 import { set } from "react-hook-form"
 import { getCurrencySymbol } from "../../utils/utils"
+import { config } from "../../utils/config"
 
-const categories = Object.values(CategoryName).map((item) => {
-  const color = "#" + Math.floor(Math.random() * 16777215).toString(16)
-  return { name: item, color: color }
-})
+const categories = Object.values(CategoryName).map((item, index) => {
+  const randomColor = () => {
+    const color = "#" + Math.floor(Math.random() * 16777215).toString(16)
+    return color
+  }
+  const color = config.colors[index] ? config.colors[index] : randomColor()
+  return { name: item, color }
+}
+)
 
 type Props = {
   selectedHouse: House

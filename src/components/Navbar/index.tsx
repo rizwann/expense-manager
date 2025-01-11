@@ -5,20 +5,25 @@ import { NavLink, useNavigate } from "react-router-dom"
 import { GridMenuIcon } from "@mui/x-data-grid"
 import Menu from "../Menu"
 import { Device } from "@capacitor/device"
+import { Button } from "@mui/material"
+import Add from "../Add"
+import { config } from "../../utils/config"
+import useMediaQuery from "../../hooks/userMediaQuery"
 
 interface IProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
-  const { logout, user } = useAuth()
+  const { logout, user, setRefresh } = useAuth()
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
   const [isIOSApp, setIsIOSApp] = useState(false)
   const [showDownloadApp, setShowDownloadApp] = useState(false)
+  const [modalOpen, setModalOpen] = useState(false)
   const navigate = useNavigate()
   const preferencesRef = useRef<HTMLDivElement>(null)
-
+  const showText = useMediaQuery(795)
 
   const toggleMenu = () => {
     setIsOpen((prev) => !prev)
@@ -79,9 +84,12 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
   }
 
   return (
-    <div className="navbar" style={{
-      paddingTop: isIOSApp ? 'env(safe-area-inset-top)' : '20px'
-    }}>
+    <div
+      className="navbar"
+      style={{
+        paddingTop: isIOSApp ? "env(safe-area-inset-top)" : "20px",
+      }}
+    >
       {isLoggingOut && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
           <div className="relative flex flex-col items-center text-white">
@@ -103,6 +111,45 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
       </div>
       <div className="icons">
         <div className="user">
+          <div className="add-btn">
+            <Button
+              variant="outlined"
+              onClick={() => setModalOpen(true)}
+              style={{
+                color: "white",
+                borderColor: "white",
+                borderRadius: "20px",
+                padding: "5px 20px",
+                fontSize: "14px",
+                textTransform: "capitalize",
+                marginRight: "10px",
+              }}
+              sx={{
+                backgroundColor: showText ? "transparent" : "#8a3ff3",
+                "&:hover": {
+                  opacity: 0.8,
+                },
+              }}
+            >
+              {!showText ? "Add Expense" : 
+              // transparen plus icon
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="currentColor"
+                className="bi bi-plus"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M8 1.5a.5.5 0 0 1 .5.5v13a.5.5 0 0 1-1 0v-13a.5.5 0 0 1 .5-.5zM1.5 8a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13a.5.5 0 0 1-.5-.5z"
+                />
+              </svg>
+              
+              }
+            </Button>
+          </div>
           <span>{user?.username}</span>
           <img
             src={user?.image ? user?.image : "/noavatar.png"}
@@ -129,13 +176,22 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
             <NavLink to="/about" onClick={handlePreferenceItemClick}>
               <li>About</li>
             </NavLink>
-            { showDownloadApp &&  <NavLink to="/app-download" onClick={handlePreferenceItemClick}>
-              <li>Download App</li>
-            </NavLink>}
+            {showDownloadApp && (
+              <NavLink to="/app-download" onClick={handlePreferenceItemClick}>
+                <li>Download App</li>
+              </NavLink>
+            )}
             <li onClick={handleLogout}>Sign Out</li>
           </ul>
         </div>
       )}
+      <Add
+          setModalOpen={setModalOpen}
+          slug="Expense"
+          columns={config.expenseFields}
+          setRefresh={setRefresh}
+          modalOpen={modalOpen}
+        />
     </div>
   )
 }

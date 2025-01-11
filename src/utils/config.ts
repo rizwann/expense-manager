@@ -35,6 +35,8 @@ const currencies =  [
   { value: "JPY", label: "JPY", symbol: "¥" },
 ]
 
+const colors = ["#e60049", "#0bb4ff", "#50e991", "#e6d800", "#9b19f5", "#ffa300", "#dc0ab4", "#b3d4ff", "#00bfa0"]
+
 const expenseFields = [
   {
     field: "storeName",
@@ -162,15 +164,15 @@ const userFields = [
 
 ]
 
+const barColors = ["#ec1c25", "#23b576", "#fcaf3d",  "#00a3e0", "#7d3f98", "#f8981d", "#00a3e0", "#7d3f98", "#fcaf3d", "#f8981d"]
 
-
-  
-  
 
 export const config = {
   expenseFields,
   storeFields,
   houseFields,
   userFields,
-  currencies
+  currencies,
+  colors,
+  barColors,
 }

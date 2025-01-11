@@ -5,6 +5,7 @@ import axios from "axios"
 import { NavLink } from "react-router-dom"
 import { useAuth } from "../../hooks/useAuth"
 import { getCurrencySymbol, getImage } from "../../utils/utils"
+import useMediaQuery from "../../hooks/userMediaQuery"
 
 interface IProps {
   user: IUser
@@ -19,6 +20,7 @@ const TopBox: React.FC<IProps> = ({ user, houseCode, month, year, selectedHouse 
   const [lastTenExpenses, setLastTenExpenses] = useState<Expense[]>([])
   const {getToken} = useAuth()
   const selectedMonth = month - 1
+  const isNotBigScreen = useMediaQuery(1024)
 
   useEffect(() => {
     const fetchExpenses = async () => {
@@ -42,15 +44,16 @@ const TopBox: React.FC<IProps> = ({ user, houseCode, month, year, selectedHouse 
   }, [user])
 
   useEffect(() => {
+    const limit = isNotBigScreen ? 10 : 15
     const lastExpenses = expenses
       ?.filter(
         (expense) =>
           new Date(expense.date).getMonth() === selectedMonth &&
           new Date(expense.date).getFullYear() === year
       )
-      .slice(0, 10)
+      .slice(0, limit)
     setLastTenExpenses(lastExpenses)
-  }, [month, year, expenses])
+  }, [month, year, expenses, isNotBigScreen])
 
   return (
     <div className="top-box">

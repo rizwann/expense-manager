@@ -13,7 +13,7 @@ type Props = {
 };
 
 const DataTable: React.FC<Props> = ({ columns, rows, slug, handleDelete, handleLeaveHouse }) => {
-  const isMobile = useMediaQuery(768);
+  const isMobile = useMediaQuery(795);
 
   // const data = slug === 'expenses' && mobileRows ? mobileRows : rows;
 
