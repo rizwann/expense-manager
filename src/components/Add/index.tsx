@@ -511,6 +511,8 @@ const Add: React.FC<IProps> = ({
                                       placeholder: (styles) => ({
                                         ...styles,
                                         color: "#A0AEC0",
+                                        alignSelf: "center",
+                                        justifySelf: "start",
                                       }),
                                     }}
                                     onCreateOption={(inputValue) => {

@@ -111,7 +111,7 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
       </div>
       <div className="icons">
         <div className="user">
-          <div className="add-btn">
+          {user?.houseCodes?.length > 0 && <div className="add-btn">
             <Button
               variant="outlined"
               onClick={() => setModalOpen(true)}
@@ -132,7 +132,6 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
               }}
             >
               {!showText ? "Add Expense" : 
-              // transparen plus icon
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -149,7 +148,7 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
               
               }
             </Button>
-          </div>
+          </div>}
           <span>{user?.username}</span>
           <img
             src={user?.image ? user?.image : "/noavatar.png"}
