@@ -9,13 +9,13 @@ import { Button } from "@mui/material"
 import Add from "../Add"
 import { config } from "../../utils/config"
 import useMediaQuery from "../../hooks/userMediaQuery"
+import Weather from "../Weather"
 
 interface IProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
-  weather: { temp: number; icon: string, city: string  } | null
 }
 
-const Navbar: React.FC<IProps> = ({ setIsOpen, weather }) => {
+const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
   const { logout, user, setRefresh } = useAuth()
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
@@ -114,15 +114,7 @@ const Navbar: React.FC<IProps> = ({ setIsOpen, weather }) => {
      
       <div className="icons">
         <div className="user">
-        <div className="weather">
-        {weather && (
-           <div className="weather-info">
-           <img src={weather.icon} alt="Weather Icon" className="weather-icon" />
-           <span>{weather.temp}°C</span>
-            <span className="city">{weather.city}</span>
-         </div>
-        )}
-      </div>
+          <Weather  />
           {user?.houseCodes?.length > 0 && <div className="add-btn">
             <Button
               variant="outlined"
@@ -161,7 +153,7 @@ const Navbar: React.FC<IProps> = ({ setIsOpen, weather }) => {
               }
             </Button>
           </div>}
-          <span>{user?.username}</span>
+          <span className="username">{user?.username}</span>
           <img
             src={user?.image ? user?.image : "/noavatar.png"}
             alt="store"
@@ -170,7 +162,7 @@ const Navbar: React.FC<IProps> = ({ setIsOpen, weather }) => {
             }
             onClick={togglePreferences}
             style={{ cursor: "pointer" }}
-            className=" ring-2 ring-black-300"
+            className=" ring-2 ring-black-300 user-image"
           />
         </div>
       </div>

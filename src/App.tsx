@@ -58,52 +58,6 @@ const App = () => {
     const navigate = useNavigate()
     const location = useLocation()
     const [isOpen, setIsOpen] = useState(false)
-    const [weather, setWeather] = useState<{ temp: number; icon: string, city: string  } | null>(
-      null
-    )
-
-    const fetchWeatherData = async (lat: number, lon: number) => {
-      console.log("fetchWeatherData", lat, lon)
-      try {
-        const apiKey = "669da1d889c14c00895153646251301" // Replace with your WeatherAPI.com API key
-        const response = await fetch(
-          `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${lat},${lon}&aqi=no`
-        )
-        const data = await response.json()
-        setWeather({
-          temp: Math.round(data.current.temp_c),
-          icon: data.current.condition.icon, // Direct URL for WeatherAPI icons
-          city: data.location.name
-        })
-      } catch (error) {
-        console.error("Error fetching weather data:", error)
-      }
-    }
-    
-  
-    useEffect(() => {
-      const isDev = process.env.NODE_ENV === "development"
-    
-      const getWeatherData = () => {
-        if (isDev) {
-          // Mock location for development
-          fetchWeatherData(51.444041, 6.975880) // London coordinates
-        } else {
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              const { latitude, longitude } = position.coords
-              fetchWeatherData(latitude, longitude)
-            },
-            (error) => {
-              console.error("Error getting location:", error.message)
-            }
-          )
-        }
-      }
-    
-      getWeatherData()
-    }, [])
-    
   
     useEffect(() => {
       if(!loading){
@@ -122,7 +76,7 @@ const App = () => {
       >
         <CssBaseline />
         <div className="main">
-          <Navbar setIsOpen={setIsOpen} weather={weather} />
+          <Navbar setIsOpen={setIsOpen} />
           <div className="main-container" style={{
             paddingTop: 'env(safe-area-inset-top)'
           }}>

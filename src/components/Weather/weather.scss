@@ -1,0 +1,15 @@
+@import "../../styles/responsive.scss";
+
+.weather{
+    .weather-img{
+        @include md {
+            display: none
+          }
+    } 
+    .weather-city{
+        @include md {
+            display: none
+          }
+    }
+}
+  
