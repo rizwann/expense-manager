@@ -503,6 +503,8 @@ const Add: React.FC<IProps> = ({
                                       singleValue: (styles) => ({
                                         ...styles,
                                         color: "white",
+                                        alignSelf: "center",
+                                        justifySelf: "start",
                                       }),
                                       input: (styles) => ({
                                         ...styles,
