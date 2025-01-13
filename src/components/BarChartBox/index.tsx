@@ -71,12 +71,13 @@ const BarChartBox: React.FC<BarChartBoxProps> = ({
     }
     fetchChartData()
   }, [user, type, month, year])
-
   return (
     <div className="barchart-box">
       <h1>{type === 'contribution' ? `Member Contributions of ${monthName}` : title}</h1>
       <div className="chart">
-        <ResponsiveContainer width="99%" height={250}>
+        <ResponsiveContainer width="100%" 
+         height={350}
+        >
           <BarChart data={chartData}>
             <Tooltip
               labelStyle={{ display: "none" }}
@@ -115,7 +116,7 @@ const BarChartBox: React.FC<BarChartBoxProps> = ({
               }}
             />
             <XAxis dataKey="name" />
-            <Bar dataKey={dataKey} fill={color} radius={[5, 5, 0, 0]}> 
+            <Bar dataKey={dataKey} fill={type !== "userSixMonths" && color} radius={[5, 5, 0, 0]}> 
                 { type === 'userSixMonths' && chartData.map((_entry, index) => (
                     <Cell key={`cell-${index}`} fill={config.barColors[index]}
                     style={{ borderRadius: "5px" }}

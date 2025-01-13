@@ -251,7 +251,7 @@ export const chartBoxConversion = {
 };
 
 export const barChartBoxUserExpenseLastSixMonths = {
-  title: "My Monthly Expenses",
+  title: "Last Six Months Expenses",
   color: "#23b576",
   dataKey: "expenses",
   chartData: [

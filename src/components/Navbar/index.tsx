@@ -12,15 +12,17 @@ import useMediaQuery from "../../hooks/userMediaQuery"
 
 interface IProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+  weather: { temp: number; icon: string, city: string  } | null
 }
 
-const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
+const Navbar: React.FC<IProps> = ({ setIsOpen, weather }) => {
   const { logout, user, setRefresh } = useAuth()
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
   const [isIOSApp, setIsIOSApp] = useState(false)
   const [showDownloadApp, setShowDownloadApp] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
+
   const navigate = useNavigate()
   const preferencesRef = useRef<HTMLDivElement>(null)
   const showText = useMediaQuery(795)
@@ -109,8 +111,18 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
       <div className="menu">
         <Menu />
       </div>
+     
       <div className="icons">
         <div className="user">
+        <div className="weather">
+        {weather && (
+           <div className="weather-info">
+           <img src={weather.icon} alt="Weather Icon" className="weather-icon" />
+           <span>{weather.temp}°C</span>
+            <span className="city">{weather.city}</span>
+         </div>
+        )}
+      </div>
           {user?.houseCodes?.length > 0 && <div className="add-btn">
             <Button
               variant="outlined"
