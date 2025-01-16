@@ -41,7 +41,7 @@ const Weather = () => {
         (position) => {
           const { latitude, longitude } = position.coords
           const storedCoordinates = getCoordinatesFromStorage()
-  
+  console.log("Distance: s", storedCoordinates)
           if (storedCoordinates) {
             const distance = calculateDistance(
               storedCoordinates.lat,
@@ -49,6 +49,7 @@ const Weather = () => {
               latitude,
               longitude
             )
+            console.log("Distance:", distance)
   
             if (distance > THRESHOLD_DISTANCE) {
               setCoordinates({ lat: latitude, lon: longitude })
@@ -77,7 +78,8 @@ const Weather = () => {
   
     const intervalId = setInterval(() => {
       checkAndUpdateLocation()
-    },  15 * 60 * 1000
+    },  15
+  
     )
   
     return () => clearInterval(intervalId)
