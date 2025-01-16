@@ -25,7 +25,7 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
 
   const navigate = useNavigate()
   const preferencesRef = useRef<HTMLDivElement>(null)
-  const showText = useMediaQuery(795)
+  const showText = useMediaQuery(930)
 
   const toggleMenu = () => {
     setIsOpen((prev) => !prev)
