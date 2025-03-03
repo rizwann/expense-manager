@@ -192,7 +192,7 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
           setModalOpen={setModalOpen}
           slug="Expense"
           columns={config.expenseFields}
-          setRefresh={setRefresh}
+          // setRefresh={setRefresh}
           modalOpen={modalOpen}
         />
     </div>

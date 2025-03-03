@@ -448,6 +448,7 @@ const Add: React.FC<IProps> = ({
                               return (
                                 <div className="relative w-full">
                                   <CreatableSelect
+                                    required
                                     options={storeOptions}
                                     onChange={(
                                       selectedOption: {
