@@ -186,7 +186,7 @@ const ChartBox: React.FC<ChartBoxProps> = ({
             className="percentage"
             style={{ color: data?.percentage < 0 ? "tomato" : "limegreen" }}
           >
-            {data?.percentage > 0 && "+"} {data?.percentage}%
+            {type !== 'popularStore'&& data?.percentage > 0 && "+"} {data?.percentage}%
           </span>
           <span className="duration">{cardText}</span>
         </div>
