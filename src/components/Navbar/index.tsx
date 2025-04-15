@@ -10,6 +10,8 @@ import Add from "../Add"
 import { config } from "../../utils/config"
 import useMediaQuery from "../../hooks/userMediaQuery"
 import Weather from "../Weather"
+import Spinner from "../Spinner"
+import axios from "axios"
 
 interface IProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -22,6 +24,7 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
   const [isIOSApp, setIsIOSApp] = useState(false)
   const [showDownloadApp, setShowDownloadApp] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
+  const [spinner, setSpinner] = useState(false)
 
   const navigate = useNavigate()
   const preferencesRef = useRef<HTMLDivElement>(null)
@@ -50,6 +53,32 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
       setIsPreferencesOpen(false)
     }
   }
+
+  const handleScrapClick = async () => {
+    setSpinner(true)
+    const token = await getToken()
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/players/create`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      if (response.status === 201) {
+        setSpinner(false)
+        alert(response.data.message)
+      } else {
+        setSpinner(false)
+      }
+    } catch (error) {
+      console.error("Error scraping players:", error)
+      setSpinner(false)
+    }
+  }
+
 
   useEffect(() => {
     const checkDevice = async () => {
@@ -92,6 +121,7 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
         paddingTop: isIOSApp ? "env(safe-area-inset-top)" : "20px",
       }}
     >
+      {spinner && <Spinner />}
       {isLoggingOut && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
           <div className="relative flex flex-col items-center text-white">
@@ -184,6 +214,7 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
                 <li>Download App</li>
               </NavLink>
             )}
+            <li onClick={handleScrapClick}>Scrap</li>
             <li onClick={handleLogout}>Sign Out</li>
           </ul>
         </div>
@@ -200,3 +231,7 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
 }
 
 export default Navbar
+    function getToken() {
+      throw new Error("Function not implemented.")
+    }
+
