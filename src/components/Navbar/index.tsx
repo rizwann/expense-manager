@@ -56,14 +56,14 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
 
   const handleScrapClick = async () => {
     setSpinner(true)
-    const token = await getToken()
+    
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/players/create`,
         {},
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${import.meta.env.VITE_SCRAPER_SECRET}`,
           },
         }
       )
