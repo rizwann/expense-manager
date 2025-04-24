@@ -29,7 +29,7 @@ const StoreExpenseViewer: React.FC<StoreExpenseViewerProps> = ({
   >([])
   const [selectedStoreName, setSelectedStoreName] = useState<string>("")
   const [loading, setLoading] = useState<boolean>(false)
-  const { getToken } = useAuth()
+  const { getToken, recall } = useAuth()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,7 +53,7 @@ const StoreExpenseViewer: React.FC<StoreExpenseViewerProps> = ({
       setLoading(false)
     }
     fetchData()
-  }, [selectedHouse, month, year])
+  }, [selectedHouse, month, year, recall])
 
   const handleChange = (
     selectedOption: { value: string; label: string } | null

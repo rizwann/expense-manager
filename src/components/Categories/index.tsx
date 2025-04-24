@@ -15,7 +15,7 @@ const CategoryExpenseViewer: React.FC<CategoryExpenseViewerProps> = ({selectedHo
     CategoryName.Grocery
   )
   const [chartData, setChartData] = useState<CategoryData[] | []>([])
-  const {getToken} = useAuth()
+  const {getToken, recall} = useAuth()
 
 useEffect(() => {
     const fetchData = async () => {
@@ -24,7 +24,7 @@ useEffect(() => {
         setChartData(data)
     }
     fetchData()
-} , [selectedHouse, month, year])
+} , [selectedHouse, month, year, recall])
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedCategory(event.target.value as CategoryName)
   }

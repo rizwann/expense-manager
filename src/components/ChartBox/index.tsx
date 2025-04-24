@@ -48,7 +48,7 @@ const ChartBox: React.FC<ChartBoxProps> = ({
   month,
   year
 }) => {
-  const {getToken} = useAuth()
+  const {getToken, recall} = useAuth()
   const [chartData, setChartData] = useState<object[]>([])
   const [image, setImage] = useState<string>("")
   const [data, setData] = useState<Tdata>({
@@ -116,7 +116,7 @@ const ChartBox: React.FC<ChartBoxProps> = ({
       setData(iData)
     }
     fetchChartData()
-  }, [user, type, month, year])
+  }, [user, type, month, year, recall])
 
   let cardText
   switch (type) {
@@ -165,17 +165,18 @@ const ChartBox: React.FC<ChartBoxProps> = ({
                 contentStyle={{ background: "transparent", border: "none" }}
                 labelStyle={{ display: "none" }}
                 position={{ x: 10, y: -10 }}
+                cursor={{ fill: "none" }}
               />
               <Line
                 type="monotone"
                 dataKey={dataKey}
-                stroke={"purple"}
                 strokeWidth={2}
+                stroke={color}
               />
               <Line
                 type="monotone"
                 dataKey={"name"}
-                stroke={"green"}
+                stroke={"#00C49F"}
                 strokeWidth={2}
               />
             </LineChart>

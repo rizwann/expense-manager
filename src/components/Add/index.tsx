@@ -24,6 +24,7 @@ interface IProps {
   setRefresh?: React.Dispatch<React.SetStateAction<boolean>>
   editData?: any // Data to be edited, if applicable
   modalOpen: boolean
+  re?: boolean
 }
 
 enum CategoryName {
@@ -47,6 +48,7 @@ const Add: React.FC<IProps> = ({
   setRefresh,
   editData,
   modalOpen,
+  re = false,
 }) => {
   const [houses, setHouses] = useState<House[]>([])
   const [houseUsers, setHouseUsers] = useState<IUser[]>([])
@@ -65,7 +67,7 @@ const Add: React.FC<IProps> = ({
   const [submitBtnDisabled, setSubmitBtnDisabled] = useState(false)
 
 
-  const { user, getToken } = useAuth()
+  const { user, getToken, setRecall } = useAuth()
   const userId = user?._id
 
 
@@ -218,6 +220,7 @@ const Add: React.FC<IProps> = ({
           }
         )
         toast.success("Expense created successfully!")
+        setRecall((prev) => !prev)
       }
       setRefresh && setRefresh((prev) => !prev)
       setModalOpen(false)

@@ -37,7 +37,7 @@ type Props = {
 
 const BigChart: React.FC<Props> = ({ selectedHouse, dataKey, month, year }) => {
   const [data, setData] = useState<object[]>([])
-  const {getToken} = useAuth()
+  const {getToken, recall} = useAuth()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,9 +56,10 @@ const BigChart: React.FC<Props> = ({ selectedHouse, dataKey, month, year }) => {
         return { ...item, color: category ? category.color : "#8884d8" } // Default color if not found
       })
       setData(enrichedData)
+      console.log("Enriched Data:", enrichedData)
     }
     fetchData()
-  }, [selectedHouse, month, year])
+  }, [selectedHouse, month, year, recall])
 
   return (
     <div className="bigchart-box">

@@ -41,7 +41,7 @@ const BarChartBox: React.FC<BarChartBoxProps> = ({
   month,
   year
 }) => {
-  const {getToken} = useAuth()
+  const { getToken, recall } = useAuth()
   const [chartData, setChartData] = useState<object[]>([])
 
   const monthName = months[month  - 1]
@@ -70,7 +70,8 @@ const BarChartBox: React.FC<BarChartBoxProps> = ({
       setChartData(chartData)
     }
     fetchChartData()
-  }, [user, type, month, year])
+  }, [user, type, month, year, recall])
+  
   return (
     <div className="barchart-box">
       <h1>{type === 'contribution' ? `Member Contributions of ${monthName}` : title}</h1>

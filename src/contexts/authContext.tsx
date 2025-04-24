@@ -33,6 +33,8 @@ interface AuthContextType {
   setErrorMessage: React.Dispatch<React.SetStateAction<string | null>>;
   setResetLink: React.Dispatch<React.SetStateAction<string | null>>;
   loading: boolean;
+  recall: boolean;
+  setRecall: React.Dispatch<React.SetStateAction<boolean>>;
   getUserFromPreferences: () => Promise<IUser | null>;
   getToken: () => Promise<string | null>;
 }
@@ -51,6 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [selectedHouse, setSelectedHouse] = useState<House | null>(null);
   const [refresh, setRefresh] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
+  const [recall, setRecall] = useState<boolean>(false);
 
   const APP_URL = import.meta.env.VITE_API_URL;
 
@@ -247,6 +250,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setRefresh,
         setErrorMessage,
         loading,
+        recall,
+        setRecall,
         getUserFromPreferences,
         getToken
       }}
