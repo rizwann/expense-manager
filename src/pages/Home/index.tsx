@@ -269,7 +269,7 @@ const Home = () => {
             />
           )}
         </div>
-        <div className="box box2">
+        {/* <div className="box box2">
           {selectedHouseData && (
             <ChartBox
               {...chartBoxUserExpense}
@@ -292,13 +292,13 @@ const Home = () => {
               year={selectedYear}
             />
           )}
-        </div>
+        </div> */}
         {/* <div className="box box4">
           {selectedHouseData && (
             <PieChartBox user={user} selectedHouse={selectedHouseData} />
           )}
         </div> */}
-        <div className="box box5">
+        {/* <div className="box box5">
           {selectedHouseData && (
             <ChartBox
               {...chartBoxConversion}
@@ -309,7 +309,7 @@ const Home = () => {
               year={selectedYear}
             />
           )}
-        </div>
+        </div> */}
          {/* <div className="box box6">
           {selectedHouseData && (
             <ChartBox
