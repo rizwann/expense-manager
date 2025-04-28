@@ -12,7 +12,7 @@ const timeZones = [
   { value: "Atlantic/South_Georgia", label: "South Georgia (GMT-02:00)" },
   { value: "Atlantic/Azores", label: "Azores (GMT-01:00)" },
   { value: "Europe/London", label: "London (GMT+00:00)" },
-  { value: "Europe/Berlin", label: "Berlin (GMT+01:00)" },
+  { value: "Europe/Berlin", label: "Berlin (GMT+02:00)" },
   { value: "Africa/Johannesburg", label: "Johannesburg (GMT+02:00)" },
   { value: "Asia/Dubai", label: "Dubai (GMT+04:00)" },
   { value: "Asia/Kolkata", label: "India Standard Time (GMT+05:30)" },

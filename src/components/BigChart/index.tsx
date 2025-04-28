@@ -20,13 +20,13 @@ import { config } from "../../utils/config"
 
 const categories = Object.values(CategoryName).map((item, index) => {
   const randomColor = () => {
-    const color = "#" + Math.floor(Math.random() * 16777215).toString(16)
-    return color
+    const hue = Math.floor(Math.random() * 360); // 0–360 degree color wheel
+    return `hsl(${hue}, 90%, 70%)`; // bright, vibrant colors
   }
-  const color = config.colors[index] ? config.colors[index] : randomColor()
-  return { name: item, color }
-}
-)
+  const color = config.colors[index] ? config.colors[index] : randomColor();
+  return { name: item, color };
+});
+
 
 type Props = {
   selectedHouse: House

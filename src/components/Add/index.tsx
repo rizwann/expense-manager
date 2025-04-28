@@ -16,6 +16,7 @@ import { useAuth } from "../../hooks/useAuth"
 import Button from "../../pages/components/Button"
 import { Close } from "@mui/icons-material"
 import CreatableSelect from "react-select/creatable"
+import { formatToLocalDatetime } from "../../utils/utils"
 
 interface IProps {
   slug: string
@@ -48,7 +49,6 @@ const Add: React.FC<IProps> = ({
   setRefresh,
   editData,
   modalOpen,
-  re = false,
 }) => {
   const [houses, setHouses] = useState<House[]>([])
   const [houseUsers, setHouseUsers] = useState<IUser[]>([])
@@ -133,16 +133,27 @@ const Add: React.FC<IProps> = ({
       setSelectedPayer(editData.paymentPerson || null)
       const selectedStoreName = editData.storeName
       setStoreName(selectedStoreName || "")
-
+  
       const selectedHouse = houses.find(
         (house) => house.code === editData.houseCode
       )
       setSelectedHouse(selectedHouse || null)
+  
       if (editData.receipt) {
         setImagePreview(editData.receipt)
       }
+  
+      // 👉 ADD this for setting time
+      if (editData.date) {
+        setSelectCustomTime(true)
+        setFormData((prev) => ({
+          ...prev,
+          date: new Date(editData.date).toISOString()
+        }))
+      }
     }
   }, [editData, houses, userId, modalOpen])
+  
 
   useEffect(() => {
     if (editData && selectedHouse) {
@@ -197,6 +208,7 @@ const Add: React.FC<IProps> = ({
     data.receipt = formData.receipt
     try {
       if (editData) {
+        console.log("henda,", editData, data)
         await axios.post(
           `${import.meta.env.VITE_API_URL}/api/expenses/${editData._id}`,
           data,
@@ -256,16 +268,20 @@ const Add: React.FC<IProps> = ({
   }
   const handleCloseModal = () => {
     setModalOpen(false)
-   if (!editData) {
+    if (imagePreview) {
+      URL.revokeObjectURL(imagePreview)
+      setImagePreview(null)
+    }
+    if (!editData) {
       setFormData({})
       setSelectedUsers([])
       setSelectedPayer(null)
       setStoreName("")
       setSelectedHouse(null)
       setErrorMessage(null)
-      setImagePreview(null)
     }
   }
+  
 
   return (
     <Modal
@@ -316,44 +332,46 @@ const Add: React.FC<IProps> = ({
                           case "date":
                             return (
                               <div className="switch-container">
-                                {!editData && (
-                                  <div>
-                                    <FormControlLabel
-                                      control={
-                                        <Switch
-                                          checked={selectCustomTime}
-                                          onChange={() =>
-                                            setSelectCustomTime(
-                                              !selectCustomTime
-                                            )
-                                          }
-                                          inputProps={{
-                                            "aria-label": "controlled",
-                                          }}
-                                        />
-                                      }
-                                      label="Custom Time"
-                                    />
-                                    <Collapse
-                                      in={selectCustomTime}
-                                      style={{ marginTop: "10px" }}
-                                    >
-                                      <input
-                                        type="datetime-local"
-                                        placeholder={column.headerName}
-                                        name={column.field}
-                                        value={formData[column.field] || ""}
-                                        onChange={(e) =>
-                                          setFormData((prev) => ({
-                                            ...prev,
-                                            [column.field]: e.target.value,
-                                          }))
-                                        }
-                                      />
-                                    </Collapse>
-                                  </div>
-                                )}
                                 <div>
+                                  {!editData && <FormControlLabel
+                                    control={
+                                      <Switch
+                                        checked={selectCustomTime}
+                                        onChange={() =>
+                                          setSelectCustomTime(!selectCustomTime)
+                                        }
+                                        inputProps={{
+                                          "aria-label": "controlled",
+                                        }}
+                                      />
+                                    }
+                                    label="Custom Time"
+                                  />}
+                                  <Collapse
+                                    in={selectCustomTime}
+                                    style={{ marginTop: "10px" }}
+                                  >
+                                    <input
+                                      type="datetime-local"
+                                      placeholder={column.headerName}
+                                      name={column.field}
+                                      value={
+                                        formData[column.field]
+                                          ? formatToLocalDatetime(
+                                              formData[column.field]
+                                            )
+                                          : ""
+                                      }
+                                      onChange={(e) =>
+                                        setFormData((prev) => ({
+                                          ...prev,
+                                          [column.field]: e.target.value,
+                                        }))
+                                      }
+                                    />
+                                  </Collapse>
+                                </div>
+
                                   {!editData && (
                                     <div className="item">
                                       <FormControlLabel
@@ -396,7 +414,6 @@ const Add: React.FC<IProps> = ({
                                       </Collapse>
                                     </div>
                                   )}
-                                </div>
                               </div>
                             )
                           case "file":
@@ -416,6 +433,7 @@ const Add: React.FC<IProps> = ({
                                   id="imageUpload"
                                   //only image
                                   accept="image/*"
+                                  aria-label="Upload Receipt"
                                 />
                                 <label
                                   style={{ marginTop: "10px" }}

@@ -78,3 +78,14 @@ export const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2
 
   return R * c // Distance in km
 }
+
+export const formatToLocalDatetime = (utcString: string) => {
+  const date = new Date(utcString)
+  const offset = date.getTimezoneOffset() * 60000 // offset in milliseconds
+  const localISOTime = new Date(date.getTime() - offset)
+    .toISOString()
+    .slice(0, 16)
+
+    console.log("UTC String:", utcString, localISOTime)
+  return localISOTime
+}
