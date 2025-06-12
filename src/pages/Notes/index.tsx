@@ -79,19 +79,24 @@ const NotesPage = () => {
   }, [selectedHouse]);
 
   return (
-    <div className="min-h-screen p-4 text-white bg-gradient-to-br">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold tracking-wide text-white">Notes Dashboard</h1>
-        <button
-          className="flex items-center gap-2 px-4 py-2 font-semibold text-white transition duration-200 bg-blue-600 rounded-lg shadow-md hover:bg-blue-700"
-          onClick={() => {
-            setSelectedNote(null);
-            setModalOpen(true);
-          }}
-        >
-          <PlusOne fontSize='medium' /> Add Note
-        </button>
-      </div>
+<div className="w-screen min-h-screen p-4 text-white sm:p-6 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+
+      <div className="flex flex-col items-center justify-between gap-4 px-4 mb-8 sm:flex-row sm:mb-6 sm:gap-0 sm:px-0">
+  <h1 className="text-3xl font-extrabold tracking-wide text-white sm:text-2xl drop-shadow-md">
+    Notes Dashboard
+  </h1>
+  <button
+    className="flex items-center gap-2 px-5 py-3 font-semibold text-white transition-colors duration-300 rounded-lg shadow-lg bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 active:scale-95"
+    onClick={() => {
+      setSelectedNote(null);
+      setModalOpen(true);
+    }}
+  >
+    <PlusOne fontSize="medium" />
+    Add Note
+  </button>
+</div>
+
 
       <div className="mb-6">
         <label className="block mb-2 text-sm font-medium text-gray-300">

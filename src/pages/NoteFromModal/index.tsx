@@ -59,8 +59,8 @@ const NoteFormModal: React.FC<Props> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
-      <div className="w-full max-w-lg p-6 text-white bg-gray-900 shadow-2xl rounded-2xl animate-fadeIn">
+<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+  <div className="w-full max-w-lg p-6 mx-4 bg-gray-900 rounded-lg shadow-lg animate-fadeIn">
         <div className="flex items-center gap-2 mb-4 text-xl font-semibold">
           <StickyNote size={20} />
           {note ? 'Edit Note' : 'Add Note'}
@@ -82,7 +82,7 @@ const NoteFormModal: React.FC<Props> = ({
 
         {/* House Selector */}
         <div className="mb-4">
-          <label className="flex items-center block gap-1 mb-2 text-sm text-gray-300">
+          <label className="flex items-center gap-1 mb-2 text-sm text-gray-300">
             <Home size={16} /> Select House
           </label>
           <select
