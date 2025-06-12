@@ -89,5 +89,20 @@ export interface StoreNameData {
   name: string
   expenses: { month: string, expenses: number }[]
 }
-// make a type by combinging all of the above types
+
+export interface Todo {
+  _id?: string;
+  text: string;
+  status: 'pending' | 'done' | 'rejected';
+}
+
+export interface Note {
+  _id?: string;
+  title: string;
+  description?: string;
+  todos: Todo[];
+  houseCode: string;
+  createdAt?: string;
+}
+
 export type General =  IUser | House | Store 

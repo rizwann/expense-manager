@@ -32,6 +32,7 @@ import MobileMenu from "./components/MobileMenu"
 import About from "./pages/About"
 import AcceptUserPage from "./pages/AcceptUser"
 import DownloadApp from "./pages/AppDownload"
+import NotesPage from "./pages/Notes"
 
 const darkTheme = createTheme({
   palette: {
@@ -105,6 +106,7 @@ const App = () => {
         { path: "/expenses/:id", element: <Expense /> },
         { path: "/stores/:id", element: <Store /> },
         { path: "/houses/:id", element: <House /> },
+        { path: "/notes", element: <NotesPage /> },
         { path: "/balance", element: <Balances /> },
         { path: "/about", element: <About /> },
         { path: "*", element: <NotFoundPage /> }, // Add wildcard route for undefined paths

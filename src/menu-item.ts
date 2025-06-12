@@ -51,6 +51,12 @@ export const menu = [
     url: "/balance",
     icon: "/balances.svg",
   },
+  {
+    id: 5,
+    title: "Notes",
+    url: "/notes",
+    icon: "/notes.svg",
+  },
 ];
 
 // export const dummyExpenses: Expense[] = [
