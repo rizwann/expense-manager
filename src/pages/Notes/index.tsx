@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import NoteCard from '../../components/NoteCard';
 import NoteFormModal from '../NoteFromModal';
 import { House, Note } from '../../types';
 import { useAuth } from '../../hooks/useAuth';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Home, LocalDining, PlusOne } from '@mui/icons-material';
+import { Home, PlusOne } from '@mui/icons-material';
 import Loading from '../../components/Loading';
 
 const NotesPage = () => {

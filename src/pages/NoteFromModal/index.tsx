@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { House, Note, Todo } from '../../types';
 import axios from 'axios';
 import { useAuth } from '../../hooks/useAuth';
-import { CheckCircle, XCircle, Plus, Home, StickyNote } from 'lucide-react';
+import { XCircle, Plus, Home, StickyNote } from 'lucide-react';
 
 type Props = {
   note: Note | null;
