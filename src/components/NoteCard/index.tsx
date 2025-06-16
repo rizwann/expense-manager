@@ -1,44 +1,43 @@
-import React, { useState } from 'react';
-import { Note } from '../../types';
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
-import ClearIcon from '@mui/icons-material/Clear';
-import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
-import { motion } from 'framer-motion';
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
+import React, { useState } from "react"
+import { Note } from "../../types"
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined"
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
+import DoneOutlineIcon from "@mui/icons-material/DoneOutline"
+import ClearIcon from "@mui/icons-material/Clear"
+import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty"
+import { motion } from "framer-motion"
+import Modal from "@mui/material/Modal"
+import Box from "@mui/material/Box"
 
 type Props = {
-  note: Note;
-  onEdit: () => void;
-  onDelete: () => void;
-};
+  note: Note
+  onEdit: () => void
+  onDelete: () => void
+}
 
 const statusBadge = {
   done: {
     icon: <DoneOutlineIcon fontSize="small" />,
-    color: 'bg-green-500/20 text-green-400',
+    color: "bg-green-500/20 text-green-400",
   },
   pending: {
     icon: <HourglassEmptyIcon fontSize="small" />,
-    color: 'bg-yellow-500/20 text-yellow-300',
+    color: "bg-yellow-500/20 text-yellow-300",
   },
   rejected: {
     icon: <ClearIcon fontSize="small" />,
-    color: 'bg-red-500/20 text-red-400',
+    color: "bg-red-500/20 text-red-400",
   },
-};
+}
 
 const NoteCard: React.FC<Props> = ({ note, onEdit, onDelete }) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
 
-  const visibleTodos = note.todos.slice(0, 2);
-  const remainingCount = note.todos.length - visibleTodos.length;
+  const visibleTodos = note.todos.slice(0, 2)
+  const remainingCount = note.todos.length - visibleTodos.length
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
   return (
     <>
       {/* Note Card */}
@@ -54,11 +53,24 @@ const NoteCard: React.FC<Props> = ({ note, onEdit, onDelete }) => {
       >
         {/* Title & Delete */}
         <div className="flex items-center justify-between mb-2">
-          <h2 className="text-base font-semibold text-white truncate sm:text-lg">{note.title}</h2>
+          <div>
+            <h2 className="text-base font-semibold text-white truncate sm:text-lg">
+              {note.title}
+            </h2>
+            <div className="text-xs text-gray-400">
+              {new Date(note.createdAt).toLocaleDateString("en-DE", {
+                month: "short",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                year: "numeric",
+              })}
+            </div>
+          </div>
           <button
             onClick={(e) => {
-              e.stopPropagation();
-              onDelete();
+              e.stopPropagation()
+              onDelete()
             }}
             className="text-red-400 hover:text-red-300"
           >
@@ -67,7 +79,9 @@ const NoteCard: React.FC<Props> = ({ note, onEdit, onDelete }) => {
         </div>
 
         {/* Description */}
-        <p className="mb-2 text-sm text-gray-400 line-clamp-2">{note.description}</p>
+        <p className="mb-2 text-sm text-gray-400 line-clamp-2">
+          {note.description}
+        </p>
 
         {/* Todos */}
         <ul className="flex-1 space-y-1 overflow-hidden">
@@ -78,20 +92,24 @@ const NoteCard: React.FC<Props> = ({ note, onEdit, onDelete }) => {
             >
               <span
                 className={`flex-1 truncate ${
-                  todo.status === 'done'
-                    ? 'line-through text-green-300'
-                    : todo.status === 'rejected'
-                    ? 'text-red-300'
-                    : 'text-gray-200'
+                  todo.status === "done"
+                    ? "line-through text-green-300"
+                    : todo.status === "rejected"
+                    ? "text-red-300"
+                    : "text-gray-200"
                 }`}
               >
                 {todo.text}
               </span>
-             {todo.status === 'pending' && <span
-                className={`ml-2 flex items-center gap-1 px-1.5 py-0.5 text-xs rounded-md font-medium ${statusBadge[todo.status].color}`}
-              >
-                {statusBadge[todo.status].icon}
-              </span>}
+              {todo.status === "pending" && (
+                <span
+                  className={`ml-2 flex items-center gap-1 px-1.5 py-0.5 text-xs rounded-md font-medium ${
+                    statusBadge[todo.status].color
+                  }`}
+                >
+                  {statusBadge[todo.status].icon}
+                </span>
+              )}
             </li>
           ))}
           {remainingCount > 0 && (
@@ -103,16 +121,15 @@ const NoteCard: React.FC<Props> = ({ note, onEdit, onDelete }) => {
 
         {/* Edit Button */}
         <button
-  onClick={(e) => {
-    e.stopPropagation();
-    onEdit();
-  }}
-  className="flex items-center gap-2 px-4 py-2 mt-1 text-sm font-medium text-blue-300 transition-all duration-200 shadow-md bg-gradient-to-br from-gray-800 to-gray-700 rounded-xl hover:shadow-lg hover:from-gray-700 hover:to-gray-600 hover:text-blue-200"
->
-  <EditOutlinedIcon fontSize="small" />
-  Edit
-</button>
-
+          onClick={(e) => {
+            e.stopPropagation()
+            onEdit()
+          }}
+          className="flex items-center gap-2 px-4 py-2 mt-1 text-sm font-medium text-blue-300 transition-all duration-200 shadow-md bg-gradient-to-br from-gray-800 to-gray-700 rounded-xl hover:shadow-lg hover:from-gray-700 hover:to-gray-600 hover:text-blue-200"
+        >
+          <EditOutlinedIcon fontSize="small" />
+          Edit
+        </button>
       </motion.div>
 
       {/* Full Note Modal */}
@@ -128,17 +145,19 @@ const NoteCard: React.FC<Props> = ({ note, onEdit, onDelete }) => {
               >
                 <span
                   className={`flex-1 ${
-                    todo.status === 'done'
-                      ? 'line-through text-green-300'
-                      : todo.status === 'rejected'
-                      ? 'text-red-300'
-                      : 'text-gray-200'
+                    todo.status === "done"
+                      ? "line-through text-green-300"
+                      : todo.status === "rejected"
+                      ? "text-red-300"
+                      : "text-gray-200"
                   }`}
                 >
                   {todo.text}
                 </span>
                 <span
-                  className={`ml-3 flex items-center gap-1 px-2 py-0.5 text-xs rounded-md font-medium ${statusBadge[todo.status].color}`}
+                  className={`ml-3 flex items-center gap-1 px-2 py-0.5 text-xs rounded-md font-medium ${
+                    statusBadge[todo.status].color
+                  }`}
                 >
                   {statusBadge[todo.status].icon}
                   {todo.status}
@@ -149,7 +168,7 @@ const NoteCard: React.FC<Props> = ({ note, onEdit, onDelete }) => {
         </Box>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default NoteCard;
+export default NoteCard
