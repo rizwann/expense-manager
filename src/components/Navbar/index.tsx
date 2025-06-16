@@ -18,7 +18,7 @@ interface IProps {
 }
 
 const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
-  const { logout, user, getToken } = useAuth()
+  const { logout, user } = useAuth()
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
   const [isIOSApp, setIsIOSApp] = useState(false)
