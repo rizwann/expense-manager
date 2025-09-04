@@ -77,6 +77,26 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
       console.error("Error scraping players:", error)
       setSpinner(false)
     }
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/players/team`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${import.meta.env.VITE_SCRAPER_SECRET}`,
+          },
+        }
+      )
+      if (response.status === 201) {
+        setSpinner(false)
+        alert(response.data.message)
+      } else {
+        setSpinner(false)
+      }
+    } catch (error) {
+      console.error("Error scraping teams:", error)
+      setSpinner(false)
+    }
   }
 
 
@@ -214,7 +234,7 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
                 <li>Download App</li>
               </NavLink>
             )}
-            <li onClick={handleScrapClick}>Scrap</li>
+            <li onClick={handleScrapClick}>Scrap (Dr)</li>
             <li onClick={handleLogout}>Sign Out</li>
           </ul>
         </div>
