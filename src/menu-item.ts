@@ -52,7 +52,7 @@ export const menu = [
     icon: "/balances.svg",
   },
   {
-    id: 5,
+    id: 7,
     title: "Notes",
     url: "/notes",
     icon: "/notes.svg",
