@@ -182,8 +182,15 @@ export const menu = [
 //   },
 // ];
 
+const themeColors = {
+  primary: "var(--color-primary)",
+  secondary: "var(--color-secondary)",
+  muted: "var(--color-muted)",
+  text: "var(--color-text)",
+}
+
 export const chartBoxUserExpense = {
-  color: "#8884d8",
+  color: themeColors.primary,
   icon: "/userIcon.svg",
   title: "My Expenses",
   number: "$241.5",
@@ -201,7 +208,7 @@ export const chartBoxUserExpense = {
 };
 
 export const chartBoxStoreExpense = {
-  color: "skyblue",
+  color: themeColors.secondary,
   icon: "/productIcon.svg",
   title: "Popular Category",
   number: "10047.76",
@@ -223,7 +230,7 @@ export const chartBoxStoreExpense = {
   ],
 };
 export const chartBoxHouseExpense = {
-  color: "teal",
+  color: themeColors.primary,
   icon: "/revenueIcon.svg",
   title: "House Expense",
   number: "$564.32",
@@ -239,7 +246,7 @@ export const chartBoxHouseExpense = {
   ],
 };
 export const chartBoxConversion = {
-  color: "gold",
+  color: themeColors.secondary,
   icon: "/conversionIcon.svg",
   title: "Popular Store",
   number: "2.6",
@@ -258,7 +265,7 @@ export const chartBoxConversion = {
 
 export const barChartBoxUserExpenseLastSixMonths = {
   title: "Last Six Months Expenses",
-  color: "#23b576",
+  color: themeColors.primary,
   dataKey: "expenses",
   chartData: [
     {
@@ -295,7 +302,7 @@ export const barChartBoxUserExpenseLastSixMonths = {
 // last 3 months all user house expense
 export const barChartBoxAllUser = {
   title: "Member Contribution This Month",
-  color: "green",
+  color: themeColors.secondary,
   dataKey: "expenses",
   chartData: [
     {
@@ -718,8 +725,8 @@ export const singleUser = {
   },
   chart: {
     dataKeys: [
-      { name: "visits", color: "#82ca9d" },
-      { name: "clicks", color: "#8884d8" },
+      { name: "visits", color: themeColors.primary },
+      { name: "clicks", color: themeColors.secondary },
     ],
     data: [
       {
@@ -799,8 +806,8 @@ export const singleProduct = {
   },
   chart: {
     dataKeys: [
-      { name: "visits", color: "#82ca9d" },
-      { name: "orders", color: "#8884d8" },
+      { name: "visits", color: themeColors.primary },
+      { name: "orders", color: themeColors.secondary },
     ],
     data: [
       {
