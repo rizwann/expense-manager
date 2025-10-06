@@ -40,7 +40,7 @@ const DownloadApp = () => {
           />
         </div>
         <a
-          href="https://download944.mediafire.com/tnl0cbjuy6ogWGRAVaHPwksQ-Elb0ZBWk0xYgg-Z07t-Y0EhX55mqzBeySU6281OQCjBiL1iNMM7RAnckta9FRzKajQ3f72p6NJJ8_ZjOBH3qe9X1YqXPGHCFFaDMD0RF_NXIO2OKNRMdkR_dDSrbMQGbA7SYPQd2LkxP332T-HB/hdnskqqfooguvou/expenser.apk"
+          href="https://www.mediafire.com/file/hdnskqqfooguvou/expenser.apk/file"
           download
           className={`flex items-center justify-center w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 ease-in-out ${
             isDownloading ? "opacity-50 cursor-not-allowed" : ""
