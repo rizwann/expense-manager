@@ -5,6 +5,17 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 20px;
+  color: var(--color-text);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+
+  h1 {
+    color: var(--color-text);
+    margin-bottom: 12px;
+  }
 
   .chart {
     width: 100%;
@@ -17,6 +28,7 @@
     gap: 10px;
     align-items: center;
     margin-left: 10px;
+    color: var(--color-muted);
 
     .option {
       display: flex;
@@ -36,4 +48,8 @@
       }
     }
   }
+}
+
+[data-theme="contrast"] .bigchart-box {
+  box-shadow: none;
 }

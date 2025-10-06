@@ -1,158 +1,128 @@
-@import "../../styles/variables.scss";
-
-// Ensure the background and text colors are consistent with the given variables
 .house-detail {
-  max-width: 800px;
-  width: 80vw;
+  max-width: 840px;
+  width: 90vw;
   margin: 0 auto;
-  padding: 20px;
-  background-color: $main-bg;
-  border-radius: 15px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  padding: clamp(20px, 4vw, 32px);
+  background: var(--color-card);
+  color: var(--color-text);
+  border-radius: 18px;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 20px 38px rgba(0, 0, 0, 0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 
   .house-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
 
     .back-button {
-      background-color: rgb(147 51 234);
-      color: white;
-      border: none;
-      border-radius: 5px;
-      padding: 8px;
-      cursor: pointer;
-      font-size: 12px;
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      transition: background-color 0.3s;
-    }
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      background: var(--color-primary);
+      color: var(--color-button-text);
+      border: none;
+      font-size: 14px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
 
-    .back-button:hover {
-      background-color: #0056b3;
-    }
-
-    .back-button svg {
-      margin-right: 8px;
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(0, 106, 220, 0.25);
+      }
     }
   }
 
   .content {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    gap: 24px;
 
     .image {
-      width: 100%;
-      max-width: 300px;
-      margin-bottom: 20px;
       display: flex;
-      justify-content: center;
-      align-items: center;
       flex-direction: column;
-      row-gap: 15px;
+      align-items: center;
+      gap: 16px;
 
       h1 {
-        font-size: 2rem;
-        font-weight: bold;
-        color: $main-color;
+        font-size: clamp(22px, 4vw, 32px);
+        font-weight: 600;
       }
 
       img {
         width: 100%;
-        border-radius: 10px;
+        max-width: 360px;
+        border-radius: 12px;
+        border: 1px solid var(--color-border);
         object-fit: cover;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.24);
       }
     }
 
     .details {
-      width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 16px;
 
       label {
-        font-weight: bold;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        background-color: $soft-bg;
-        padding: 10px;
-        border-radius: 8px;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-        font-size: 1.2rem;
-        color: $main-color;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: 12px;
+        padding: 12px 16px;
+        font-weight: 600;
+        font-size: 15px;
 
-        span,
-        input,
-        select {
+        span {
           flex: 1;
           text-align: right;
-          color: $main-color;
+          color: var(--color-text);
+          font-weight: 500;
+        }
 
-          // Styling for input fields and selects in edit mode
-          input,
-          select {
-            border: none;
-            background-color: transparent;
-            color: $main-color;
-            font-size: 1rem;
-            padding: 5px;
-            border-bottom: 1px solid $main-color;
+        .users {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: flex-end;
+          gap: 8px;
 
-            &:focus {
-              outline: none;
-              border-color: $soft-color;
-            }
+          .user {
+            background: rgba(0, 106, 220, 0.15);
+            color: var(--color-text);
+            padding: 4px 8px;
+            border-radius: 8px;
           }
         }
       }
     }
   }
 
-  // Mobile responsiveness
   @media (max-width: 640px) {
-    .store-header {
-      .back-button {
-        font-size: 12px;
-        padding: 4px 5px;
-        .back-button svg {
-          margin-right: 5px;
-        }
+    width: 95vw;
+
+    .details label {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+
+      span {
+        text-align: left;
+        width: 100%;
       }
 
-
-    }
-
-    .content {
-      // align-items: flex-start;
-
-      .image {
-        h1 {
-          font-size: 1.5rem;
-        }
-
-        img {
-          width: 100%;
-        }
-      }
-
-      .details {
-        label {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 5px;
-
-          span,
-          input,
-          select {
-            text-align: left;
-            width: 100%;
-          }
-        }
+      .users {
+        justify-content: flex-start;
       }
     }
   }
+}
+
+[data-theme="contrast"] .house-detail {
+  box-shadow: none;
 }

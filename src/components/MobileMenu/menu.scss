@@ -1,20 +1,18 @@
-@import "../../styles/variables.scss";
-@import "../../styles/responsive.scss";
-
 .mobile-menu {
   display: none;
-  @include md {
+
+  @media (max-width: 900px) {
     display: flex;
     flex-direction: column;
     width: 100vw;
-    height: 100vh;  // Ensure the menu covers the full screen height
-    position: fixed;  // Make it fixed to cover the entire viewport
-    top: 0;  // Ensure it starts at the top of the screen
-    left: 0;  // Ensure it starts at the left side of the screen
-    background-color: $main-bg;
-    z-index: 1000;
-    padding: 20px;
-    overflow: hidden;  // Prevent scrolling
+    height: 100vh;
+    position: fixed;
+    inset: 0;
+    background: var(--color-card);
+    color: var(--color-text);
+    z-index: 1100;
+    padding: 24px;
+    gap: 24px;
   }
 
   .close-icon {
@@ -22,47 +20,52 @@
     justify-content: space-between;
     align-items: center;
     font-size: 24px;
-    font-weight: bold;
+    font-weight: 600;
     cursor: pointer;
-    color: $soft-color;
-    margin-bottom: 20px;
   }
 
   .menu-items {
     display: flex;
     flex-direction: column;
-    justify-content: center;  // Center the menu items vertically
-    overflow-y: auto;  // Allow scrolling if there are too many items
+    gap: 12px;
+    overflow-y: auto;
+    color: var(--color-text);
   }
 
   .item {
-    .title {
-      font-size: 12px;
-      font-weight: 200;
-      color: $soft-color;
-      text-transform: uppercase;
-    }
-
     .list-item {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 10px;
-      border-radius: 5px;
-      margin-bottom: 10px;
-      
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      color: var(--color-text);
+      transition: background-color 0.25s ease, color 0.25s ease;
+
       img {
         width: 20px;
         height: 20px;
+        filter: invert(45%);
       }
 
       &:hover {
-        background-color: $soft-bg;
+        background: rgba(0, 106, 220, 0.12);
       }
 
       &.active {
-        background-color: $soft-bg;
+        background: var(--color-primary);
+        color: var(--color-button-text);
+
+        img {
+          filter: invert(100%);
+        }
       }
     }
+  }
+}
+
+[data-theme="contrast"] .mobile-menu .item .list-item {
+  &:hover {
+    background: rgba(255, 0, 0, 0.2);
   }
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import "./addExpense.scss"
 import { House, IUser } from "../../types"
 import axios from "axios"
@@ -9,13 +9,13 @@ import {
   FormControlLabel,
   Modal,
 } from "@mui/material"
-import CustomDropdown from "../CustomDropDown"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { useAuth } from "../../hooks/useAuth"
 import Button from "../../pages/components/Button"
 import { Close } from "@mui/icons-material"
 import CreatableSelect from "react-select/creatable"
+import { StylesConfig } from "react-select"
 import { formatToLocalDatetime } from "../../utils/utils"
 
 interface IProps {
@@ -69,6 +69,84 @@ const Add: React.FC<IProps> = ({
 
   const { user, getToken, setRecall } = useAuth()
   const userId = user?._id
+  const selectThemeStyles = useMemo<StylesConfig<{ value: string; label: string }, boolean>>(
+    () => ({
+      control: (styles, state) => ({
+        ...styles,
+        backgroundColor: "var(--color-inputBg)",
+        borderColor: state.isFocused
+          ? "var(--color-primary)"
+          : "var(--color-inputBorder)",
+        color: "var(--color-text)",
+        boxShadow: state.isFocused
+          ? `0 0 0 1px var(--color-primary)`
+          : styles.boxShadow,
+        minHeight: 44,
+        "&:hover": {
+          borderColor: "var(--color-primary)",
+        },
+      }),
+      menu: (styles) => ({
+        ...styles,
+        backgroundColor: "var(--color-surface)",
+        color: "var(--color-text)",
+        border: `1px solid var(--color-border)`
+      }),
+      option: (styles, { isFocused, isSelected }) => ({
+        ...styles,
+        backgroundColor: isSelected
+          ? "var(--color-primary)"
+          : isFocused
+          ? "rgba(0, 106, 220, 0.15)"
+          : "var(--color-surface)",
+        color: isSelected ? "var(--color-button-text)" : "var(--color-text)",
+      }),
+      placeholder: (styles) => ({
+        ...styles,
+        color: "var(--color-muted)",
+      }),
+      singleValue: (styles) => ({
+        ...styles,
+        color: "var(--color-text)",
+      }),
+      input: (styles) => ({
+        ...styles,
+        color: "var(--color-text)",
+      }),
+      multiValue: (styles) => ({
+        ...styles,
+        backgroundColor: "rgba(0, 106, 220, 0.15)",
+        color: "var(--color-text)",
+      }),
+      dropdownIndicator: (styles) => ({
+        ...styles,
+        color: "var(--color-text)",
+        "&:hover": {
+          color: "var(--color-primary)",
+        },
+      }),
+      clearIndicator: (styles) => ({
+        ...styles,
+        color: "var(--color-text)",
+        "&:hover": {
+          color: "var(--color-primary)",
+        },
+      }),
+      indicatorSeparator: (styles) => ({
+        ...styles,
+        backgroundColor: "var(--color-inputBorder)",
+      }),
+      valueContainer: (styles) => ({
+        ...styles,
+        padding: "2px 8px",
+      }),
+      menuList: (styles) => ({
+        ...styles,
+        backgroundColor: "var(--color-surface)",
+      }),
+    }),
+    []
+  )
 
 
   useEffect(() => {
@@ -296,10 +374,7 @@ const Add: React.FC<IProps> = ({
             <Close />
           </span>
           <h1>{editData ? `Edit ${slug}` : `Add New ${slug}`}</h1>
-          <form
-            onSubmit={handleSubmit}
-            style={{ display: "contents", marginTop: "20px" }}
-          >
+          <form onSubmit={handleSubmit}>
             <div className="item-container">
               {columns
                 .filter((item) => item.field !== "id")
@@ -467,98 +542,73 @@ const Add: React.FC<IProps> = ({
                           case "select":
                             if (column.field === "storeName") {
                               return (
-                                <div className="relative w-full">
-                                  <CreatableSelect
-                                    required
-                                    options={storeOptions}
-                                    onChange={(
-                                      selectedOption: {
-                                        value: string
-                                        label: string
-                                      } | null
-                                    ) => {
-                                      if (selectedOption) {
-                                        setStoreName(selectedOption.value)
-                                      } else {
-                                        setStoreName("")
-                                      }
-                                    }}
-                                    placeholder="Store Name"
-                                    className="text-black"
-                                    value={
-                                      storeName
-                                        ? storeOptions.find((option) => option.value === storeName) || { value: storeName, label: storeName }
-                                        : null
+                                <CreatableSelect<{ value: string; label: string }, false>
+                                  required
+                                  options={storeOptions}
+                                  onChange={(selectedOption) => {
+                                    if (selectedOption) {
+                                      setStoreName(selectedOption.value)
+                                    } else {
+                                      setStoreName("")
                                     }
-                                    styles={{
-                                      control: (styles) => ({
-                                        ...styles,
-                                        padding: "6px",
-                                        background: "#444",
-                                        color: "#f0f0f0",
-                                        outline: "none",
-                                        border: "1px solid #666",
-                                        borderRadius: "5px",
-                                        transition: "border-color 0.3s ease, box-shadow 0.3s ease",
-                                        "&:focus": {
-                                          borderColor: "#3498db",
-                                          boxShadow: "0 0 10px rgba(52, 152, 219, 0.7)",
-                                        },
-                                        "@media (max-width: 415px)": {
-                                          padding: "4px",
-                                          fontSize: "15px",
-                                          maxWidth: "100%",
-                                        },
-
-                                      }),
-                                      option: (styles, { isFocused }) => ({
-                                        ...styles,
-                                        backgroundColor: isFocused
-                                          ? "#2d3748"
-                                          : "#1a202c",
-                                        color: "white",
-                                      }),
-                                      menu: (styles) => ({
-                                        ...styles,
-                                        backgroundColor: "#1a202c",
-                                      }),
-                                      singleValue: (styles) => ({
-                                        ...styles,
-                                        color: "white",
-                                        alignSelf: "center",
-                                        justifySelf: "start",
-                                      }),
-                                      input: (styles) => ({
-                                        ...styles,
-                                        color: "white",
-                                      }),
-                                      placeholder: (styles) => ({
-                                        ...styles,
-                                        color: "#A0AEC0",
-                                        alignSelf: "center",
-                                        justifySelf: "start",
-                                      }),
-                                    }}
-                                    onCreateOption={(inputValue) => {
-                                      const newOption = {
-                                        value: inputValue,
-                                        label: inputValue,
-                                      }
-                                      setStoreOptions((prevOptions) => [
-                                        ...prevOptions,
-                                        newOption,
-                                      ])
-                                      setStoreName(inputValue)
-                                    }}
-                                    components={{
-                                      DropdownIndicator: () => null,
-                                      IndicatorSeparator: () => null,
-                                    }}
-                                    formatCreateLabel={(inputValue) => `Add Store "${inputValue}"`} 
-                                  />
-                                </div>
+                                  }}
+                                  onCreateOption={(inputValue) => {
+                                    const newOption = {
+                                      value: inputValue,
+                                      label: inputValue,
+                                    }
+                                    setStoreOptions((prevOptions) => [
+                                      ...prevOptions,
+                                      newOption,
+                                    ])
+                                    setStoreName(inputValue)
+                                  }}
+                                  components={{
+                                    DropdownIndicator: () => null,
+                                    IndicatorSeparator: () => null,
+                                  }}
+                                  placeholder="Store Name"
+                                  value={
+                                    storeName
+                                      ? storeOptions.find((option) => option.value === storeName) || {
+                                          value: storeName,
+                                          label: storeName,
+                                        }
+                                      : null
+                                  }
+                                  styles={selectThemeStyles}
+                                  classNamePrefix="themed-select"
+                                  formatCreateLabel={(inputValue) => `Add Store "${inputValue}"`}
+                                />
                               )
-                            } else if (column.field === "category") {
+                            }
+
+                            if (column.field === "involvedUsers") {
+                              return (
+                                <CreatableSelect<{ value: string; label: string }, true>
+                                  isMulti
+                                  options={houseUsers.map((member) => ({
+                                    value: member.username,
+                                    label: member.username,
+                                  }))}
+                                  value={selectedUsers.map((username) => ({
+                                    value: username,
+                                    label: username,
+                                  }))}
+                                  onChange={(selected) => {
+                                    const values = Array.isArray(selected)
+                                      ? selected.map((option) => option.value)
+                                      : []
+                                    setSelectedUsers(values)
+                                  }}
+                                  placeholder="Select members"
+                                  styles={selectThemeStyles}
+                                  classNamePrefix="themed-select"
+                                />
+                              )
+                            }
+
+                            if (column.field === "category") {
                               return (
                                 <select
                                   name={column.field}
@@ -574,25 +624,23 @@ const Add: React.FC<IProps> = ({
                                   <option value="" disabled>
                                     Select Category
                                   </option>
-                                  {Object.values(CategoryName).map(
-                                    (category) => (
-                                      <option key={category} value={category}>
-                                        {category}
-                                      </option>
-                                    )
-                                  )}
+                                  {Object.values(CategoryName).map((category) => (
+                                    <option key={category} value={category}>
+                                      {category}
+                                    </option>
+                                  ))}
                                 </select>
                               )
-                            } else if (column.field === "house") {
+                            }
+
+                            if (column.field === "house") {
                               return (
                                 <select
-                                  name={"houseCode"}
+                                  name="houseCode"
                                   value={selectedHouse?.code || ""}
                                   onChange={(e) => {
-                                    const selectedHouse = houses.find(
-                                      (house) => house.code === e.target.value
-                                    )
-                                    setSelectedHouse(selectedHouse || null)
+                                    const nextHouse = houses.find((house) => house.code === e.target.value)
+                                    setSelectedHouse(nextHouse || null)
                                   }}
                                   required
                                 >
@@ -606,19 +654,34 @@ const Add: React.FC<IProps> = ({
                                   ))}
                                 </select>
                               )
-                            } else if (column.field === "involvedUsers") {
-                              return (
-                                <CustomDropdown
-                                  options={houseUsers}
-                                  label={column.headerName}
-                                  name={column.field}
-                                  selectedValues={selectedUsers}
-                                  setSelectedValues={setSelectedUsers}
-                                />
-                              )
-                            } else {
-                              return null
                             }
+
+                            if (column.options?.length) {
+                              return (
+                                <select
+                                  name={column.field}
+                                  value={formData[column.field] || ""}
+                                  onChange={(e) =>
+                                    setFormData((prev) => ({
+                                      ...prev,
+                                      [column.field]: e.target.value,
+                                    }))
+                                  }
+                                  required
+                                >
+                                  <option value="" disabled>
+                                    Select {column.headerName}
+                                  </option>
+                                  {column.options.map((option: any) => (
+                                    <option key={option.value} value={option.value}>
+                                      {option.label}
+                                    </option>
+                                  ))}
+                                </select>
+                              )
+                            }
+
+                            return null
                           default:
                             return null
                         }

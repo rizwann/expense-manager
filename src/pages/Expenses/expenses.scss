@@ -22,12 +22,12 @@
 
     // Styling for buttons
     button {
-      background-color: #18b460; // Red-ish color for buttons
-      color: white;
+      background-color: var(--color-primary);
+      color: var(--color-button-text);
       border: none;
 
       &:hover {
-        background-color: #ff4757; // Darker shade on hover
+        background-color: var(--color-primary);
         transform: translateY(-2px); // Slight lift on hover
         box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); // Fancy shadow
       }
@@ -40,28 +40,28 @@
 
     // Styling for select dropdowns
     .dark-input {
-      background-color: #333;
-      color: #fff;
-      border: 1px solid #555;
+      background-color: rgba(255, 255, 255, 0.04);
+      color: var(--color-text);
+      border: 1px solid var(--color-inputBorder);
       border-radius: 8px;
       padding: 10px;
       min-width: 150px;
 
       &:hover,
       &:focus {
-        border-color: #ff6b6b;
+        border-color: var(--color-primary);
         box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); // Shadow on focus
       }
 
       option {
-        background-color: #333;
-        color: #fff;
+        background-color: var(--color-surface);
+        color: var(--color-text);
       }
     }
 
     // Checkbox styles
     input[type="checkbox"] {
-      accent-color: #ff6b6b; // Matching the button color
+      accent-color: var(--color-primary); // Matching the button color
       transform: scale(1.2); // Make checkboxes slightly larger
     }
 

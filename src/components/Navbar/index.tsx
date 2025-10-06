@@ -12,6 +12,7 @@ import useMediaQuery from "../../hooks/userMediaQuery"
 import Weather from "../Weather"
 import Spinner from "../Spinner"
 import axios from "axios"
+import ThemeSwitcher from "../ThemeSwitcher"
 
 interface IProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -164,24 +165,24 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
      
       <div className="icons">
         <div className="user">
-          <Weather  />
+          <ThemeSwitcher />
+          <Weather />
           {user?.houseCodes?.length > 0 && <div className="add-btn">
             <Button
               variant="outlined"
               onClick={() => setModalOpen(true)}
-              style={{
-                color: "white",
-                borderColor: "white",
+              sx={{
+                color: showText ? "var(--color-text)" : "var(--color-button-text)",
+                borderColor: "var(--color-secondary)",
                 borderRadius: "20px",
                 padding: "5px 20px",
                 fontSize: "14px",
                 textTransform: "capitalize",
                 marginRight: "10px",
-              }}
-              sx={{
-                backgroundColor: showText ? "transparent" : "#8a3ff3",
+                backgroundColor: showText ? "transparent" : "var(--color-primary)",
                 "&:hover": {
-                  opacity: 0.8,
+                  backgroundColor: "var(--color-primary)",
+                  opacity: 0.85,
                 },
               }}
             >
@@ -251,4 +252,3 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
 }
 
 export default Navbar
-

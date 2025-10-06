@@ -6,6 +6,8 @@ import {
   ResponsiveContainer,
   Tooltip,
   XAxis,
+  YAxis,
+  CartesianGrid,
 } from "recharts"
 import { CategoryName, House } from "../../types"
 import "./bigChart.scss"
@@ -17,6 +19,7 @@ import { useAuth } from "../../hooks/useAuth"
 import { set } from "react-hook-form"
 import { getCurrencySymbol } from "../../utils/utils"
 import { config } from "../../utils/config"
+import { useThemeContext } from "../../context/ThemeContext"
 
 const categories = Object.values(CategoryName).map((item, index) => {
   const randomColor = () => {
@@ -38,6 +41,7 @@ type Props = {
 const BigChart: React.FC<Props> = ({ selectedHouse, dataKey, month, year }) => {
   const [data, setData] = useState<object[]>([])
   const {getToken, recall} = useAuth()
+  const { colors } = useThemeContext()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -75,14 +79,15 @@ const BigChart: React.FC<Props> = ({ selectedHouse, dataKey, month, year }) => {
                   return (
                     <div
                       style={{
-                        background: "#2a2447",
+                        background: colors.tooltipBg,
                         borderRadius: "5px",
                         padding: "10px",
+                        border: `1px solid ${colors.border}`,
                       }}
                     >
                       <p
                         style={{
-                          color: "white",
+                          color: colors.text,
                           fontSize: "12px",
                           fontWeight: "bold",
                           marginBottom: "0px",
@@ -90,7 +95,7 @@ const BigChart: React.FC<Props> = ({ selectedHouse, dataKey, month, year }) => {
                       >{`${payload[0].payload.name}`}</p>
                       <p
                         style={{
-                          color: "white",
+                          color: colors.text,
                           fontSize: "12px",
                           fontWeight: "bold",
                           marginBottom: "0px",
@@ -102,7 +107,7 @@ const BigChart: React.FC<Props> = ({ selectedHouse, dataKey, month, year }) => {
                 return null
               }}
             />
-            <XAxis dataKey="name" />
+            <XAxis dataKey="name" tick={{ fill: colors.text }} stroke={colors.muted} />
             <Bar dataKey={dataKey} radius={[5, 5, 0, 0]}>
               {data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />

@@ -15,6 +15,7 @@ import { House, IUser } from "../../types"
 import { Typography } from "@mui/material"
 import { useAuth } from "../../hooks/useAuth"
 import { getCurrencySymbol } from "../../utils/utils"
+import { useThemeContext } from "../../context/ThemeContext"
 
 interface ChartBoxProps {
   title: string
@@ -49,6 +50,7 @@ const ChartBox: React.FC<ChartBoxProps> = ({
   year
 }) => {
   const {getToken, recall} = useAuth()
+  const { colors: themeColors } = useThemeContext()
   const [chartData, setChartData] = useState<object[]>([])
   const [image, setImage] = useState<string>("")
   const [data, setData] = useState<Tdata>({
@@ -140,14 +142,19 @@ const ChartBox: React.FC<ChartBoxProps> = ({
           <img src={icon} alt="" />
           <span>{title}</span>
         </div>
-        <Typography className="text-green-400 " variant="h4">
-          {getCurrencySymbol(selectedHouse)}{data?.totalExpensesThisMonth || 0}
+        <Typography
+          variant="h4"
+          style={{ color: themeColors.primary, fontWeight: 600 }}
+        >
+          {getCurrencySymbol(selectedHouse)}
+          {data?.totalExpensesThisMonth || 0}
         </Typography>
         {(type === "popularStore" || type === "popularCategory") ? (
           <div className="flex items-center gap-2 mb-2">
              <p className="font-bold">
             </p>
-             <span style={{ color: color }}>Store: </span><span className="text-green-400">{data?.popularName}</span>
+             <span style={{ color: color }}>Store: </span>
+             <span style={{ color: themeColors.primary }}>{data?.popularName}</span>
           </div>
         ) :
         <Link to="/expenses" style={{ color: color }}>
@@ -162,7 +169,11 @@ const ChartBox: React.FC<ChartBoxProps> = ({
           <ResponsiveContainer width="99%" height="60%">
             <LineChart data={chartData}>
               <Tooltip
-                contentStyle={{ background: "transparent", border: "none" }}
+                contentStyle={{
+                  background: themeColors.tooltipBg,
+                  border: `1px solid ${themeColors.border}`,
+                  color: themeColors.text,
+                }}
                 labelStyle={{ display: "none" }}
                 position={{ x: 10, y: -10 }}
                 cursor={{ fill: "none" }}
@@ -176,7 +187,7 @@ const ChartBox: React.FC<ChartBoxProps> = ({
               <Line
                 type="monotone"
                 dataKey={"name"}
-                stroke={"#00C49F"}
+                stroke={themeColors.secondary}
                 strokeWidth={2}
               />
             </LineChart>
@@ -185,7 +196,9 @@ const ChartBox: React.FC<ChartBoxProps> = ({
         <div className="texts">
           <span
             className="percentage"
-            style={{ color: data?.percentage < 0 ? "tomato" : "limegreen" }}
+            style={{
+              color: data?.percentage < 0 ? "#ff4d4f" : themeColors.primary,
+            }}
           >
             {type !== 'popularStore'&& data?.percentage > 0 && "+"} {data?.percentage}%
           </span>

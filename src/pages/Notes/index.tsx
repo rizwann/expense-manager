@@ -1,25 +1,26 @@
-import { useEffect, useState } from 'react';
-import NoteCard from '../../components/NoteCard';
-import NoteFormModal from '../NoteFromModal';
-import { House, Note } from '../../types';
-import { useAuth } from '../../hooks/useAuth';
-import axios from 'axios';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Home, PlusOne } from '@mui/icons-material';
-import Loading from '../../components/Loading';
+import { useEffect, useState } from "react"
+import NoteCard from "../../components/NoteCard"
+import NoteFormModal from "../NoteFromModal"
+import { House, Note } from "../../types"
+import { useAuth } from "../../hooks/useAuth"
+import axios from "axios"
+import { motion, AnimatePresence } from "framer-motion"
+import { Home, PlusOne } from "@mui/icons-material"
+import Loading from "../../components/Loading"
+import "./notes.scss"
 
 const NotesPage = () => {
-  const [notes, setNotes] = useState<Note[]>([]);
-  const [selectedNote, setSelectedNote] = useState<Note | null>(null);
-  const [houses, setHouses] = useState<House[]>([]);
-  const [selectedHouse, setSelectedHouse] = useState<string | null>(null);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const { getToken } = useAuth();
+  const [notes, setNotes] = useState<Note[]>([])
+  const [selectedNote, setSelectedNote] = useState<Note | null>(null)
+  const [houses, setHouses] = useState<House[]>([])
+  const [selectedHouse, setSelectedHouse] = useState<string | null>(null)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const { getToken } = useAuth()
 
   useEffect(() => {
     const fetchHouses = async () => {
-      const token = await getToken();
+      const token = await getToken()
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/api/houses`,
@@ -29,19 +30,19 @@ const NotesPage = () => {
             },
           }
         );
-        setHouses(response.data);
-        setSelectedHouse(response.data[0]?.code || null);
+        setHouses(response.data)
+        setSelectedHouse(response.data[0]?.code || null)
       } catch (error) {
-        console.error('Error fetching houses:', error);
+        console.error("Error fetching houses:", error)
       }
-    };
+    }
 
-    fetchHouses();
-  }, []);
+    fetchHouses()
+  }, [])
 
   const fetchNotes = async () => {
-    const token = await getToken();
-    setLoading(true);
+    const token = await getToken()
+    setLoading(true)
     try {
       const response = await axios.get<Note[]>(
         `${import.meta.env.VITE_API_URL}/api/notes/house/${selectedHouse}`,
@@ -50,63 +51,57 @@ const NotesPage = () => {
             Authorization: `Bearer ${token}`,
           },
         }
-      );
-      setNotes(response.data);
+      )
+      setNotes(response.data)
     } catch (error) {
-      console.error('Error fetching notes:', error);
-      setNotes([]);
+      console.error("Error fetching notes:", error)
+      setNotes([])
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleDelete = async (id: string) => {
-    const token = await getToken();
+    const token = await getToken()
     try {
       await axios.delete(`${import.meta.env.VITE_API_URL}/api/notes/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      });
-      fetchNotes();
+      })
+      fetchNotes()
     } catch (error) {
-      console.error('Error deleting note:', error);
+      console.error("Error deleting note:", error)
     }
-  };
+  }
 
   useEffect(() => {
-    if (selectedHouse) fetchNotes();
-  }, [selectedHouse]);
+    if (selectedHouse) fetchNotes()
+  }, [selectedHouse])
 
   return (
-<div className="w-screen min-h-screen p-4 text-white sm:p-6 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+    <div className="notes-page">
+      <div className="notes-header">
+        <h1>Notes Dashboard</h1>
+        <button
+          className="notes-add-btn"
+          onClick={() => {
+            setSelectedNote(null)
+            setModalOpen(true)
+          }}
+        >
+          <PlusOne fontSize="medium" />
+          Add Note
+        </button>
+      </div>
 
-      <div className="flex flex-col items-center justify-between gap-4 px-4 mb-8 sm:flex-row sm:mb-6 sm:gap-0 sm:px-0">
-  <h1 className="text-3xl font-extrabold tracking-wide text-white sm:text-2xl drop-shadow-md">
-    Notes Dashboard
-  </h1>
-  <button
-    className="flex items-center gap-2 px-5 py-3 font-semibold text-white transition-colors duration-300 rounded-lg shadow-lg bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 active:scale-95"
-    onClick={() => {
-      setSelectedNote(null);
-      setModalOpen(true);
-    }}
-  >
-    <PlusOne fontSize="medium" />
-    Add Note
-  </button>
-</div>
-
-
-      <div className="mb-6">
-        <label className="block mb-2 text-sm font-medium text-gray-300">
-          <span className="flex items-center gap-1">
-            <Home fontSize='medium' /> Select House
-          </span>
+      <div className="notes-filter">
+        <label className="notes-filter__label">
+          <Home fontSize="small" /> Select House
         </label>
         <select
-          className="w-full p-3 text-white bg-gray-800 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          value={selectedHouse || ''}
+          className="notes-filter__select"
+          value={selectedHouse || ""}
           onChange={(e) => setSelectedHouse(e.target.value)}
         >
           <option value="" disabled>
@@ -121,11 +116,11 @@ const NotesPage = () => {
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center py-20">
+        <div className="notes-loading">
           <Loading />
         </div>
       ) : (
-        <motion.div layout className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <motion.div layout className="notes-grid">
           <AnimatePresence>
             {notes.map((note) => (
               <motion.div
@@ -139,8 +134,8 @@ const NotesPage = () => {
                 <NoteCard
                   note={note}
                   onEdit={() => {
-                    setSelectedNote(note);
-                    setModalOpen(true);
+                    setSelectedNote(note)
+                    setModalOpen(true)
                   }}
                   onDelete={() => handleDelete(note._id!)}
                 />
@@ -157,13 +152,13 @@ const NotesPage = () => {
           setSelectedHouse={setSelectedHouse}
           houses={houses}
           onClose={() => {
-            setModalOpen(false);
-            fetchNotes();
+            setModalOpen(false)
+            fetchNotes()
           }}
         />
       )}
     </div>
-  );
-};
+  )
+}
 
-export default NotesPage;
+export default NotesPage

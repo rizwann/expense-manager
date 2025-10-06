@@ -1,8 +1,14 @@
+
 .footer {
+  width: 100%;
+  align-self: stretch;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 30px;
+  padding: 20px clamp(16px, 4vw, 32px);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
 
   span {
     &:first-child {
@@ -13,4 +19,9 @@
       font-size: 14px;
     }
   }
+}
+
+[data-theme="dark"] .footer,
+[data-theme="contrast"] .footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
 }

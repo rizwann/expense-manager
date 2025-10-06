@@ -1,35 +1,42 @@
-@import "../../styles/variables.scss";
-@import "../../styles/responsive.scss";
-
 .menu {
   display: flex;
-  .item {
-    .title {
-      font-size: 12px;
-      font-weight: 200;
-      color: $soft-color;
-      text-transform: uppercase;
-    }
+  gap: 4px;
 
+  .item {
     .list-item {
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-right: 5px;
-      padding: 7px;
-      border-radius: 5px;
-      
-      img {
-        width: 20px;
-        height: 20px;
-      }
+      margin-right: 6px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      color: var(--color-text);
+      transition: background-color 0.3s ease, color 0.3s ease;
 
       &:hover {
-        background-color: $soft-bg;
+        background-color: rgba(0, 106, 220, 0.12);
       }
+
       &.active {
-        background-color: $soft-bg;
+        background-color: var(--color-primary);
+        color: var(--color-button-text);
       }
     }
+
+    .list-item-title {
+      font-size: 14px;
+      font-weight: 500;
+    }
+  }
+}
+
+[data-theme="contrast"] .menu .item .list-item {
+  &:hover {
+    background-color: rgba(255, 0, 0, 0.2);
+  }
+
+  &.active {
+    background-color: var(--color-primary);
+    color: var(--color-button-text);
   }
 }

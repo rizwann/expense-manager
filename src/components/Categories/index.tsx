@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { CategoryData, CategoryName, House } from "../../types"
 import { fetchSixMonthsExpensesByCategory } from "../../utils/chartDataFetch"
 import { useAuth } from "../../hooks/useAuth"
 import { getCurrencySymbol } from "../../utils/utils"
+import "./categories.scss"
 
 interface CategoryExpenseViewerProps {
   selectedHouse: House
@@ -10,51 +11,48 @@ interface CategoryExpenseViewerProps {
   year: number
 }
 
-const CategoryExpenseViewer: React.FC<CategoryExpenseViewerProps> = ({selectedHouse, month, year}) => {
+const CategoryExpenseViewer: React.FC<CategoryExpenseViewerProps> = ({
+  selectedHouse,
+  month,
+  year,
+}) => {
   const [selectedCategory, setSelectedCategory] = useState<CategoryName | "">(
     CategoryName.Grocery
   )
   const [chartData, setChartData] = useState<CategoryData[] | []>([])
-  const {getToken, recall} = useAuth()
+  const { getToken, recall } = useAuth()
 
-useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
-        const token = await getToken()
-        const data = await fetchSixMonthsExpensesByCategory(selectedHouse, token || "", month, year)
-        setChartData(data)
+      const token = await getToken()
+      const data = await fetchSixMonthsExpensesByCategory(
+        selectedHouse,
+        token || "",
+        month,
+        year
+      )
+      setChartData(data)
     }
     fetchData()
-} , [selectedHouse, month, year, recall])
+  }, [selectedHouse, month, year, recall])
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedCategory(event.target.value as CategoryName)
   }
 
-  let filteredExpenses: CategoryData | undefined
-    if (chartData) {
-        filteredExpenses = chartData.find((data) => data.name! === selectedCategory)
-    }
+  const filteredExpenses = useMemo(() => {
+    if (!chartData || chartData.length === 0) return undefined
+    return chartData.find((data) => data.name === selectedCategory)
+  }, [chartData, selectedCategory])
 
   return (
-    <div className="max-w-lg p-6 mx-auto text-gray-100 rounded-lg shadow-lg">
-      <h2 className="mb-3 text-2xl font-bold text-center">
-        Category Expenses By Month
-      </h2>
-      <div className="mb-2">
-        <select
-          id="category"
-          value={selectedCategory}
-          onChange={handleChange}
-          className="w-full p-3 text-gray-100 bg-gray-900 border border-gray-600 rounded-md focus:ring focus:ring-blue-500 focus:outline-none"
-        >
-          <option value="" className="bg-gray-800">
-            -- Select a Category --
-          </option>
+    <div className="category-expense">
+      <h2>Category Expenses By Month</h2>
+      <div className="category-selector">
+        <label htmlFor="category">Category</label>
+        <select id="category" value={selectedCategory} onChange={handleChange}>
+          <option value="">-- Select a Category --</option>
           {Object.values(CategoryName).map((category) => (
-            <option
-              key={category}
-              value={category}
-              className="text-gray-100 bg-gray-800"
-            >
+            <option key={category} value={category}>
               {category}
             </option>
           ))}
@@ -62,26 +60,22 @@ useEffect(() => {
       </div>
 
       {filteredExpenses ? (
-        <div className="p-4 rounded-md shadow-md">
-          <h3 className="mb-4 text-xl font-semibold text-center text-blue-400">
-            {filteredExpenses.name} Expenses
-          </h3>
-          <ul className="divide-y divide-gray-600">
+        <div className="category-summary">
+          <h3>{filteredExpenses.name} Expenses</h3>
+          <ul>
             {filteredExpenses.expenses.map((expense) => (
-              <li
-                key={expense.month}
-                className="flex justify-between py-2 text-sm text-gray-200"
-              >
+              <li key={expense.month}>
                 <span>{expense.month}</span>
-                <span className="font-medium text-green-300">
-                  {getCurrencySymbol(selectedHouse)}{expense.expenses.toFixed(2)}
+                <span>
+                  {getCurrencySymbol(selectedHouse)}
+                  {expense.expenses.toFixed(2)}
                 </span>
               </li>
             ))}
           </ul>
         </div>
       ) : (
-        <p className="text-center text-gray-400">
+        <p className="category-empty">
           Select a category to view expenses.
         </p>
       )}
@@ -90,4 +84,3 @@ useEffect(() => {
 }
 
 export default CategoryExpenseViewer
-

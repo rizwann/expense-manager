@@ -6,16 +6,23 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #1c1c1c; // Dark background
+  background-color: var(--color-surface);
+  color: var(--color-text);
   position: fixed;
   z-index: 1000;
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 
   .logo {
     display: flex;
     align-items: center;
     font-weight: bold;
     gap: 10px;
-    color: #fff;
+    color: var(--color-text);
+
+    svg {
+      color: inherit;
+    }
   } 
   .menu {
     @include md {
@@ -28,9 +35,10 @@
     align-items: center;
     justify-content: center;
     gap: 20px;
+    color: inherit;
 
     .icon {
-      filter: brightness(0) invert(1); // White icons for dark background
+      color: inherit;
       cursor: pointer;
       transition: transform 0.2s ease;
 
@@ -43,8 +51,8 @@
       position: relative;
 
       span {
-        background-color: red;
-        color: white;
+        background-color: var(--color-primary);
+        color: var(--color-background);
         width: 16px;
         height: 16px;
         border-radius: 50%;
@@ -63,16 +71,96 @@
       align-items: center;
       gap: 10px;
 
+      .theme-switcher {
+        position: relative;
+
+        &__trigger {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          background-color: transparent;
+          color: inherit;
+          border: 1px solid var(--color-secondary);
+          border-radius: 20px;
+          padding: 6px 14px;
+          cursor: pointer;
+          font-size: 14px;
+          transition: border 0.3s ease, background-color 0.3s ease;
+
+          &:hover {
+            border-color: var(--color-primary);
+            background-color: rgba(255, 255, 255, 0.05);
+          }
+
+          &-label {
+            @include sm {
+              display: none;
+            }
+          }
+
+          @include sm {
+            padding: 6px 10px;
+            border-radius: 50%;
+            border-color: transparent;
+            background-color: rgba(255, 255, 255, 0.08);
+
+            &:hover {
+              background-color: rgba(255, 255, 255, 0.15);
+            }
+          }
+        }
+
+        &__menu {
+          position: absolute;
+          top: calc(100% + 8px);
+          right: 0;
+          background-color: var(--color-surface);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 12px;
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+          min-width: 160px;
+          padding: 8px 0;
+          display: flex;
+          flex-direction: column;
+          z-index: 1001;
+
+          button {
+            background: none;
+            border: none;
+            text-align: left;
+            padding: 10px 16px;
+            color: inherit;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+
+            &:hover,
+            &:focus {
+              background-color: rgba(255, 255, 255, 0.07);
+              color: var(--color-primary);
+            }
+
+            &.is-active {
+              color: var(--color-primary);
+              font-weight: 600;
+            }
+          }
+        }
+      }
+
       .user-image {
         width: 26px;
         height: 26px;
         border-radius: 50%;
         object-fit: cover;
-        border: 2px solid #fff;
+        border: 2px solid var(--color-secondary);
       }
 
       .username {
-        color: #fff;
+        color: inherit;
         @include md {
           display: none;
         }
@@ -85,10 +173,11 @@
     position: absolute;
     right: 20px;
     top: 60px;
-    background-color: #2e2e2e;
+    background-color: var(--color-surface);
     border-radius: 8px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.25);
     z-index: 1000;
+    border: 1px solid rgba(255, 255, 255, 0.08);
 
     ul {
       list-style: none;
@@ -98,12 +187,12 @@
 
       li {
         padding: 10px 20px;
-        color: #fff;
+        color: var(--color-text);
         cursor: pointer;
         transition: background-color 0.3s ease;
 
         &:hover {
-          background-color: #444;
+          background-color: rgba(255, 255, 255, 0.05);
         }
 
         &:first-child {

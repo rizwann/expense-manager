@@ -1,15 +1,32 @@
 @import "../../styles/responsive.scss";
 
-.weather{
-    .weather-img{
-        @include md {
-            display: none
-          }
-    } 
-    .weather-city{
-        @include md {
-            display: none
-          }
+.weather {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-size: 12px;
+
+  &__icon {
+    width: 28px;
+    height: 28px;
+    @include md {
+      display: none;
     }
+  }
+
+  &__temp {
+    font-weight: 600;
+  }
+
+  &__city {
+    color: var(--color-muted);
+    @include md {
+      display: none;
+    }
+  }
 }
-  

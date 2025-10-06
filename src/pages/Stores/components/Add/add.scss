@@ -1,131 +1,164 @@
-@import "../../styles/variables.scss";
-
-.add {
+.store-add {
   width: 100vw;
   height: 100vh;
-  position: absolute;
-  top: 0;
-  left: 0;
-  background: rgba(0, 0, 0, 0.9);
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+  z-index: 1200;
 
   .modal {
-    padding: 40px;
-    border-radius: 15px;
-    background: #2c2c2c;
-    background: linear-gradient(145deg, #2a2a2a, #3a3a3a);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    padding: clamp(20px, 5vw, 40px);
+    border-radius: 16px;
+    background: var(--color-card);
+    color: var(--color-text);
+    box-shadow: 0 24px 40px rgba(0, 0, 0, 0.45);
     position: relative;
-    max-width: 600px;
-    width: 90%;
+    max-width: 540px;
+    width: min(540px, 100%);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
     text-align: center;
-    transform: scale(0.95);
-    transition: transform 0.3s ease;
+  }
+
+  h1 {
+    font-size: clamp(22px, 4vw, 28px);
+  }
+
+  .close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 28px;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: transform 0.2s ease, color 0.2s ease;
 
     &:hover {
-      transform: scale(1);
+      color: var(--color-primary);
+      transform: scale(1.1);
     }
+  }
 
-    h1 {
-      margin-bottom: 30px;
-      font-size: 28px;
-      color: #f0f0f0;
-      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-    }
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 
-    .close {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 20px;
-      color: #f0f0f0;
-      cursor: pointer;
-      transition: color 0.3s ease, transform 0.3s ease;
-
-      &:hover {
-        color: #e74c3c;
-        transform: rotate(90deg);
-      }
-    }
-
-    form {
+    .item {
       display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      justify-content: center;
+      flex-direction: column;
+      gap: 8px;
+      text-align: left;
 
-      .item {
-        width: 45%;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        margin-bottom: 20px;
+      label {
+        color: var(--color-secondary);
+        font-size: 15px;
+      }
 
-        label {
-          font-size: 16px;
-          color: #b0b0b0;
+      input,
+      select {
+        padding: 12px;
+        background: var(--color-inputBg);
+        color: var(--color-text);
+        border: 1px solid var(--color-inputBorder);
+        border-radius: 8px;
+        outline: none;
+        box-shadow: 0 4px 12px var(--color-inputShadow);
+        transition: border 0.3s ease, box-shadow 0.3s ease;
+
+        &::placeholder {
+          color: var(--color-muted);
         }
 
-        input,
-        select {
-          padding: 12px;
-          background: #444;
-          color: #f0f0f0;
-          outline: none;
-          border: 1px solid #666;
-          border-radius: 5px;
-          transition: border-color 0.3s ease, box-shadow 0.3s ease;
-
-          &:focus {
-            border-color: #3498db;
-            box-shadow: 0 0 10px rgba(52, 152, 219, 0.7);
-          }
-        }
-
-        select {
-          appearance: none;
-          background: url('data:image/svg+xml;utf8,<svg fill="%23f0f0f0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
-          background-size: 12px;
+        &:focus {
+          border-color: var(--color-primary);
+          box-shadow: 0 0 0 3px rgba(0, 106, 220, 0.25);
         }
       }
 
-      .error-message {
-        color: #e74c3c;
-        font-size: 14px;
-        margin-top: -10px;
-        margin-bottom: 20px;
-        text-align: center;
-        background: #2c2c2c;
-        padding: 10px;
-        border-radius: 5px;
-        border: 1px solid #e74c3c;
+      select {
+        appearance: none;
+        background: url('data:image/svg+xml;utf8,<svg fill="%23ffffff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>')
+          no-repeat right 12px center,
+          var(--color-inputBg);
+        background-size: 12px;
+
+        &:required:invalid {
+          color: var(--color-muted);
+        }
+
+        option {
+          color: var(--color-text);
+        }
       }
 
-      button {
-        width: 100%;
-        padding: 15px;
-        font-size: 16px;
-        color: white;
-        background: #3498db;
+      input[type="file"] {
+        padding: 0;
         border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        background: transparent;
+        color: var(--color-text);
+      }
 
-        &:hover {
-          background: #2980b9;
-          transform: scale(1.05);
-          box-shadow: 0 5px 15px rgba(41, 128, 185, 0.5);
-        }
+      .image-preview {
+        margin-top: 6px;
+        display: flex;
+        justify-content: center;
 
-        &:active {
-          background: #1f6391;
-          transform: scale(1);
-          box-shadow: 0 5px 10px rgba(31, 99, 145, 0.5);
+        img {
+          width: 130px;
+          height: 130px;
+          object-fit: cover;
+          border-radius: 12px;
+          border: 2px solid var(--color-border);
+          box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
         }
       }
+    }
+  }
+
+  .error-message {
+    color: var(--color-primary);
+    background: rgba(255, 0, 0, 0.08);
+    border: 1px solid rgba(255, 0, 0, 0.18);
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  button {
+    padding: 14px;
+    background: var(--color-primary);
+    color: var(--color-button-text);
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(0, 106, 220, 0.25);
+    }
+
+    &:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 16px rgba(0, 106, 220, 0.2);
+    }
+  }
+
+  @media (max-width: 560px) {
+    padding: 16px;
+
+    .modal {
+      border-radius: 0;
+      width: 100%;
+      min-height: 100%;
     }
   }
 }

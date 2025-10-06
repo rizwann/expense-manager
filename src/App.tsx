@@ -23,8 +23,6 @@ import Stores from "./pages/Stores"
 import User from "./pages/User"
 import Users from "./pages/Users"
 import "./styles/global.scss"
-import { ThemeProvider, createTheme } from "@mui/material/styles"
-import CssBaseline from "@mui/material/CssBaseline"
 import NotFoundPage from "./pages/NotFound"
 import Balances from "./pages/Balances"
 import ActivationPage from "./pages/AccountActivation"
@@ -33,12 +31,7 @@ import About from "./pages/About"
 import AcceptUserPage from "./pages/AcceptUser"
 import DownloadApp from "./pages/AppDownload"
 import NotesPage from "./pages/Notes"
-
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-  },
-})
+import { ThemeContextProvider } from "./context/ThemeContext"
 
 const LoadingSkeleton = () => {
   return (
@@ -73,22 +66,21 @@ const App = () => {
     }
 
     return (
-      <ThemeProvider theme={darkTheme}
-      >
-        <CssBaseline />
-        <div className="main">
-          <Navbar setIsOpen={setIsOpen} />
-          <div className="main-container" style={{
-            paddingTop: 'env(safe-area-inset-top)'
-          }}>
-            <MobileMenu isOpen={isOpen} setIsOpen={setIsOpen} />
-            <div className="content-container">
-              <Outlet />
-            </div>
+      <div className="main">
+        <Navbar setIsOpen={setIsOpen} />
+        <div
+          className="main-container"
+          style={{
+            paddingTop: "env(safe-area-inset-top)",
+          }}
+        >
+          <MobileMenu isOpen={isOpen} setIsOpen={setIsOpen} />
+          <div className="content-container">
+            <Outlet />
           </div>
         </div>
         <Footer />
-      </ThemeProvider>
+      </div>
     )
   }
 
@@ -122,7 +114,11 @@ const App = () => {
     { path: "*", element: <NotFoundPage /> }, // Add another wildcard route for undefined paths
   ])
 
-  return <RouterProvider router={router} />
+  return (
+    <ThemeContextProvider>
+      <RouterProvider router={router} />
+    </ThemeContextProvider>
+  )
 }
 
 export default App

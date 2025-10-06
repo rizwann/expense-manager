@@ -1,5 +1,20 @@
-@import "./variables.scss";
-@import "./responsive.scss";
+:root {
+  --color-background: #121212;
+  --color-surface: #1f1f1f;
+  --color-text: #ffffff;
+  --color-primary: #1f6feb;
+  --color-secondary: #8b949e;
+  --color-link: #58a6ff;
+  --color-button-text: #ffffff;
+  --color-border: rgba(255, 255, 255, 0.12);
+  --color-card: #1f1f24;
+  --color-muted: #a8b3cf;
+  --color-tooltip-bg: #22263f;
+  --color-inputBg: rgba(255, 255, 255, 0.06);
+  --color-inputBorder: rgba(255, 255, 255, 0.18);
+  --color-inputShadow: rgba(0, 0, 0, 0.28);
+  --color-chart-grid: rgba(255, 255, 255, 0.08);
+}
 
 * {
   margin: 0;
@@ -7,25 +22,58 @@
   box-sizing: border-box;
 }
 
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-family: "Fira Sans Condensed", sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 a {
   text-decoration: none;
-  color: inherit;
+  color: var(--color-link);
+  transition: color 0.3s ease;
+
+  &:hover,
+  &:focus {
+    color: var(--color-primary);
+  }
 }
 
 .main {
-  font-family: "Fira Sans Condensed", sans-serif;
-  color: $main-color;
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--color-background);
+  color: var(--color-text);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
-  
 }
 
 .main-container {
   display: flex;
+  width: 100%;
+  background-color: var(--color-background);
+
   .content-container {
     padding: 5px 20px;
     margin-top: 80px;
+    width: 100%;
+    background-color: transparent;
+    color: inherit;
   }
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+
+    .content-container {
+      margin-top: 72px;
+      padding: 10px 16px 24px;
+    }
+  }
+}
+
+:root {
+  color-scheme: light dark;
 }

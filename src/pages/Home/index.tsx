@@ -105,6 +105,42 @@ const Home = () => {
   ) => {
     setSelectedYear(event.target.value as number)
   }
+
+  const selectStyles = {
+    color: "var(--color-text)",
+    "& .MuiSelect-select": {
+      backgroundColor: "var(--color-surface)",
+      color: "var(--color-text)",
+    },
+    "& .MuiOutlinedInput-notchedOutline": {
+      borderColor: "var(--color-secondary)",
+    },
+    "&:hover .MuiOutlinedInput-notchedOutline": {
+      borderColor: "var(--color-primary)",
+    },
+    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+      borderColor: "var(--color-primary)",
+    },
+    "& .MuiSvgIcon-root": {
+      color: "var(--color-text)",
+    },
+  }
+
+  const labelStyles = {
+    color: "var(--color-secondary)",
+    "&.Mui-focused": {
+      color: "var(--color-primary)",
+    },
+  }
+
+  const menuProps = {
+    PaperProps: {
+      sx: {
+        backgroundColor: "var(--color-surface)",
+        color: "var(--color-text)",
+      },
+    },
+  }
   
   if (loading) {
     return (
@@ -183,19 +219,25 @@ const Home = () => {
       }}
     >
        <motion.div
-          className="flex flex-col items-center justify-between w-[70%] gap-5 p-4 mb-2 text-white md:flex-row "
+          className="flex flex-col items-center justify-between w-[70%] gap-5 p-4 mb-2 md:flex-row "
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
+          style={{ color: "var(--color-text)" }}
         >
-        <FormControl variant="outlined" className="w-full max-w-xs mb-6">
-          <InputLabel id="select-house-label">Select House</InputLabel>
+        <FormControl
+          variant="outlined"
+          className="w-full max-w-xs mb-6"
+          sx={{ "& .MuiInputBase-root": { color: "var(--color-text)" } }}
+        >
+          <InputLabel id="select-house-label" sx={labelStyles}>Select House</InputLabel>
           <Select
             labelId="select-house-label"
             value={selectedHouseLocal}
             onChange={handleHouseChange}
             label="Select House"
-            className="text-white bg-gray-800"
+            sx={selectStyles}
+            MenuProps={menuProps}
             renderValue={(selected) => {
               const selectedHouse = houses.find(
                 (house) => house.code === selected
@@ -204,7 +246,7 @@ const Home = () => {
             }}
           >
             {houses.map((house) => (
-              <MenuItem key={house.code} value={house.code}>
+              <MenuItem key={house.code} value={house.code} sx={{ color: "var(--color-text)" }}>
                 {house.image ? (
                   <img
                     src={house.image}
@@ -224,17 +266,22 @@ const Home = () => {
           </Select>
         </FormControl>
            {/* Month Select */}
-           <FormControl variant="outlined" className="w-full max-w-xs mb-6">
-          <InputLabel id="select-month-label">Select Month</InputLabel>
+           <FormControl
+            variant="outlined"
+            className="w-full max-w-xs mb-6"
+            sx={{ "& .MuiInputBase-root": { color: "var(--color-text)" } }}
+          >
+          <InputLabel id="select-month-label" sx={labelStyles}>Select Month</InputLabel>
           <Select
             labelId="select-month-label"
             value={selectedMonth}
             onChange={handleMonthChange}
             label="Select Month"
-            className="text-white bg-gray-800"
+            sx={selectStyles}
+            MenuProps={menuProps}
           >
             {months.map((month) => (
-              <MenuItem key={month} value={month}>
+              <MenuItem key={month} value={month} sx={{ color: "var(--color-text)" }}>
                 {month}
               </MenuItem>
             ))}
@@ -242,17 +289,22 @@ const Home = () => {
         </FormControl>
 
         {/* Year Select */}
-        <FormControl variant="outlined" className="w-full mb-4">
-            <InputLabel id="select-year-label">Select Year</InputLabel>
+        <FormControl
+          variant="outlined"
+          className="w-full mb-4"
+          sx={{ "& .MuiInputBase-root": { color: "var(--color-text)" } }}
+        >
+            <InputLabel id="select-year-label" sx={labelStyles}>Select Year</InputLabel>
             <Select
               labelId="select-year-label"
               value={selectedYear}
               onChange={handleYearChange}
               label="Select Year"
-              className="text-white bg-gray-800"
+              sx={selectStyles}
+              MenuProps={menuProps}
             >
               {years.map((year) => (
-                <MenuItem key={year} value={year}>
+                <MenuItem key={year} value={year} sx={{ color: "var(--color-text)" }}>
                   {year}
                 </MenuItem>
               ))}

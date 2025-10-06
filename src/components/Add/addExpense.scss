@@ -1,53 +1,50 @@
 .add-expense {
-  // Check if the class name matches
   width: 100vw;
   height: 100vh;
   position: fixed;
-  top: 0;
-  left: 0;
-  background: rgba(0, 0, 0, 0.9);
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
-  overflow: hidden;
+  overflow-y: auto;
+  z-index: 1200;
 
   .modal-expense {
-    padding: 40px;
-    margin-top: 15px;
+    padding: clamp(20px, 5vw, 40px);
+    margin: 15px auto;
     border-radius: 15px;
-    background: linear-gradient(145deg, #2a2a2a, #3a3a3a);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    background: var(--color-card);
+    color: var(--color-text);
+    box-shadow: 0 24px 40px rgba(0, 0, 0, 0.45);
     position: relative;
     max-width: 600px;
-    width: 100%;
-    height: 90vh;
+    width: min(600px, 100%);
+    max-height: 90vh;
     text-align: center;
     overflow: hidden;
-
-    // Ensure display and flex direction are correctly set
     display: flex;
     flex-direction: column;
     align-items: center;
 
     h1 {
-      margin-bottom: 30px;
-      font-size: 28px;
-      color: #f0f0f0;
-      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+      margin-bottom: 24px;
+      font-size: clamp(22px, 4vw, 28px);
+      color: var(--color-text);
     }
 
     .close {
       position: absolute;
       top: 10px;
       right: 10px;
-      font-size: 40px;
-      color: #f0f0f0;
+      font-size: 32px;
+      color: var(--color-text);
       cursor: pointer;
       transition: color 0.3s ease, transform 0.3s ease;
 
       &:hover {
-        color: #8a1407;
+        color: var(--color-primary);
         transform: scale(1.2);
       }
     }
@@ -55,31 +52,44 @@
     form {
       width: 100%;
       display: flex;
- 
+      flex-direction: column;
+      gap: 16px;
+      overflow-y: auto;
+      padding-right: 4px;
+      margin-top: 10px;
 
       .item {
         width: 100%;
         display: flex;
         flex-direction: column;
+        gap: 6px;
 
         label {
-          font-size: 16px;
-          color: #b0b0b0;
+          font-size: 15px;
+          color: var(--color-secondary);
+          text-align: left;
         }
 
         input,
         select {
           padding: 12px;
-          background: #444;
-          color: #f0f0f0;
+          background: var(--color-inputBg);
+          color: var(--color-text);
           outline: none;
-          border: 1px solid #666;
-          border-radius: 5px;
+          border: 1px solid var(--color-inputBorder);
+          border-radius: 8px;
+          box-shadow: 0 4px 12px var(--color-inputShadow);
           transition: border-color 0.3s ease, box-shadow 0.3s ease;
-          &:focus {
-            border-color: #3498db;
-            box-shadow: 0 0 10px rgba(52, 152, 219, 0.7);
+
+          &::placeholder {
+            color: var(--color-muted);
           }
+
+          &:focus {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(0, 106, 220, 0.25);
+          }
+
           @media (max-width: 415px) {
             padding: 10px;
             font-size: 15px;
@@ -89,9 +99,20 @@
 
         select {
           appearance: none;
-          background: url('data:image/svg+xml;utf8,<svg fill="%23f0f0f0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
+          background: url('data:image/svg+xml;utf8,<svg fill="%23ffffff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>')
+            no-repeat right 10px center,
+            var(--color-inputBg);
           background-size: 12px;
+
+          &:required:invalid {
+            color: var(--color-muted);
+          }
+
+          option {
+            color: var(--color-text);
+          }
         }
+
         .image-preview {
           margin-top: 5px;
           height: 220px;
@@ -106,17 +127,18 @@
           @media (max-height: 720px) {
             display: none;
           }
-          
+
           img {
             width: 100%;
             height: 100%;
-            border: 2px solid #444;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--color-border);
+            border-radius: 8px;
+            object-fit: cover;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
 
             &:hover {
               transform: scale(1.05);
-              box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+              box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
             }
           }
         }
@@ -125,15 +147,9 @@
       .item-container {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 12px;
         justify-content: space-between;
-        @media (max-width: 574px) {
-          gap: 15px;
-        }
-        @media (max-width: 415px) {
-          gap: 10px;
-          width: calc(100%);
-        }
+        width: 100%;
 
         .item {
           flex: 1 1 45%;
@@ -141,59 +157,62 @@
       }
 
       .error-message {
-        color: #e74c3c;
+        color: var(--color-primary);
         font-size: 14px;
-        margin-top: 15px;
+        margin-top: 10px;
         margin-bottom: 10px;
         text-align: center;
-        background: #2c2c2c;
+        background: rgba(255, 0, 0, 0.08);
         padding: 10px;
-        border-radius: 5px;
-        border: 1px solid #e74c3c;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 0, 0, 0.18);
       }
 
       .switch-container {
         display: flex;
         justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
       }
 
       button {
-        width: 60%;
-        margin-top: 20px;
-        padding: 15px;
+        width: 100%;
+        margin-top: 10px;
+        padding: 14px;
         font-size: 16px;
-        color: white;
-        background: #3498db;
+        color: var(--color-button-text);
+        background: var(--color-primary);
         border: none;
-        border-radius: 5px;
+        border-radius: 8px;
         text-align: center;
         cursor: pointer;
-        transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        transition: background 0.3s ease, transform 0.2s ease,
+          box-shadow 0.3s ease;
 
         &:hover {
-          background: #2980b9;
-          transform: scale(1.05);
-          box-shadow: 0 5px 15px rgba(41, 128, 185, 0.5);
+          background: var(--color-primary);
+          transform: translateY(-2px);
+          box-shadow: 0 5px 15px rgba(31, 111, 235, 0.25);
         }
 
         &:active {
-          background: #1f6391;
           transform: scale(1);
-          box-shadow: 0 5px 10px rgba(31, 99, 145, 0.5);
+          box-shadow: 0 5px 10px rgba(31, 111, 235, 0.2);
         }
       }
     }
   }
 
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
+    padding: 16px;
+
     .modal-expense {
+      max-height: 92vh;
       padding: 20px;
-      h1 {
-        font-size: 24px;
-      }
 
       form {
-        gap: 15px;
+        gap: 12px;
+        padding-right: 0;
 
         .item-container {
           .item {
@@ -201,49 +220,28 @@
           }
         }
 
-        .switch-container {
-          .item {
-            width: 100%;
-          }
-        }
-
         button {
-          font-size: 14px;
+          font-size: 15px;
           padding: 12px;
         }
       }
     }
   }
 
-  @media (max-width: 415px) {
+  @media (max-width: 480px) {
     .modal-expense {
-      height: 90vh;
-      h1 {
-        font-size: 20px;
-      }
+      width: 100%;
+      border-radius: 0;
+      max-height: 100vh;
 
       form {
-        gap: 5px;
-        .item-container {
-          .item {
-            width: 100%;
-          }
-        }
+        gap: 10px;
+
         button {
-          font-size: 12px;
+          font-size: 14px;
           padding: 10px;
         }
       }
-    }
-  }
-  @media (max-height: 680px) {
-    .modal-expense {
-      height: 100%;
-    }
-  }
-  @media (max-height: 800px) {
-    .modal-expense {
-      height: 100%;
     }
   }
 }

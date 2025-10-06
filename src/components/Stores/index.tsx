@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import Select from "react-select"
+import Select, { StylesConfig } from "react-select"
 import { House, StoreNameData } from "../../types"
 import { fetchSixMonthsExpensesByStoreName } from "../../utils/chartDataFetch"
 import { useAuth } from "../../hooks/useAuth"
@@ -12,6 +12,10 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts"
+import "./stores.scss"
+import { useThemeContext } from "../../context/ThemeContext"
+type StoreOption = { value: string; label: string }
+
 interface StoreExpenseViewerProps {
   selectedHouse: House
   month: number
@@ -24,12 +28,11 @@ const StoreExpenseViewer: React.FC<StoreExpenseViewerProps> = ({
   year,
 }) => {
   const [chartData, setChartData] = useState<StoreNameData[]>([])
-  const [storeOptions, setStoreOptions] = useState<
-    { value: string; label: string }[]
-  >([])
+  const [storeOptions, setStoreOptions] = useState<StoreOption[]>([])
   const [selectedStoreName, setSelectedStoreName] = useState<string>("")
   const [loading, setLoading] = useState<boolean>(false)
   const { getToken, recall } = useAuth()
+  const { colors } = useThemeContext()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,7 +59,7 @@ const StoreExpenseViewer: React.FC<StoreExpenseViewerProps> = ({
   }, [selectedHouse, month, year, recall])
 
   const handleChange = (
-    selectedOption: { value: string; label: string } | null
+    selectedOption: StoreOption | null
   ) => {
     setSelectedStoreName(selectedOption?.value || "")
   }
@@ -71,9 +74,19 @@ const StoreExpenseViewer: React.FC<StoreExpenseViewerProps> = ({
   const renderTooltip = (props: any) => {
     if (props.active && props.payload && props.payload.length) {
       return (
-        <div className="p-2 text-gray-100 bg-gray-900 rounded shadow">
-          <p className="font-semibold">{props.payload[0].payload.month}</p>
-          <p>
+        <div
+          style={{
+            background: colors.tooltipBg,
+            color: colors.text,
+            padding: "8px 12px",
+            borderRadius: 8,
+            border: `1px solid ${colors.border}`,
+          }}
+        >
+          <p style={{ fontWeight: 600, marginBottom: 4 }}>
+            {props.payload[0].payload.month}
+          </p>
+          <p style={{ fontWeight: 500 }}>
             {currencySymbol}
             {props.payload[0].value.toFixed(2)}
           </p>
@@ -83,75 +96,117 @@ const StoreExpenseViewer: React.FC<StoreExpenseViewerProps> = ({
     return null
   }
 
-  return (
-    <div className="max-w-3xl pt-3 pb-3 mx-auto rounded-md shadow-md">
-      <h2 className="mb-4 text-2xl font-bold text-center ">
-        Store Expenses by Month
-      </h2>
+  const selectThemeStyles: StylesConfig<StoreOption, false> = {
+    control: (styles, state) => ({
+      ...styles,
+      backgroundColor: "var(--color-surface)",
+      borderColor: state.isFocused ? "var(--color-primary)" : "var(--color-secondary)",
+      color: "var(--color-text)",
+      boxShadow: state.isFocused ? "0 0 0 1px var(--color-primary)" : styles.boxShadow,
+      "&:hover": {
+        borderColor: "var(--color-primary)",
+      },
+    }),
+    option: (styles, { isFocused, isSelected }) => ({
+      ...styles,
+      backgroundColor: isSelected
+        ? "var(--color-primary)"
+        : isFocused
+        ? "rgba(0, 106, 220, 0.15)"
+        : "var(--color-surface)",
+      color: isSelected ? "var(--color-button-text)" : "var(--color-text)",
+    }),
+    menu: (styles) => ({
+      ...styles,
+      backgroundColor: "var(--color-surface)",
+      color: "var(--color-text)",
+    }),
+    singleValue: (styles) => ({
+      ...styles,
+      color: "var(--color-text)",
+    }),
+    input: (styles) => ({
+      ...styles,
+      color: "var(--color-text)",
+    }),
+    placeholder: (styles) => ({
+      ...styles,
+      color: "var(--color-secondary)",
+    }),
+    dropdownIndicator: (styles) => ({
+      ...styles,
+      color: "var(--color-text)",
+      "&:hover": {
+        color: "var(--color-primary)",
+      },
+    }),
+    indicatorSeparator: (styles) => ({
+      ...styles,
+      backgroundColor: "var(--color-secondary)",
+    }),
+    clearIndicator: (styles) => ({
+      ...styles,
+      color: "var(--color-text)",
+      "&:hover": {
+        color: "var(--color-primary)",
+      },
+    }),
+    multiValue: (styles) => ({
+      ...styles,
+      backgroundColor: "rgba(0, 106, 220, 0.15)",
+      color: "var(--color-text)",
+    }),
+    menuList: (styles) => ({
+      ...styles,
+      backgroundColor: "var(--color-surface)",
+    }),
+  }
 
-      {/* Searchable Dropdown */}
-      <div className="mb-4">
+  return (
+    <div className="store-expense">
+      <h2>Store Expenses by Month</h2>
+      <div className="store-selector">
+        <label htmlFor="store-select">Store</label>
         <Select
           options={storeOptions}
           onChange={handleChange}
           placeholder="Search and select a store..."
-          className="text-black"
           value={storeOptions.find(
             (option) => option.value === selectedStoreName
           )}
-          styles={{
-            control: (styles) => ({
-              ...styles,
-              backgroundColor: "#1a202c",
-              borderColor: "#2d3748",
-            }),
-            option: (styles, { isFocused }) => ({
-              ...styles,
-              backgroundColor: isFocused ? "#2d3748" : "#1a202c",
-              color: "white",
-            }),
-            menu: (styles) => ({
-              ...styles,
-              backgroundColor: "#1a202c",
-            }),
-            singleValue: (styles) => ({
-              ...styles,
-              color: "white",
-            }),
-            input: (styles) => ({
-              ...styles,
-              color: "white",
-            }),
-          }}
+          styles={selectThemeStyles}
           isClearable
+          inputId="store-select"
         />
       </div>
 
       {loading ? (
-        <p className="text-center text-gray-500 dark:text-gray-400">
-          Loading...
-        </p>
+        <p className="category-empty">Loading...</p>
       ) : filteredExpenses ? (
-        <>
-          <h3 className="mb-3 text-lg font-semibold text-center text-blue-600 dark:text-blue-400">
-            {filteredExpenses.name} Expenses
-          </h3>
+        <div className="chart-container">
+          <h3 className="store-summary">{filteredExpenses.name} Expenses</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart
               data={filteredExpenses.expenses}
               margin={{ top: 20, right: 30, left: 0, bottom: 0 }}
             >
-              <XAxis dataKey="month" stroke="#FFFFFF" />
+              <XAxis
+                dataKey="month"
+                stroke={colors.muted}
+                tick={{ fill: colors.text }}
+              />
               <YAxis
-                stroke="#FFFFFF"
+                stroke={colors.muted}
                 tickFormatter={(value) => `${currencySymbol}${value}`}
+                tick={{ fill: colors.text }}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "#222222",
-                  borderColor: "#444444",
+                  backgroundColor: colors.tooltipBg,
+                  borderColor: colors.border,
+                  color: colors.text,
                 }}
-                itemStyle={{ color: "#E0E0E0" }}
+                itemStyle={{ color: colors.text }}
                 formatter={(value: number) =>
                   `${currencySymbol}${value.toFixed(2)}`
                 }
@@ -160,16 +215,16 @@ const StoreExpenseViewer: React.FC<StoreExpenseViewerProps> = ({
               />
               <Bar
                 dataKey="expenses"
-                fill="#00C49F"
-                stroke="#006F56"
-                strokeWidth={2}
+                fill={colors.primary}
                 radius={[5, 5, 0, 0]}
               />
             </BarChart>
           </ResponsiveContainer>
-        </>
+        </div>
       ) : (
-        <p className="text-center">Select a store to view expenses</p>
+        <p className="category-empty">
+          Select a store to view expenses
+        </p>
       )}
     </div>
   )

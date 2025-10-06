@@ -281,7 +281,7 @@ const MobileDataTable: React.FC<Props> = ({
                 id="rowsPerPage"
                 value={rowsPerPage}
                 onChange={handleRowsPerPageChange}
-                className="px-2 py-1 text-gray-700 bg-gray-200 border rounded"
+                className="rows-select"
               >
                 <option value={5}>5</option>
                 <option value={10}>10</option>
@@ -293,7 +293,7 @@ const MobileDataTable: React.FC<Props> = ({
               <button
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="px-3 py-1 text-white bg-gray-700 rounded disabled:opacity-50"
+                className="pagination-btn"
               >
                 &larr;
               </button>
@@ -303,7 +303,7 @@ const MobileDataTable: React.FC<Props> = ({
               <button
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="px-3 py-1 text-white bg-gray-700 rounded disabled:opacity-50"
+                className="pagination-btn"
               >
                 &rarr;
               </button>

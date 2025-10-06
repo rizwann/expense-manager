@@ -1,230 +1,171 @@
-@import "../../styles/variables.scss";
-
-// Ensure the background and text colors are consistent with the given variables
 .expense-detail {
-  max-width: 800px;
-  width: 80vw;
+  max-width: 840px;
+  width: 90vw;
   margin: 0 auto;
-  padding: 20px;
-  background-color: $main-bg;
-  border-radius: 15px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  padding: clamp(20px, 4vw, 32px);
+  background: var(--color-card);
+  color: var(--color-text);
+  border-radius: 18px;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 20px 38px rgba(0, 0, 0, 0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 
   .expense-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+
     .back-button {
-        background-color: rgb(147 51 234);
-        color: white;
-        border: none;
-        border-radius: 5px;
-        padding: 8px;
-        cursor: pointer;
-        font-size: 12px;
-        display: flex;
-        align-items: center;
-        transition: background-color 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      background: var(--color-primary);
+      color: var(--color-button-text);
+      border: none;
+      font-size: 14px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(0, 106, 220, 0.25);
       }
-      
-      .back-button:hover {
-        background-color: rgb(147 51 234 / 80%);
-      }
-      
-      .back-button svg {
-        margin-right: 8px;
-      }
+    }
   }
 
   .content {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    gap: 24px;
 
-    /* Main container styles */
     .image {
-      width: 100%;
-      max-width: 300px;
-      margin-bottom: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      row-gap: 15px;
-    }
-    
-    .image h1 {
-      font-size: 2rem;
-      font-weight: bold;
-      color: $main-color; /* replace with your actual variable */
-    }
-    
-    /* Image preview styles */
-    .image-preview {
-      width: 100%;
-      border-radius: 10px;
-      object-fit: cover;
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-      cursor: pointer;
-      transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    }
-    
-    .image-preview:hover {
-      transform: scale(1.05); /* Slight zoom-in on hover */
-      box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.4);
-    }
-    
-    /* Download button styling */
-    .download-btn {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 10px;
-      padding: 10px 20px;
-      background-color: $main-bg; /* replace with your actual variable */
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: background-color 0.3s ease-in-out;
-    }
-    
-    .download-btn:hover {
-      background-color: darken($main-bg, 10%);
-    }
-    
-    .download-btn svg {
-      font-size: 1.2rem;
-    }
-    
-    /* Modal Overlay and Background */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-color: rgba(0, 0, 0, 0.9); /* Dark background */
       display: flex;
       flex-direction: column;
-      gap: 20px;
-      justify-content: center;
       align-items: center;
-      z-index: 1000;
-      cursor: zoom-out; /* Indicate that the user can click to exit zoom */
-    }
-     .close-btn{
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 20px;
-      color: #f0f0f0;
-      cursor: pointer;
-      transition: color 0.3s ease, transform 0.3s ease;
-  
-      &:hover {
-        color: #a44c42;
-        scale: 1.2;
+      gap: 16px;
+
+      h1 {
+        font-size: clamp(22px, 4vw, 32px);
+        font-weight: 600;
       }
-     }
-    /* Modal Content for Zoomed Image */
-    .modal-content {
-      max-width: 90%;
-      max-height: 90%;
-      cursor: initial;
+
+      .image-preview {
+        width: 100%;
+        max-width: 360px;
+        border-radius: 12px;
+        border: 1px solid var(--color-border);
+        object-fit: cover;
+        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.24);
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+        &:hover {
+          transform: scale(1.03);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.28);
+        }
+      }
+
+      .download-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        border-radius: 10px;
+        background: var(--color-surface);
+        color: var(--color-text);
+        border: 1px solid var(--color-border);
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
+        }
+      }
     }
-    
-    .modal-content img {
-      width: 100%;
-      height: auto;
-      border-radius: 10px;
-      box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
-    }
-    
 
     .details {
-      width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 14px;
 
       label {
-        font-weight: bold;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        background-color: $soft-bg;
-        padding: 10px;
-        border-radius: 8px;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-        font-size: 1.2rem;
-        color: $main-color;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: 12px;
+        padding: 12px 16px;
+        font-weight: 600;
+        font-size: 15px;
 
-        span,
-        input,
-        select {
+        span {
           flex: 1;
           text-align: right;
-          color: $main-color;
-
-          // Styling for input fields and selects in edit mode
-          input,
-          select {
-            border: none;
-            background-color: transparent;
-            color: $main-color;
-            font-size: 1rem;
-            padding: 5px;
-            border-bottom: 1px solid $main-color;
-
-            &:focus {
-              outline: none;
-              border-color: $soft-color;
-            }
-          }
+          color: var(--color-text);
+          font-weight: 500;
         }
       }
     }
   }
 
-  // Mobile responsiveness
-  @media (max-width: 640px) {
-    .expense-header {
-    .back-button {
-      font-size: 12px;
-      padding: 4px 5px;
-      .back-button svg {
-        margin-right: 5px;
-      }
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+    z-index: 1200;
+  }
+
+  .modal-content {
+    max-width: 90vw;
+    max-height: 90vh;
+
+    img {
+      width: 100%;
+      border-radius: 16px;
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45);
     }
   }
+
+  .close-btn {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: var(--color-primary);
+    color: var(--color-button-text);
+    border: none;
+    cursor: pointer;
+  }
+
+  @media (max-width: 640px) {
+    width: 95vw;
 
     .content {
-      // align-items: flex-start;
-      .image {
-        h1 {
-          font-size: 1.5rem;
-        }
-        img {
+      .details label {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+
+        span {
+          text-align: left;
           width: 100%;
         }
       }
-      .details {
-        label {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 5px;
-
-          span,
-          input,
-          select {
-            text-align: left;
-            width: 100%;
-          }
-        }
-      }
     }
   }
+}
+
+[data-theme="contrast"] .expense-detail {
+  box-shadow: none;
 }

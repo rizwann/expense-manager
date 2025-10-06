@@ -1,11 +1,11 @@
 @import "../../styles/responsive.scss";
-@import "../../styles/variables.scss";
 
 .card-container {
   display: flex;
   flex-direction: column;
   gap: 15px;
   padding: 10px;
+  color: var(--color-text);
 
   .search-container {
     margin-bottom: 15px;
@@ -13,30 +13,53 @@
 
     input {
       width: 100%;
-      padding: 10px;
-      border: 1px solid $main-color;
-      border-radius: 5px;
+      padding: 10px 14px;
+      border: 1px solid var(--color-inputBorder);
+      border-radius: 12px;
       font-size: 1rem;
-      background-color: $main-bg;
+      background-color: var(--color-inputBg);
+      color: var(--color-text);
+      box-shadow: 0 4px 12px var(--color-inputShadow);
+
+      &::placeholder {
+        color: var(--color-muted);
+      }
+
+      &:focus {
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px rgba(0, 106, 220, 0.25);
+        outline: none;
+      }
+    }
+
+    .clear-search {
+      color: var(--color-muted);
+      &:hover {
+        color: var(--color-primary);
+      }
     }
   }
 }
 
 .card {
   display: flex;
-  background-color: $main-bg;
-  border-radius: 10px;
+  background-color: var(--color-card);
+  border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
 
   .card-left-border {
     width: 5px;
-    background: linear-gradient(180deg, #0265a8 0%, #1d1d1d 100%);
+    background: linear-gradient(180deg, var(--color-primary) 0%, rgba(0, 0, 0, 0.2) 100%);
   }
 
   .card-content {
     flex: 1;
-    padding: 15px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 
     .card-header {
       display: flex;
@@ -45,8 +68,8 @@
 
       h3 {
         margin: 0;
-        font-size: 1.2rem;
-        color: $main-color;
+        font-size: 1.1rem;
+        color: var(--color-text);
       }
 
       .card-actions {
@@ -57,39 +80,46 @@
           width: 20px;
           height: 20px;
           cursor: pointer;
+          filter: invert(55%);
+          transition: filter 0.2s ease;
+
+          &:hover {
+            filter: invert(30%) sepia(80%) saturate(250%);
+          }
         }
       }
     }
 
     .card-body {
-      margin-top: 10px;
+      display: grid;
+      gap: 10px;
 
       .card-item {
-        margin-bottom: 10px;
         display: flex;
+        gap: 4px;
 
         .card-item-header {
           display: flex;
           align-items: center;
-          margin-bottom: 5px;
+          gap: 8px;
 
           img {
             width: 16px;
             height: 16px;
-            margin-right: 8px;
+            filter: invert(55%);
           }
 
           span {
-            font-size: 0.9rem;
-            font-weight: bold;
-            color: $main-color;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-muted);
           }
         }
 
         .card-item-value {
-          font-size: 0.9rem;
-          color: $main-color;
-          margin-left: 5px;
+          font-size: 0.95rem;
+          color: var(--color-text);
+
           .boolean-icon {
             width: 20px;
             height: 20px;
@@ -97,6 +127,34 @@
         }
       }
     }
+  }
+}
+
+.rows-select {
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--color-inputBorder);
+  background: var(--color-inputBg);
+  color: var(--color-text);
+  box-shadow: 0 4px 12px var(--color-inputShadow);
+  outline: none;
+}
+
+.pagination-btn {
+  padding: 6px 12px;
+  border-radius: 10px;
+  border: none;
+  background: var(--color-primary);
+  color: var(--color-button-text);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 }
 

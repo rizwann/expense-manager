@@ -83,28 +83,12 @@ const Weather = () => {
   }, [])
   return (
     <>
-      {coordinates && (
-       <div className="weather">
-       {weather && (
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            color: "white"
-          }}>
-          <img src={weather.icon} alt="Weather Icon" className="weather-img" style={{
-            width: "32px",
-            height: "32px",
-          }} />
-          <span style={{
-            fontSize: "12px"
-          }}>{Math.round(weather.temp)}°C</span>
-           <span className="weather-city" style={{
-            fontSize: "12px"
-           }}>{weather.city}</span>
+      {coordinates && weather && (
+        <div className="weather">
+          <img src={weather.icon} alt="Weather Icon" className="weather__icon" />
+          <span className="weather__temp">{Math.round(weather.temp)}°C</span>
+          <span className="weather__city">{weather.city}</span>
         </div>
-       )}
-     </div>
       )}
     </>
   )

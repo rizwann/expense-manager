@@ -1,0 +1,217 @@
+.note-form-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(6px);
+  z-index: 1200;
+  padding: 24px;
+}
+
+.note-form-modal__content {
+  width: min(90vw, 520px);
+  background: var(--color-card);
+  color: var(--color-text);
+  border-radius: 18px;
+  border: 1px solid var(--color-border);
+  padding: clamp(20px, 4vw, 28px);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.note-form-modal__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.note-form-modal__input,
+.note-form-modal__textarea,
+.note-form-modal__select {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--color-inputBorder);
+  background: var(--color-inputBg);
+  color: var(--color-text);
+  padding: 12px;
+  font-size: 14px;
+  outline: none;
+  box-shadow: 0 4px 12px var(--color-inputShadow);
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+
+  &:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(0, 106, 220, 0.25);
+  }
+
+  &:required:invalid {
+    color: var(--color-muted);
+  }
+
+  option {
+    color: var(--color-text);
+  }
+}
+
+.note-form-modal__textarea {
+  resize: none;
+}
+
+.note-form-modal__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--color-muted);
+}
+
+.note-form-modal__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.note-form-modal__todo-entry {
+  display: flex;
+  gap: 8px;
+}
+
+.note-form-modal__icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 10px;
+  background: var(--color-primary);
+  color: var(--color-button-text);
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &--danger {
+    background: #ef4444;
+  }
+}
+
+.note-form-modal__todo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.note-form-modal__todo-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+.note-form-modal__todo-text {
+  flex: 1;
+  margin-right: 10px;
+  font-size: 14px;
+  color: var(--color-text);
+}
+
+.note-form-modal__todo-text--done {
+  text-decoration: line-through;
+  color: #4ade80;
+}
+
+.note-form-modal__todo-text--rejected {
+  color: #f87171;
+}
+
+.note-form-modal__todo-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.note-form-modal__toggle {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+
+  input {
+    display: none;
+  }
+}
+
+.note-form-modal__toggle-track {
+  position: relative;
+  width: 42px;
+  height: 22px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.15);
+  transition: background 0.2s ease;
+}
+
+.note-form-modal__toggle-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  transition: transform 0.2s ease, background 0.2s ease;
+
+  &.is-active {
+    transform: translateX(20px);
+    background: #4ade80;
+  }
+}
+
+.note-form-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.note-form-modal__button {
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &--ghost {
+    background: transparent;
+    color: var(--color-muted);
+  }
+
+  &--primary {
+    background: var(--color-primary);
+    color: var(--color-button-text);
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px rgba(0, 106, 220, 0.25);
+    }
+  }
+}
+
+[data-theme="contrast"] .note-form-modal__content {
+  box-shadow: none;
+}

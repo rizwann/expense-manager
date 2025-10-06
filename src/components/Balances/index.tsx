@@ -20,6 +20,8 @@ import { motion } from "framer-motion"
 import { useAuth } from "../../hooks/useAuth"
 import { months } from "../../menu-item"
 import { getCurrencySymbol } from "../../utils/utils"
+import "./balances.scss"
+import { useThemeContext } from "../../context/ThemeContext"
 
 // Helper function to get the current year and month
 const getCurrentYear = () => new Date().getFullYear();
@@ -30,6 +32,7 @@ years.unshift('All Years')
 
 const TransactionSummary: React.FC = () => {
   const { selectedHouse, user, getToken } = useAuth()
+  const { colors } = useThemeContext()
 
   const [data, setData] = useState<TransactionData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -102,6 +105,42 @@ const TransactionSummary: React.FC = () => {
     setSelectedYear(event.target.value as number)
   }
 
+  const selectStyles = {
+    color: "var(--color-text)",
+    "& .MuiSelect-select": {
+      backgroundColor: "var(--color-surface)",
+      color: "var(--color-text)",
+    },
+    "& .MuiOutlinedInput-notchedOutline": {
+      borderColor: "var(--color-secondary)",
+    },
+    "&:hover .MuiOutlinedInput-notchedOutline": {
+      borderColor: "var(--color-primary)",
+    },
+    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+      borderColor: "var(--color-primary)",
+    },
+    "& .MuiSvgIcon-root": {
+      color: "var(--color-text)",
+    },
+  }
+
+  const labelStyles = {
+    color: "var(--color-secondary)",
+    "&.Mui-focused": {
+      color: "var(--color-primary)",
+    },
+  }
+
+  const menuProps = {
+    PaperProps: {
+      sx: {
+        backgroundColor: "var(--color-surface)",
+        color: "var(--color-text)",
+      },
+    },
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -111,7 +150,7 @@ const TransactionSummary: React.FC = () => {
   }
 
   if (!data) {
-    return <div className="text-center text-white">No data available</div>
+    return <div className="text-center" style={{ color: "var(--color-text)" }}>No data available</div>
   }
 
   const {
@@ -135,16 +174,15 @@ const TransactionSummary: React.FC = () => {
   )
   return (
     <motion.div
-      className="p-6 mx-auto text-white rounded-lg shadow-lg max-w-7xl"
+      className="balances-page"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
-      style={{ minHeight: "calc(100vh - 120px)" }}
     >
-      <div className="flex flex-col items-center mb-12">
+      <div className="balances-header">
         {selectedHouseData && (
           <motion.div
-            className="flex flex-col items-center justify-center mb-8"
+            className="balances-avatar"
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5 }}
@@ -152,7 +190,6 @@ const TransactionSummary: React.FC = () => {
             <img
               src={selectedHouseData.image || "/app.svg"}
               alt={selectedHouseData.description}
-              className="object-cover w-32 h-32 border-4 border-gray-800 rounded-full shadow-lg ring-4 ring-blue-500"
               onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) =>
                 (e.currentTarget.src = "/app.svg")
               }
@@ -164,37 +201,52 @@ const TransactionSummary: React.FC = () => {
         )}
 
         <motion.div
-          className="flex flex-col items-center justify-between w-full gap-5 p-4 mb-2 text-white md:flex-row "
+          className="balances-controls"
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
           {/* House selection */}
-          <FormControl variant="outlined" className="w-full mb-6">
-            <InputLabel id="select-house-label">Select House</InputLabel>
+          <FormControl
+            variant="outlined"
+            sx={{ "& .MuiInputBase-root": { color: "var(--color-text)" } }}
+          >
+            <InputLabel id="select-house-label" sx={labelStyles}>Select House</InputLabel>
             <Select
               labelId="select-house-label"
               value={selectedHouseLocal}
               onChange={handleHouseChange}
               label="Select House"
-              className="text-white bg-gray-800"
+              sx={selectStyles}
+              MenuProps={menuProps}
               renderValue={(selected) => {
                 const selectedHouse = houses.find(house => house.code === selected);
                 return selectedHouse ? selectedHouse.description : '';
               }}
             >
               {houses.map((house) => (
-                <MenuItem key={house.code} value={house.code}>
-                  {house.image ? <img
+                <MenuItem key={house.code} value={house.code} sx={{ color: "var(--color-text)" }}>
+                  {house.image ? (
+                    <img
                       src={house.image}
                       alt={house.description}
-                      className="object-cover w-8 h-8 mr-2 border-4 border-gray-800 rounded-full ring-4 ring-gray-700"
+                      style={{
+                        width: 32,
+                        height: 32,
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                        marginRight: 8,
+                        border: `2px solid ${colors.border}`,
+                      }}
                       onError={(
                         e: React.SyntheticEvent<HTMLImageElement, Event>
                       ) => (e.currentTarget.src = "/app.svg")}
                     />
-                    : <Home className="mr-2 text-gray-500 rounded-full ring-4 ring-gray-700" />
-                  }
+                  ) : (
+                    <Home
+                      style={{ marginRight: 8, color: colors.muted }}
+                    />
+                  )}
                   {house.description}
                 </MenuItem>
               ))}
@@ -202,17 +254,21 @@ const TransactionSummary: React.FC = () => {
           </FormControl>
 
           {/* Month selection */}
-          <FormControl variant="outlined" className="w-full mb-4">
-            <InputLabel id="select-month-label">Select Month</InputLabel>
+          <FormControl
+            variant="outlined"
+            sx={{ "& .MuiInputBase-root": { color: "var(--color-text)" } }}
+          >
+            <InputLabel id="select-month-label" sx={labelStyles}>Select Month</InputLabel>
             <Select
               labelId="select-month-label"
               value={selectedMonth}
               onChange={handleMonthChange}
               label="Select Month"
-              className="text-white bg-gray-800"
+              sx={selectStyles}
+              MenuProps={menuProps}
             >
               {["All Months",...months].map((month) => (
-                <MenuItem key={month} value={month}>
+                <MenuItem key={month} value={month} sx={{ color: "var(--color-text)" }}>
                   {month}
                 </MenuItem>
               ))}
@@ -220,17 +276,21 @@ const TransactionSummary: React.FC = () => {
           </FormControl>
 
           {/* Year selection */}
-          <FormControl variant="outlined" className="w-full mb-4">
-            <InputLabel id="select-year-label">Select Year</InputLabel>
+          <FormControl
+            variant="outlined"
+            sx={{ "& .MuiInputBase-root": { color: "var(--color-text)" } }}
+          >
+            <InputLabel id="select-year-label" sx={labelStyles}>Select Year</InputLabel>
             <Select
               labelId="select-year-label"
               value={selectedYear}
               onChange={handleYearChange}
               label="Select Year"
-              className="text-white bg-gray-800"
+              sx={selectStyles}
+              MenuProps={menuProps}
             >
               {years.map((year) => (
-                <MenuItem key={year} value={year}>
+                <MenuItem key={year} value={year} sx={{ color: "var(--color-text)" }}>
                   {year}
                 </MenuItem>
               ))}
@@ -238,20 +298,20 @@ const TransactionSummary: React.FC = () => {
           </FormControl>
         </motion.div>
       </div>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="balances-grid">
         {/* Net Changes */}
         <motion.div
-          className="p-4 bg-gray-800 rounded-lg"
+          className="balance-card"
           initial={{ x: -100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="flex items-center mb-4 text-xl font-semibold">
-            <AccountBalance className="mr-2" /> Net Changes
+          <h2 className="balance-card__title">
+            <AccountBalance /> Net Changes
           </h2>
-          <ul>
+          <ul className="balance-card__list">
             {Object.entries(netChanges).map(([person, amount], index) => (
-              <li key={person} className="flex justify-between">
+              <li key={person}>
                 <span>
                   {index + 1}. {person}
                 </span>
@@ -263,17 +323,17 @@ const TransactionSummary: React.FC = () => {
 
         {/* Balances */}
         <motion.div
-          className="p-4 bg-gray-800 rounded-lg"
+          className="balance-card"
           initial={{ x: 100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="flex items-center mb-4 text-xl font-semibold">
-            <AccountBalance className="mr-2" /> Balances
+          <h2 className="balance-card__title">
+            <AccountBalance /> Balances
           </h2>
-          <ul>
+          <ul className="balance-card__list">
             {Object.entries(balances).map(([person, balance], index) => (
-              <li key={person} className="flex justify-between">
+              <li key={person}>
                 <span>
                   {index + 1}. {person}
                 </span>
@@ -285,17 +345,17 @@ const TransactionSummary: React.FC = () => {
 
         {/* Total Expenses by User */}
         <motion.div
-          className="p-4 bg-gray-800 rounded-lg"
+          className="balance-card"
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="flex items-center mb-4 text-xl font-semibold">
-            <AttachMoney className="mr-2" /> Total Expenses by User
+          <h2 className="balance-card__title">
+            <AttachMoney /> Total Expenses by User
           </h2>
-          <ul>
+          <ul className="balance-card__list">
             {Object.entries(totalExpenseByUser).map(([user, total], index) => (
-              <li key={user} className="flex justify-between">
+              <li key={user}>
                 <span>
                   {index + 1}. {user}
                 </span>
@@ -307,13 +367,13 @@ const TransactionSummary: React.FC = () => {
 
         {/* Givers */}
         <motion.div
-          className="p-4 bg-gray-800 rounded-lg sm:col-span-2 lg:col-span-1"
+          className="balance-card"
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="mb-4 text-xl font-semibold">Givers</h2>
-          <ul>
+          <h2 className="balance-card__title">Givers</h2>
+          <ul className="balance-card__list">
             {givers.map((giver, index) => (
               <li key={giver}>
                 {index + 1}. {giver}
@@ -324,13 +384,13 @@ const TransactionSummary: React.FC = () => {
 
         {/* Receivers */}
         <motion.div
-          className="p-4 bg-gray-800 rounded-lg sm:col-span-2 lg:col-span-1"
+          className="balance-card"
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="mb-4 text-xl font-semibold">Receivers</h2>
-          <ul>
+          <h2 className="balance-card__title">Receivers</h2>
+          <ul className="balance-card__list">
             {receivers.map((receiver, index) => (
               <li key={receiver}>
                 {index + 1}. {receiver}
@@ -341,59 +401,52 @@ const TransactionSummary: React.FC = () => {
 
         {/* Total Expenses */}
         <motion.div
-          className="p-4 bg-gray-800 rounded-lg sm:col-span-2 lg:col-span-1"
+          className="balance-card"
           initial={{ scale: 1, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="flex items-center mb-4 text-xl font-semibold">
-            <Euro className="mr-2" /> Total House Expense
+          <h2 className="balance-card__title">
+            <Euro /> Total House Expense
           </h2>
-          <div className="text-center">
-            <span className="text-2xl font-bold">
-              {getCurrencySymbol(selectedHouseData)}{totalExpenses.toFixed(2)}
-            </span>
+          <div className="balances-total">
+            <span>Total</span>
+            <span>{getCurrencySymbol(selectedHouseData)}{totalExpenses.toFixed(2)}</span>
           </div>
         </motion.div>
 
         {/* Payment Instructions */}
         <motion.div
-          className="p-4 bg-gray-800 rounded-lg sm:col-span-2"
+          className="balance-card"
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          {" "}
-          <h2 className="mb-4 text-xl font-semibold">
-            Payment Instructions
-          </h2>{" "}
-          <ul>
-            {" "}
+          <h2 className="balance-card__title">Payment Instructions</h2>
+          <ul className="balance-card__list">
             {paymentInstructionsOptimized.map(({ from, to, amount }, index) => (
-              <li key={index} className="flex justify-between">
-                {" "}
-                <span className="mr-2">
-                  {" "}
-                  {index + 1}. {from} <ArrowForward className="mx-2" /> {to}{" "}
-                </span>{" "}
-                <span>{getCurrencySymbol(selectedHouseData)}{amount.toFixed(2)}</span>{" "}
+              <li key={index}>
+                <span>
+                  {index + 1}. {from} <ArrowForward style={{ margin: "0 8px" }} /> {to}
+                </span>
+                <span>{getCurrencySymbol(selectedHouseData)}{amount.toFixed(2)}</span>
               </li>
-            ))}{" "}
-          </ul>{" "}
+            ))}
+          </ul>
         </motion.div>
         {/* Transactions */}
         <motion.div
-          className="p-4 bg-gray-800 rounded-lg sm:col-span-2"
+          className="balance-card balances-transactions"
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="mb-4 text-xl font-semibold">Transactions</h2>
-          <ul>
+          <h2 className="balance-card__title">Transactions</h2>
+          <ul className="balance-card__list">
             {transactions.map(({ from, to, amount }, index) => (
-              <li key={index} className="flex justify-between">
-                <span className="mr-2">
-                  {index + 1}. {from} <ArrowForward className="mx-2" /> {to}
+              <li key={index}>
+                <span>
+                  {index + 1}. {from} <ArrowForward style={{ margin: "0 8px" }} /> {to}
                 </span>
                 <span>{getCurrencySymbol(selectedHouseData)}{amount.toFixed(2)}</span>
               </li>
