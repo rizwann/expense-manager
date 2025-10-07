@@ -4,6 +4,7 @@ type Props = {
   type?: "button" | "submit" | "reset";
   size?: "sm" | "md" | "lg";
   disabled?: boolean;
+  icon?: React.ReactNode;
 };
 
 const Button = (props: Props) => {
@@ -15,9 +16,12 @@ const Button = (props: Props) => {
       type={props.type ? props.type : "button"}
       style={{
         // size
-        padding: props.size === "sm" ? "0.2rem 0.5rem" : props.size === "lg" ? "0.75rem 1.5rem" : "0.5rem 1rem",
+        padding: props.size === "sm" ? "0.2rem 0.5rem" : props.size === "lg" ? "0.75rem 1.5rem" : "0.5rem 1rem", display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
+      {props.icon && <span className="mr-2">{props.icon}</span>}
       {props.text}
     </button>
   );
