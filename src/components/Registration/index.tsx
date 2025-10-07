@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { useAuth } from "../../hooks/useAuth";
 import FormAction from "../Form/formAction";
 import { inputClassName } from "../Login";
+import "../../styles/auth.scss";
 
 export type RegistrationFormInput = {
   email: string;
@@ -27,17 +28,17 @@ function Registration() {
   const passwordPattern = /^(?=.*[a-zA-Z0-9])(?=.*[^a-zA-Z0-9]).{6,}$/;
   useEffect(() => {
     if (errorMessage) {
-    setErrorMessage(null)
+      setErrorMessage(null);
     }
-  }
-  , [])
+  }, [errorMessage, setErrorMessage]);
+
   return (
     <form
       onSubmit={handleSubmit((data) => registration(data))}
-      className="p-6 mt-8 space-y-6 bg-gray-800 rounded-lg shadow-md"
+      className="auth-form"
     >
-      <div className="">
-        <div className="my-5">
+      <div className="auth-fields">
+        <div className="auth-field">
           <label htmlFor="name" className="sr-only">
             Name
           </label>
@@ -49,10 +50,10 @@ function Registration() {
             {...register("name", { required: "Name is required" })}
           />
           {errors.name && (
-            <span className="text-red-400">{errors.name.message}</span>
+            <span className="auth-error">{errors.name.message}</span>
           )}
         </div>
-        <div className="my-5">
+        <div className="auth-field">
           <label htmlFor="email" className="sr-only">
             Email
           </label>
@@ -64,10 +65,10 @@ function Registration() {
             {...register("email", { required: "Email is required" })}
           />
           {errors.email && (
-            <span className="text-red-400">{errors.email.message}</span>
+            <span className="auth-error">{errors.email.message}</span>
           )}
         </div>
-        <div className="my-5">
+        <div className="auth-field">
           <label htmlFor="username" className="sr-only">
             Username
           </label>
@@ -85,10 +86,10 @@ function Registration() {
             })}
           />
           {errors.username && (
-            <span className="text-red-400">{errors.username.message}</span>
+            <span className="auth-error">{errors.username.message}</span>
           )}
         </div>
-        <div className="my-5">
+        <div className="auth-field">
           <label htmlFor="password" className="sr-only">
             Password
           </label>
@@ -107,10 +108,10 @@ function Registration() {
             })}
           />
           {errors.password && (
-            <span className="text-red-400">{errors.password.message}</span>
+            <span className="auth-error">{errors.password.message}</span>
           )}
         </div>
-        <div className="my-5">
+        <div className="auth-field">
           <label htmlFor="confirmPassword" className="sr-only">
             Confirm Password
           </label>
@@ -126,11 +127,11 @@ function Registration() {
             })}
           />
           {errors.confirmPassword && (
-            <span className="text-red-400">{errors.confirmPassword.message}</span>
+            <span className="auth-error">{errors.confirmPassword.message}</span>
           )}
         </div>
 
-        {errorMessage && <div className="text-red-400">{errorMessage}</div>}
+        {errorMessage && <div className="auth-status">{errorMessage}</div>}
       </div>
 
       <FormAction text="Register" />

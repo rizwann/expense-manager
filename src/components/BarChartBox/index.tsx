@@ -125,9 +125,7 @@ const BarChartBox: React.FC<BarChartBoxProps> = ({
                 return null
               }}
             />
-            <CartesianGrid stroke={colors.chartGrid} strokeDasharray="3 3" />
             <XAxis dataKey="name" tick={{ fill: colors.text }} stroke={colors.muted} />
-            <YAxis tick={{ fill: colors.text }} stroke={colors.muted} />
             <Bar
               dataKey={dataKey}
               fill={type !== "userSixMonths" ? color : colors.primary}

@@ -1,64 +1,63 @@
-import { ArrowLeft, CloudDownload } from "@mui/icons-material"
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { ArrowBack, CloudDownload } from "@mui/icons-material";
+import { useState, MouseEvent } from "react";
+import { Link } from "react-router-dom";
+import ThemeSwitcher from "../../components/ThemeSwitcher";
+import "../../styles/auth.scss";
 
 const DownloadApp = () => {
-  const [isDownloading, setIsDownloading] = useState(false)
-  const navigate = useNavigate()
+  const [isDownloading, setIsDownloading] = useState(false);
 
-  const handleDownload = () => {
-    setIsDownloading(true)
+  const handleDownload = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (isDownloading) {
+      event.preventDefault();
+      return;
+    }
+    setIsDownloading(true);
     setTimeout(() => {
-      setIsDownloading(false)
-    }, 2000)
-  }
+      setIsDownloading(false);
+    }, 2000);
+  };
 
   return (
-    <div className="relative flex items-center justify-center min-h-screen p-4 text-white bg-gray-900"
-    style={{
-    }}
-    >
-      <button
-        onClick={() => navigate("/")}
-        className="absolute flex items-center p-2 text-white bg-gray-700 rounded-lg top-4 left-4 hover:bg-gray-600"
-      >
-        <ArrowLeft className="w-5 h-5 mr-1" />
-        <span className="hidden sm:block">Back to Home</span>
-      </button>
-      <div className="w-full max-w-md p-6 text-center bg-gray-800 rounded-lg shadow-lg">
-        <h1 className="mb-4 text-3xl font-bold">Download Our App</h1>
-        <p className="mb-6 text-base sm:text-lg">
-          Download the latest version of our app and manage your expenses on the
-          go.
+    <div className="auth-page">
+      <div className="auth-container auth-container--center">
+        <div className="auth-theme-switcher">
+          <ThemeSwitcher />
+        </div>
+        <div className="auth-container__actions">
+          <Link to="/" className="auth-back-link">
+            <ArrowBack fontSize="small" />
+            <span>Back to Home</span>
+          </Link>
+        </div>
+        <h1 className="auth-header__title">Download Our App</h1>
+        <p className="auth-text-muted">
+          Keep your expenses organized even when you are offline. Get the latest
+          build and install it on your device in a few taps.
         </p>
 
-        <div className="mb-6">
-          <img
-            src="/logo.png"
-            alt="App Mockup"
-            className="w-full h-auto rounded-lg shadow-md"
-          />
+        <div className="auth-illustration">
+          <img src="/logo.png" alt="Expense Manager app" />
         </div>
         <a
           href="https://www.mediafire.com/file/hdnskqqfooguvou/expenser.apk/file"
           download
-          className={`flex items-center justify-center w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 ease-in-out ${
-            isDownloading ? "opacity-50 cursor-not-allowed" : ""
-          }`}
+          rel="noopener noreferrer"
+          className={`auth-button auth-button--full${isDownloading ? " is-disabled" : ""}`}
           onClick={handleDownload}
         >
-          <CloudDownload className="w-6 h-6 mr-2" />
+          <CloudDownload />
           {isDownloading ? "Downloading..." : "Download APK"}
         </a>
 
         {isDownloading && (
-          <p className="mt-2 text-sm text-gray-400">
+          <p className="auth-text-muted">
             Your download will start shortly...
           </p>
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default DownloadApp
+export default DownloadApp;

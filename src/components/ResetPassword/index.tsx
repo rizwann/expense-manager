@@ -1,9 +1,10 @@
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useEffect } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import FormAction from "../Form/formAction";
 import PasswordResetConfirmation from "./passwordResetConfirmation";
 import { inputClassName } from "./resetPassowordForm";
-import { useEffect } from "react";
+import "../../styles/auth.scss";
 
 export type ResetPasswordFormInput = {
   email: string;
@@ -27,23 +28,23 @@ function ResetPassword() {
 
   useEffect(() => {
     if (errorMessage) {
-    setErrorMessage(null)    
-  }
-  }, [])  ;
+      setErrorMessage(null);
+    }
+  }, [errorMessage, setErrorMessage]);
 
   return (
-    <div className="p-6 bg-gray-800 rounded-lg shadow-md">
+    <>
       {!emailSent ? (
-        <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-6">
-          <div className="space-y-px">
-            <div className="my-5">
+        <form onSubmit={handleSubmit(onSubmit)} className="auth-form">
+          <div className="auth-fields">
+            <div className="auth-field">
               <label htmlFor="email" className="sr-only">
                 Email
               </label>
               <input
                 type="text"
                 id="email"
-                className={`${inputClassName} bg-gray-700 text-gray-200 border-gray-600 placeholder-gray-400`}
+                className={inputClassName}
                 placeholder="Your email"
                 {...register("email", {
                   required: "Email is required",
@@ -54,10 +55,12 @@ function ResetPassword() {
                 })}
               />
               {errors.email && (
-                <span className="text-red-400">nunu</span>
+                <span className="auth-error">
+                  {errors.email.message}
+                </span>
               )}
             </div>
-            {errorMessage && <div className="text-red-400">{errorMessage}</div>}
+            {errorMessage && <div className="auth-status">{errorMessage}</div>}
           </div>
 
           <FormAction text={"Reset Password"} />
@@ -65,7 +68,7 @@ function ResetPassword() {
       ) : (
         <PasswordResetConfirmation />
       )}
-    </div>
+    </>
   );
 }
 

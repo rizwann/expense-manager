@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import "../../styles/auth.scss";
 
 interface IProps {
   heading: string;
@@ -14,26 +15,17 @@ const Header: React.FC<IProps> = ({
   linkUrl = "#",
 }) => {
   return (
-    <div className="mb-10 text-gray-200">
-      <div className="flex justify-center">
-        <img
-          alt=""
-          className="w-16 h-16"
-          src={import.meta.env.VITE_LOGO_URL}
-        />
+    <div className="auth-header">
+      <div className="auth-header__logo">
+        <img alt="" src={import.meta.env.VITE_LOGO_URL} />
       </div>
-      <h2 className="mt-6 text-3xl font-extrabold text-center text-gray-100">
-        {heading}
-      </h2>
-      <p className="mt-2 text-sm text-center text-gray-400">
-        {paragraph}{" "}
-        <Link
-          to={linkUrl}
-          className="font-medium text-purple-400 hover:text-purple-300"
-        >
-          {linkName}
-        </Link>
-      </p>
+      <h2 className="auth-header__title">{heading}</h2>
+      {paragraph && linkName && (
+        <p className="auth-header__subtitle">
+          {paragraph}{" "}
+          <Link to={linkUrl}>{linkName}</Link>
+        </p>
+      )}
     </div>
   );
 };

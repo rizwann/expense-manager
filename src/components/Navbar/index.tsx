@@ -136,25 +136,26 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
   }
 
   return (
-    <div
-      className="navbar"
-      style={{
-        paddingTop: isIOSApp ? "env(safe-area-inset-top)" : "20px",
-      }}
-    >
+    <>
       {spinner && <Spinner />}
       {isLoggingOut && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
-          <div className="relative flex flex-col items-center text-white">
+        <div className="logout-overlay">
+          <div className="logout-overlay__content">
             <img
-              src="/logout-icon.svg" // Replace with your logout icon or robot image
+              src="/logout-icon.svg"
               alt="Logging out"
-              className="w-24 h-24 mb-4"
+              className="logout-overlay__image"
             />
-            <div className="text-2xl animate-pulse">Logging out...</div>
+            <div className="logout-overlay__text animate-pulse">Logging out...</div>
           </div>
         </div>
       )}
+      <div
+        className="navbar"
+        style={{
+          paddingTop: isIOSApp ? "env(safe-area-inset-top)" : "20px",
+        }}
+      >
       <div className="logo">
         <GridMenuIcon onClick={toggleMenu} />
         <NavLink to={"/"}>Expense Manager</NavLink>
@@ -205,16 +206,21 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
             </Button>
           </div>}
           <span className="username">{user?.username}</span>
-          <img
-            src={user?.image ? user?.image : "/noavatar.png"}
-            alt="store"
-            onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) =>
-              (e.currentTarget.src = "/noavatar.png")
-            }
+          <button
+            type="button"
+            className="user-avatar"
             onClick={togglePreferences}
-            style={{ cursor: "pointer" }}
-            className=" ring-2 ring-black-300 user-image"
-          />
+            aria-label="Open profile menu"
+          >
+            <img
+              src={user?.image ? user?.image : "/noavatar.png"}
+              alt="Profile"
+              onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) =>
+                (e.currentTarget.src = "/noavatar.png")
+              }
+              className="user-avatar__image"
+            />
+          </button>
         </div>
       </div>
 
@@ -247,7 +253,8 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
           re={true}
           modalOpen={modalOpen}
         />
-    </div>
+      </div>
+    </>
   )
 }
 

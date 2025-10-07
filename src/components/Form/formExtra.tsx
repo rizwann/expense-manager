@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import "../../styles/auth.scss";
 
 export default function FormExtra() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -13,28 +14,19 @@ export default function FormExtra() {
   };
 
   return (
-    <div className="flex items-center justify-between text-gray-300">
-      <div className="flex items-center">
+    <div className="auth-extra">
+      <div className="auth-extra__left">
         <input
           id="show-password"
           name="show-password"
           type="checkbox"
-          className="w-4 h-4 text-purple-600 bg-gray-800 border-gray-600 rounded focus:ring-purple-500"
           onChange={togglePasswordVisibility}
         />
-        <label
-          htmlFor="show-password"
-          className="block ml-2 text-xs text-gray-300"
-        >
-          Show Password
-        </label>
+        <label htmlFor="show-password">Show Password</label>
       </div>
 
-      <div className="text-xs">
-        <Link
-          to="/forgot-password"
-          className="font-medium text-purple-400 hover:text-purple-300"
-        >
+      <div>
+        <Link to="/forgot-password" className="auth-extra__link">
           Forgot your password?
         </Link>
       </div>

@@ -6,6 +6,7 @@ import { NavLink } from "react-router-dom"
 import { useAuth } from "../../hooks/useAuth"
 import { getCurrencySymbol, getImage } from "../../utils/utils"
 import useMediaQuery from "../../hooks/userMediaQuery"
+import { useThemeContext } from "../../context/ThemeContext"
 
 interface IProps {
   user: IUser
@@ -16,6 +17,7 @@ interface IProps {
 }
 
 const TopBox: React.FC<IProps> = ({ user, houseCode, month, year, selectedHouse }) => {
+  const { colors: themeColors } = useThemeContext()
   const [expenses, setExpenses] = useState<Expense[]>([])
   const [lastTenExpenses, setLastTenExpenses] = useState<Expense[]>([])
   const {getToken} = useAuth()
@@ -77,7 +79,9 @@ const TopBox: React.FC<IProps> = ({ user, houseCode, month, year, selectedHouse 
                   <span className="date">{date}</span>
                 </div>
               </NavLink>
-              <span className="amount">{getCurrencySymbol(selectedHouse)}{expense.cost.toFixed(2)}</span>
+              <span className="amount"
+               style={{ color: themeColors.amount }}
+              >{getCurrencySymbol(selectedHouse)}{expense.cost.toFixed(2)}</span>
             </div>
           )
         })}

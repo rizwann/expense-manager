@@ -14,7 +14,8 @@ const themes = {
     background: "#121212",
     surface: "#1f1f1f",
     text: "#ffffff",
-    primary: "#1f6feb",
+    amount: "#5dcf83",
+    primary: "#8a71e6",
     secondary: "#8b949e",
     link: "#58a6ff",
     buttonText: "#ffffff",
@@ -31,6 +32,7 @@ const themes = {
     background: "#e7ebf3",
     surface: "#ffffff",
     text: "#1a1f36",
+    amount: "#238523",
     primary: "#006adc",
     secondary: "#5f6c7b",
     link: "#0040a8",
@@ -48,6 +50,7 @@ const themes = {
     background: "#000000",
     surface: "#111111",
     text: "#ffff00",
+    amount: "#00ff00",
     primary: "#ff0000",
     secondary: "#00ff00",
     link: "#00ffff",
@@ -102,8 +105,8 @@ export const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
         }
       }
     }
-    applyCssVariables("dark")
-    return "dark"
+    applyCssVariables("normal")
+    return "normal"
   })
 
   useEffect(() => {

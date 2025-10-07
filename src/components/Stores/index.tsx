@@ -195,11 +195,6 @@ const StoreExpenseViewer: React.FC<StoreExpenseViewerProps> = ({
                 stroke={colors.muted}
                 tick={{ fill: colors.text }}
               />
-              <YAxis
-                stroke={colors.muted}
-                tickFormatter={(value) => `${currencySymbol}${value}`}
-                tick={{ fill: colors.text }}
-              />
               <Tooltip
                 contentStyle={{
                   backgroundColor: colors.tooltipBg,

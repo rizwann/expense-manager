@@ -1,74 +1,46 @@
-import { useEffect, useRef, useState } from "react"
+import { useMemo } from "react";
 import {
   ThemeName,
   availableThemes,
   useThemeContext,
-} from "../../context/ThemeContext"
+} from "../../context/ThemeContext";
 
 const themeLabels: Record<ThemeName, string> = {
   dark: "Dark Mode",
   normal: "Normal Mode",
   contrast: "High Contrast",
-}
+};
 
 // Small utility button that lets users toggle between the supported themes.
 const ThemeSwitcher = () => {
-  const { theme, setTheme } = useThemeContext()
-  const [isOpen, setIsOpen] = useState(false)
-  const switcherRef = useRef<HTMLDivElement>(null)
+  const { theme, setTheme } = useThemeContext();
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        switcherRef.current &&
-        !switcherRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false)
-      }
-    }
+  const nextTheme = useMemo<ThemeName>(() => {
+    const currentIndex = availableThemes.indexOf(theme);
+    const nextIndex = (currentIndex + 1) % availableThemes.length;
+    return availableThemes[nextIndex];
+  }, [theme]);
 
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => document.removeEventListener("mousedown", handleClickOutside)
-  }, [])
-
-  const handleThemeChange = (nextTheme: ThemeName) => {
-    setTheme(nextTheme)
-    setIsOpen(false)
-  }
+  const handleToggleTheme = () => {
+    setTheme(nextTheme);
+  };
 
   return (
-    <div className="theme-switcher" ref={switcherRef}>
+    <div className="theme-switcher">
       <button
         type="button"
         className="theme-switcher__trigger"
-        onClick={() => setIsOpen((prev) => !prev)}
-        aria-haspopup="listbox"
-        aria-expanded={isOpen}
-        aria-label={`Toggle theme menu. Current theme ${themeLabels[theme]}`}
+        onClick={handleToggleTheme}
+        aria-label={`Switch theme. Current theme ${themeLabels[theme]}`}
+        title={`Switch to ${themeLabels[nextTheme]}`}
       >
         <span aria-hidden="true">🎨</span>
         <span className="theme-switcher__trigger-label">
           {themeLabels[theme]}
         </span>
       </button>
-      {isOpen && (
-        <div className="theme-switcher__menu" role="listbox">
-          {availableThemes.map((availableTheme) => (
-            <button
-              key={availableTheme}
-              type="button"
-              role="option"
-              aria-selected={theme === availableTheme}
-              className={theme === availableTheme ? "is-active" : ""}
-              onClick={() => handleThemeChange(availableTheme)}
-            >
-              {themeLabels[availableTheme]}
-            </button>
-          ))}
-        </div>
-      )}
     </div>
-  )
-}
+  );
+};
 
-export default ThemeSwitcher
+export default ThemeSwitcher;

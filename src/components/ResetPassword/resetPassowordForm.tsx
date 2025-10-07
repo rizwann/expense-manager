@@ -3,14 +3,14 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { Link, useParams } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import FormAction from "../Form/formAction";
+import "../../styles/auth.scss";
 
 export type PasswordResetFormInput = {
   newPassword: string;
   confirmPassword: string;
 };
 
-export const inputClassName =
-  "relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm";
+export const inputClassName = "auth-input";
 
 function PasswordResetForm() {
   const {
@@ -52,28 +52,26 @@ function PasswordResetForm() {
   return (
     <>
       {verified ? (
-        <div>
+        <div className="auth-fields auth-centered">
           {isPasswordReset ? (
-            // Show a confirmation message when the password has been reset
-            <div className="mt-8 space-y-6 text-center">
-              <p className="text-green-500">
+            <div className="auth-fields auth-centered">
+              <p className="auth-text-success">
                 Your password has been successfully reset.
               </p>
-              <p className="text-gray-500">
+              <p className="auth-text-muted">
                 You can now log in with your new password.
               </p>
               <Link
                 to="/login"
-                className="relative flex justify-center w-full px-4 py-2 mt-10 text-sm font-medium text-white bg-purple-600 border border-transparent rounded-md group hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                className="auth-button auth-button--full"
               >
                 Log In
               </Link>
             </div>
           ) : (
-            // Show the password reset form
-            <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-6">
-              <div className="space-y-px">
-                <div className="my-5">
+            <form onSubmit={handleSubmit(onSubmit)} className="auth-form">
+              <div className="auth-fields">
+                <div className="auth-field">
                   <label htmlFor="newPassword" className="sr-only">
                     Password
                   </label>
@@ -92,12 +90,12 @@ function PasswordResetForm() {
                     })}
                   />
                   {errors.newPassword && (
-                    <span className="text-red-500">
+                    <span className="auth-error">
                       {errors.newPassword.message}
                     </span>
                   )}
                 </div>
-                <div className="my-5">
+                <div className="auth-field">
                   <label htmlFor="confirmPassword" className="sr-only">
                     Confirm Password
                   </label>
@@ -114,7 +112,7 @@ function PasswordResetForm() {
                     })}
                   />
                   {errors.confirmPassword && (
-                    <span className="text-red-500">
+                    <span className="auth-error">
                       {errors.confirmPassword.message}
                     </span>
                   )}
@@ -170,17 +168,12 @@ function PasswordResetForm() {
           )}
         </div>
       ) : (
-        <div className="mt-8 space-y-6">
-          <p className="text-red-500">Invalid password reset link</p>
-          <p className="text-gray-500">{expiredError}</p>
-          <div className="text-sm">
-            <Link
-              to="/forgot-password"
-              className="relative flex justify-center w-full px-4 py-2 mt-10 text-sm font-medium text-white bg-purple-600 border border-transparent rounded-md group hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
-            >
-              Try again
-            </Link>
-          </div>
+        <div className="auth-fields auth-centered">
+          <p className="auth-text-error">Invalid password reset link</p>
+          <p className="auth-text-muted">{expiredError}</p>
+          <Link to="/forgot-password" className="auth-button auth-button--full">
+            Try again
+          </Link>
         </div>
       )}
     </>
