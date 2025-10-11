@@ -1,19 +1,21 @@
 .add-expense {
   width: 100vw;
   height: 100vh;
+  min-height: 100vh;
+  min-height: 100dvh;
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.75);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: clamp(16px, 4vw, 28px);
   overflow-y: auto;
   z-index: 1200;
 
   .modal-expense {
     padding: clamp(20px, 5vw, 40px);
-    margin: 15px auto;
+    margin: clamp(12px, 4vh, 24px) auto;
     border-radius: 15px;
     background: var(--color-card);
     color: var(--color-text);
@@ -233,6 +235,7 @@
       width: 100%;
       border-radius: 0;
       max-height: 100vh;
+      margin: 0 auto;
 
       form {
         gap: 10px;

@@ -29,7 +29,9 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
 
   const navigate = useNavigate()
   const preferencesRef = useRef<HTMLDivElement>(null)
+  const avatarButtonRef = useRef<HTMLButtonElement>(null)
   const showText = useMediaQuery(930)
+  const isCompactNav = useMediaQuery(720)
 
   const toggleMenu = () => {
     setIsOpen((prev) => !prev)
@@ -51,6 +53,12 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
       preferencesRef.current &&
       !preferencesRef.current.contains(event.target as Node)
     ) {
+      if (
+        avatarButtonRef.current &&
+        avatarButtonRef.current.contains(event.target as Node)
+      ) {
+        return
+      }
       setIsPreferencesOpen(false)
     }
   }
@@ -153,12 +161,21 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
       <div
         className="navbar"
         style={{
-          paddingTop: isIOSApp ? "env(safe-area-inset-top)" : "20px",
+          paddingTop: isIOSApp ? "env(safe-area-inset-top)" : "12px",
         }}
       >
       <div className="logo">
-        <GridMenuIcon onClick={toggleMenu} />
-        <NavLink to={"/"}>Expense Manager</NavLink>
+        <button
+          type="button"
+          className="logo__menu-toggle"
+          onClick={toggleMenu}
+          aria-label="Toggle navigation menu"
+        >
+          <GridMenuIcon className="logo__menu-icon" />
+        </button>
+        <NavLink to={"/"} className="logo__text">
+          Expense Manager
+        </NavLink>
       </div>
       <div className="menu">
         <Menu />
@@ -166,8 +183,12 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
      
       <div className="icons">
         <div className="user">
-          <ThemeSwitcher />
-          <Weather />
+          <div className="user__utilities">
+            <ThemeSwitcher />
+            <div className="user__weather">
+              <Weather />
+            </div>
+          </div>
           {user?.houseCodes?.length > 0 && <div className="add-btn">
             <Button
               variant="outlined"
@@ -205,11 +226,12 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
               }
             </Button>
           </div>}
-          <span className="username">{user?.username}</span>
+          {!isCompactNav && <span className="username">{user?.username}</span>}
           <button
             type="button"
             className="user-avatar"
             onClick={togglePreferences}
+            ref={avatarButtonRef}
             aria-label="Open profile menu"
           >
             <img
@@ -241,7 +263,7 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
                 <li>Download App</li>
               </NavLink>
             )}
-            <li onClick={handleScrapClick}>Scrap (Dr)</li>
+            {user?.username === "RizwanKabir" &&<li onClick={handleScrapClick}>Scrap (Dr)</li>}
             <li onClick={handleLogout}>Sign Out</li>
           </ul>
         </div>
