@@ -19,7 +19,7 @@ const CategoryExpenseViewer: React.FC<CategoryExpenseViewerProps> = ({
   const [selectedCategory, setSelectedCategory] = useState<CategoryName | "">(
     CategoryName.Grocery
   )
-  const [chartData, setChartData] = useState<CategoryData[] | []>([])
+  const [chartData, setChartData] = useState<CategoryData[]>([])
   const { getToken, recall } = useAuth()
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const CategoryExpenseViewer: React.FC<CategoryExpenseViewerProps> = ({
 
   const filteredExpenses = useMemo(() => {
     if (!chartData || chartData.length === 0) return undefined
-    return chartData.find((data) => data.name === selectedCategory)
+    return chartData.find((data) => data.name === selectedCategory) 
   }, [chartData, selectedCategory])
 
   return (

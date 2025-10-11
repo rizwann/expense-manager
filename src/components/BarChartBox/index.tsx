@@ -5,8 +5,6 @@ import {
   ResponsiveContainer,
   Tooltip,
   XAxis,
-  YAxis,
-  CartesianGrid,
 } from "recharts"
 import "./barChartBox.scss"
 import { House, IUser } from "../../types"
