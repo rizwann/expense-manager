@@ -39,12 +39,6 @@ export const menu = [
     url: "/houses",
     icon: "/houses.svg",
   },
-  // {
-  //   id: 3,
-  //   title: "Stores",
-  //   url: "/stores",
-  //   icon: "/storemenu.svg",
-  // },
   {
     id: 4,
     title: "Balance",

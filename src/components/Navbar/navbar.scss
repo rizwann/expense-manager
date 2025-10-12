@@ -188,10 +188,6 @@
       .user__weather {
         display: flex;
         align-items: stretch;
-
-        @include md {
-          display: none;
-        }
       }
 
       .theme-switcher {
@@ -230,6 +226,19 @@
             &:hover {
               background-color: rgba(255, 255, 255, 0.15);
             }
+          }
+        }
+
+        &__icon {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          line-height: 0;
+          color: inherit;
+
+          svg {
+            width: 18px;
+            height: 18px;
           }
         }
 

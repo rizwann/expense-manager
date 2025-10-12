@@ -14,7 +14,7 @@
   &__icon {
     width: 28px;
     height: 28px;
-    @include md {
+    @include sm {
       display: none;
     }
   }
@@ -25,8 +25,18 @@
 
   &__city {
     color: var(--color-muted);
-    @include md {
+    @include sm {
       display: none;
+    }
+  }
+
+  &__status {
+    color: var(--color-muted);
+    font-size: 12px;
+    white-space: nowrap;
+
+    @include sm {
+      font-size: 11px;
     }
   }
 }

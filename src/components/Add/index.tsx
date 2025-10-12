@@ -15,6 +15,7 @@ import { useAuth } from "../../hooks/useAuth"
 import Button from "../../pages/components/Button"
 import { Close } from "@mui/icons-material"
 import CreatableSelect from "react-select/creatable"
+import Select, { components as selectComponents } from "react-select"
 import { StylesConfig } from "react-select"
 import { formatToLocalDatetime } from "../../utils/utils"
 
@@ -115,8 +116,23 @@ const Add: React.FC<IProps> = ({
       }),
       multiValue: (styles) => ({
         ...styles,
-        backgroundColor: "rgba(0, 106, 220, 0.15)",
-        color: "var(--color-text)",
+        backgroundColor: "var(--color-primary)",
+        color: "var(--color-button-text)",
+        borderRadius: 12,
+        paddingInline: 4,
+      }),
+      multiValueLabel: (styles) => ({
+        ...styles,
+        color: "var(--color-button-text)",
+        fontWeight: 500,
+      }),
+      multiValueRemove: (styles) => ({
+        ...styles,
+        color: "var(--color-button-text)",
+        ":hover": {
+          backgroundColor: "transparent",
+          color: "var(--color-button-text)",
+        },
       }),
       dropdownIndicator: (styles) => ({
         ...styles,
@@ -584,9 +600,12 @@ const Add: React.FC<IProps> = ({
                             }
 
                             if (column.field === "involvedUsers") {
+                              const OptionComponent = selectComponents.Option
                               return (
-                                <CreatableSelect<{ value: string; label: string }, true>
+                                <Select<{ value: string; label: string }, true>
                                   isMulti
+                                  closeMenuOnSelect={false}
+                                  hideSelectedOptions={false}
                                   options={houseUsers.map((member) => ({
                                     value: member.username,
                                     label: member.username,
@@ -604,6 +623,22 @@ const Add: React.FC<IProps> = ({
                                   placeholder="Select members"
                                   styles={selectThemeStyles}
                                   classNamePrefix="themed-select"
+                                  components={{
+                                    Option: (props) => (
+                                      <OptionComponent {...props}>
+                                        <div className="multi-option">
+                                          <input
+                                            type="checkbox"
+                                            readOnly
+                                            checked={props.isSelected}
+                                            tabIndex={-1}
+                                            style={{ marginRight: 8 }}
+                                          />
+                                          <span>{props.label}</span>
+                                        </div>
+                                      </OptionComponent>
+                                    ),
+                                  }}
                                 />
                               )
                             }
