@@ -35,6 +35,12 @@ const saveJsonToStorage = (key: string, value: unknown) => {
 const Weather = () => {
   const [weather, setWeather] = useState<WeatherData | null>(null)
   const [status, setStatus] = useState<WeatherStatus>("idle")
+  const secureContext =
+    typeof window !== "undefined"
+      ? window.isSecureContext ||
+      window.location.protocol === "capacitor:" ||
+      window.location.protocol === "ionic:"
+      : true
 
   const hasFreshWeather = useMemo(() => {
     if (!weather) return false
@@ -91,6 +97,11 @@ const Weather = () => {
   }
 
   const checkAndUpdateLocation = (forceFetch = false) => {
+    if (!secureContext) {
+      setStatus("error")
+      return
+    }
+
     if (!navigator.geolocation) {
       setStatus((prev) => (prev === "ready" || hasFreshWeather ? "ready" : "error"))
       return
@@ -114,7 +125,6 @@ const Weather = () => {
 
           return distanceMoved > THRESHOLD_DISTANCE_KM
         })()
-
         saveCoordinatesToStorage(latitude, longitude)
 
         if (shouldUpdateWeather) {
@@ -129,6 +139,11 @@ const Weather = () => {
   }
 
   useEffect(() => {
+    if (!secureContext) {
+      setStatus("error")
+      return
+    }
+
     const storedCoordinates = getCoordinatesFromStorage()
     const storedWeather = getWeatherFromStorage()
 
@@ -151,29 +166,27 @@ const Weather = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const renderContent = () => {
-    if (weather) {
-      return (
-        <>
-          <img src={weather.icon} alt="Weather Icon" className="weather__icon" />
-          <span className="weather__temp">{Math.round(weather.temp)}°C</span>
-          <span className="weather__city">{weather.city}</span>
-        </>
-      )
-    }
 
-    if (status === "loading") {
-      return <span className="weather__status">Loading weather…</span>
-    }
-
-    return <span className="weather__status">Weather unavailable</span>
+  if (weather) {
+    return (
+      <div className="weather" data-state={status}>
+        <img src={weather.icon} alt="Weather Icon" className="weather__icon" />
+        <span className="weather__temp">{Math.round(weather.temp)}°C</span>
+        <span className="weather__city">{weather.city}</span>
+      </div>
+    )
   }
 
-  return (
-    <div className="weather" data-state={status}>
-      {renderContent()}
-    </div>
-  )
+  if (status === "loading") {
+    return <span className="weather__status">Loading weather…</span>
+  }
+
+  if (!secureContext) {
+    return null
+  }
+
+  return null
 }
+
 
 export default Weather

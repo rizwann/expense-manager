@@ -39,4 +39,38 @@
       font-size: 11px;
     }
   }
+
+  &__refresh {
+    border: 1px solid var(--color-inputBorder);
+    background: var(--color-inputBg);
+    color: var(--color-text);
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    margin-right: 6px;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+
+    &:hover {
+      background: var(--color-primary);
+      color: var(--color-button-text);
+      transform: rotate(-20deg);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+
+    @include sm {
+      width: 20px;
+      height: 20px;
+      margin-right: 4px;
+      font-size: 11px;
+    }
+  }
 }
