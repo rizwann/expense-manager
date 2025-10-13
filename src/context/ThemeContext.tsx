@@ -80,6 +80,18 @@ const ThemeContext = createContext<ThemeContextValue | undefined>(undefined)
 
 const STORAGE_KEY = "expense-manager-theme"
 
+const detectSystemTheme = (): ThemeName => {
+  if (typeof window !== "undefined" && typeof window.matchMedia === "function") {
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      return "dark"
+    }
+    if (window.matchMedia("(prefers-color-scheme: light)").matches) {
+      return "normal"
+    }
+  }
+  return "normal"
+}
+
 const applyCssVariables = (theme: ThemeName) => {
   if (typeof document === "undefined") return
 
@@ -104,19 +116,50 @@ export const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
           return normalizedTheme as ThemeName
         }
       }
+      const systemTheme = detectSystemTheme()
+      applyCssVariables(systemTheme)
+      return systemTheme
     }
     applyCssVariables("normal")
     return "normal"
+  })
+  const [isUserOverride, setIsUserOverride] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      return Boolean(window.localStorage.getItem(STORAGE_KEY))
+    }
+    return false
   })
 
   useEffect(() => {
     applyCssVariables(theme)
     if (typeof window !== "undefined") {
-      window.localStorage.setItem(STORAGE_KEY, theme)
+      if (isUserOverride) {
+        window.localStorage.setItem(STORAGE_KEY, theme)
+      } else {
+        window.localStorage.removeItem(STORAGE_KEY)
+      }
     }
-  }, [theme])
+  }, [theme, isUserOverride])
+
+  useEffect(() => {
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+      return
+    }
+    if (isUserOverride) {
+      return
+    }
+    const mediaQueryList = window.matchMedia("(prefers-color-scheme: dark)")
+    const handleChange = (event: MediaQueryListEvent) => {
+      setThemeState(event.matches ? "dark" : "normal")
+    }
+    mediaQueryList.addEventListener("change", handleChange)
+    return () => {
+      mediaQueryList.removeEventListener("change", handleChange)
+    }
+  }, [isUserOverride])
 
   const handleSetTheme = useCallback((nextTheme: ThemeName) => {
+    setIsUserOverride(true)
     setThemeState(nextTheme)
   }, [])
 

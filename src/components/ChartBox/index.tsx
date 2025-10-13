@@ -157,7 +157,7 @@ const ChartBox: React.FC<ChartBoxProps> = ({
              <span style={{ color: themeColors.primary }}>{data?.popularName}</span>
           </div>
         ) :
-        <Link to="/expenses" style={{ color: color }}>
+        <Link to="/expenses" style={{ color: themeColors.text }}>
         {" "}
         View All
       </Link>

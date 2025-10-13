@@ -13,6 +13,7 @@ import Loading from "../../components/Loading"
 import Toaster from "../../components/Toaster"
 import { DownloadOutlined } from "@mui/icons-material";
 import { getCurrencySymbol } from "../../utils/utils";
+import { useThemeContext } from "../../context/ThemeContext"
 
 const ExpenseDetail = () => {
   const { id } = useParams<{ id: string }>()
@@ -23,6 +24,8 @@ const ExpenseDetail = () => {
   const [refresh, setRefresh] = useState(false)
   const [isZoomed, setIsZoomed] = useState(false);
   const [house, setHouse] = useState<House | null>(null)
+  const { theme } = useThemeContext()
+  const fallbackReceipt = theme === "normal" ? "/app-dark.svg" : "/app.svg"
 
   // Open modal in edit mode
   const openEditModal = () => {
@@ -118,13 +121,13 @@ const ExpenseDetail = () => {
       <div className="image">
       <h1>Expense Details</h1>
       <img
-        src={expense.receipt || "/app.svg"}
+        src={expense.receipt || fallbackReceipt}
         alt={expense.storeName}
         onClick={() => {
           expense.receipt && setIsZoomed(true)
         }} // Open zoom modal on click
         onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) =>
-          (e.currentTarget.src = "/app.svg")
+          (e.currentTarget.src = fallbackReceipt)
         }
         className="image-preview"
       />
@@ -136,7 +139,7 @@ const ExpenseDetail = () => {
       {isZoomed && (
         <div className="modal-overlay" onClick={() => setIsZoomed(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <img src={expense.receipt || "/app.svg"} alt={expense.storeName} />
+            <img src={expense.receipt || fallbackReceipt} alt={expense.storeName} />
           </div>
           {/* // Close button */}
           <button
