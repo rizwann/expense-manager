@@ -302,7 +302,6 @@ const Add: React.FC<IProps> = ({
     data.receipt = formData.receipt
     try {
       if (editData) {
-        console.log("henda,", editData, data)
         await axios.post(
           `${import.meta.env.VITE_API_URL}/api/expenses/${editData._id}`,
           data,
