@@ -31,7 +31,7 @@ function Login() {
     if (errorMessage) {
       setErrorMessage(null);
     }
-  }, [errorMessage, setErrorMessage]);
+  }, [])
 
   const onSubmit: SubmitHandler<LoginFormInput> = async (data) => {
     setIsLoggingIn(true);
@@ -48,6 +48,7 @@ function Login() {
     const b = parseInt(hex.substring(4, 6), 16);
     return `rgba(${r}, ${g}, ${b}, 0.8)`;
   }, [colors.background]);
+      console.log("henda", errorMessage)
 
   return (
     <>
@@ -102,6 +103,7 @@ function Login() {
             )}
           </div>
           {errorMessage && <div className="auth-status">{errorMessage}</div>}
+          <div className="auth-helper">Test login: <b>tester</b> <br/>Password: <b>Tester@123</b></div>
         </div>
 
         <FormExtra />
