@@ -48,7 +48,6 @@ function Login() {
     const b = parseInt(hex.substring(4, 6), 16);
     return `rgba(${r}, ${g}, ${b}, 0.8)`;
   }, [colors.background]);
-      console.log("henda", errorMessage)
 
   return (
     <>

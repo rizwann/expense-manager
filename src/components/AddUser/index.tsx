@@ -254,19 +254,27 @@ const AddUser: React.FC<IProps> = ({
                       switch (column.control) {
                         case "text":
                           return (
-                            <input
-                              type={column.type === "number" ? "number" : "text"}
-                              placeholder={column.headerName}
-                              name={column.field}
-                              value={formData[column.field] || ""}
-                              onChange={(e) =>
-                                setFormData((prev) => ({
-                                  ...prev,
-                                  [column.field]: e.target.value,
-                                }))
-                              }
-                              required
-                            />
+                            <>
+                              <label htmlFor={column.field}>
+                                {column.headerName}
+                              </label>
+                              <input
+                                id={column.field}
+                                type={
+                                  column.type === "number" ? "number" : "text"
+                                }
+                                placeholder={column.headerName}
+                                name={column.field}
+                                value={formData[column.field] || ""}
+                                onChange={(e) =>
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    [column.field]: e.target.value,
+                                  }))
+                                }
+                                required
+                              />
+                            </>
                           )
                         case "file":
                           return (
@@ -316,7 +324,11 @@ const AddUser: React.FC<IProps> = ({
                         case "password":
                           return (
                             <>
+                              <label htmlFor={column.field}>
+                                {column.headerName}
+                              </label>
                               <input
+                                id={column.field}
                                 type="password"
                                 placeholder={column.headerName}
                                 name={column.field}
@@ -342,21 +354,27 @@ const AddUser: React.FC<IProps> = ({
                           )
                         case "select":
                           return (
-                            <select
-                              name={column.field}
-                              value={formData[column.field] || ""}
-                              onChange={(e) =>
-                                setFormData((prev) => ({
-                                  ...prev,
-                                  [column.field]: e.target.value,
-                                }))
-                              }
-                              required
-                            >
-                              <option value="">Gender</option>
-                              <option value="male">Male</option>
-                              <option value="female">Female</option>
-                            </select>
+                            <>
+                              <label htmlFor={column.field}>
+                                {column.headerName}
+                              </label>
+                              <select
+                                id={column.field}
+                                name={column.field}
+                                value={formData[column.field] || ""}
+                                onChange={(e) =>
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    [column.field]: e.target.value,
+                                  }))
+                                }
+                                required
+                              >
+                                <option value="">Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                              </select>
+                            </>
                           )
                         default:
                           return null

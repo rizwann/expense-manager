@@ -122,19 +122,27 @@ const AddHouse: React.FC<IProps> = ({
                     switch (column.control) {
                       case "text":
                         return (
-                          <input
-                            type={column.type === "number" ? "number" : "text"}
-                            placeholder={column.headerName}
-                            name={column.field}
-                            value={formData[column.field] || ""}
-                            onChange={(e) =>
-                              setFormData((prev) => ({
-                                ...prev,
-                                [column.field]: e.target.value,
-                              }))
-                            }
-                            required
-                          />
+                          <>
+                            <label htmlFor={column.field}>
+                              {column.headerName}
+                            </label>
+                            <input
+                              id={column.field}
+                              type={
+                                column.type === "number" ? "number" : "text"
+                              }
+                              placeholder={column.headerName}
+                              name={column.field}
+                              value={formData[column.field] || ""}
+                              onChange={(e) =>
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  [column.field]: e.target.value,
+                                }))
+                              }
+                              required
+                            />
+                          </>
                         )
                       case "file":
                         return (
@@ -184,45 +192,63 @@ const AddHouse: React.FC<IProps> = ({
                       case "select":
                         if (column.field === "timeZone") {
                           return (
-                            <select
-                              name={column.field}
-                              value={formData[column.field] || ""}
-                              onChange={(e) =>
-                                setFormData((prev) => ({
-                                  ...prev,
-                                  [column.field]: e.target.value,
-                                }))
-                              }
-                              required
-                            >
-                              <option value="">Select Timezone</option>
-                              {column.options.map((option) => (
-                                <option key={option.value} value={option.value}>
-                                  {option.label}
-                                </option>
-                              ))}
-                            </select>
+                            <>
+                              <label htmlFor={column.field}>
+                                {column.headerName}
+                              </label>
+                              <select
+                                id={column.field}
+                                name={column.field}
+                                value={formData[column.field] || ""}
+                                onChange={(e) =>
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    [column.field]: e.target.value,
+                                  }))
+                                }
+                                required
+                              >
+                                <option value="">Select Timezone</option>
+                                {column.options.map((option) => (
+                                  <option
+                                    key={option.value}
+                                    value={option.value}
+                                  >
+                                    {option.label}
+                                  </option>
+                                ))}
+                              </select>
+                            </>
                           )
                         } else if (column.field === "currency") {
                           return (
-                            <select
-                              name={column.field}
-                              value={formData[column.field] || ""}
-                              onChange={(e) =>
-                                setFormData((prev) => ({
-                                  ...prev,
-                                  [column.field]: e.target.value,
-                                }))
-                              }
-                              required
-                            >
-                              <option value="">Select Currency</option>
-                              {column.options.map((option) => (
-                                <option key={option.value} value={option.value}>
-                                  {option.symbol} {option.label}
-                                </option>
-                              ))}
-                            </select>
+                            <>
+                              <label htmlFor={column.field}>
+                                {column.headerName}
+                              </label>
+                              <select
+                                id={column.field}
+                                name={column.field}
+                                value={formData[column.field] || ""}
+                                onChange={(e) =>
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    [column.field]: e.target.value,
+                                  }))
+                                }
+                                required
+                              >
+                                <option value="">Select Currency</option>
+                                {column.options.map((option) => (
+                                  <option
+                                    key={option.value}
+                                    value={option.value}
+                                  >
+                                    {option.symbol} {option.label}
+                                  </option>
+                                ))}
+                              </select>
+                            </>
                           )
                         } else {
                           return null
