@@ -280,9 +280,6 @@ const Add: React.FC<IProps> = ({
     const data: any = {}
     const token = await getToken()
 
-    Object.keys(formDataToSend).forEach((key) => {
-      formDataToSend.append(key, formDataToSend[key])
-    })
     formDataToSend.forEach((value, key) => {
       if (key === "date") {
         if (selectCustomTime) {
@@ -290,13 +287,12 @@ const Add: React.FC<IProps> = ({
           const utcDateTime = localDateTime.toISOString()
           data[key] = utcDateTime
         }
-      } else if (key === "involvedUsers") {
-        data[key] = selectedUsers
       } else {
         data[key] = value
       }
     })
 
+    data.involvedUsers = selectedUsers
     data.storeName = storeName
     data.paymentPerson = paidByMe ? userId : selectedPayer
     data.receipt = formData.receipt
