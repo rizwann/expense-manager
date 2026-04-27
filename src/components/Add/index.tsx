@@ -24,7 +24,7 @@ interface IProps {
   columns: any[]
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>
   setRefresh?: React.Dispatch<React.SetStateAction<boolean>>
-  editData?: any // Data to be edited, if applicable
+  editData?: any
   modalOpen: boolean
   re?: boolean
 }
@@ -237,7 +237,7 @@ const Add: React.FC<IProps> = ({
         setImagePreview(editData.receipt)
       }
   
-      // 👉 ADD this for setting time
+      // setting time
       if (editData.date) {
         setSelectCustomTime(true)
         setFormData((prev) => ({
@@ -325,7 +325,7 @@ const Add: React.FC<IProps> = ({
       }
       setRefresh && setRefresh((prev) => !prev)
       setModalOpen(false)
-      // Reset the form data
+      // Resetting the form data
       setFormData({})
       setSelectedUsers([])
       setSelectedPayer(null)
