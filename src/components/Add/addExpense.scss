@@ -23,7 +23,8 @@
     position: relative;
     max-width: 600px;
     width: min(600px, 100%);
-    max-height: 90vh;
+    max-height: calc(100vh - clamp(24px, 8vw, 56px));
+    max-height: calc(100dvh - clamp(24px, 8vw, 56px));
     text-align: center;
     overflow: hidden;
     display: flex;
@@ -55,10 +56,18 @@
       width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 16px;
-      overflow-y: auto;
-      padding-right: 4px;
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
       margin-top: 10px;
+
+      .form-content {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        padding-right: 4px;
+        padding-bottom: 16px;
+      }
 
       .item {
         width: 100%;
@@ -197,7 +206,6 @@
       .error-message {
         color: var(--color-primary);
         font-size: 14px;
-        margin-top: 10px;
         margin-bottom: 10px;
         text-align: center;
         background: rgba(255, 0, 0, 0.08);
@@ -213,9 +221,17 @@
         gap: 10px;
       }
 
+      .form-actions {
+        width: 100%;
+        flex-shrink: 0;
+        padding-top: 12px;
+        padding-bottom: calc(8px + env(safe-area-inset-bottom));
+        background: var(--color-card);
+        border-top: 1px solid var(--color-border);
+      }
+
       button {
         width: 100%;
-        margin-top: 10px;
         padding: 14px;
         font-size: 16px;
         color: var(--color-button-text);
@@ -245,16 +261,17 @@
     padding: 16px;
 
     .modal-expense {
-      max-height: 92vh;
+      max-height: calc(100dvh - 32px);
       padding: 20px;
 
       form {
-        gap: 12px;
-        padding-right: 0;
+        .form-content {
+          padding-right: 0;
+        }
 
         .item-container {
           .item {
-            width: 100%;
+            flex-basis: 100%;
           }
         }
 
@@ -270,12 +287,10 @@
     .modal-expense {
       width: 100%;
       border-radius: 0;
-      max-height: 100vh;
+      max-height: 100dvh;
       margin: 0 auto;
 
       form {
-        gap: 10px;
-
         button {
           font-size: 14px;
           padding: 10px;
