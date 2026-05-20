@@ -70,6 +70,13 @@ const Add: React.FC<IProps> = ({
 
   const { user, getToken, setRecall } = useAuth()
   const userId = user?._id
+  const submitButtonText = submitBtnDisabled
+    ? editData
+      ? "Updating..."
+      : "Creating..."
+    : editData
+    ? "Update"
+    : "Create"
   const selectThemeStyles = useMemo<StylesConfig<{ value: string; label: string }, boolean>>(
     () => ({
       control: (styles, state) => ({
@@ -386,14 +393,15 @@ const Add: React.FC<IProps> = ({
           </span>
           <h1>{editData ? `Edit ${slug}` : `Add New ${slug}`}</h1>
           <form onSubmit={handleSubmit}>
-            <div className="item-container">
-              {columns
-                .filter((item) => item.field !== "id")
-                .map((column) => {
-                  return (
-                    <div className="item" key={column.field}>
-                      {(() => {
-                        switch (column.control) {
+            <div className="form-content">
+              <div className="item-container">
+                {columns
+                  .filter((item) => item.field !== "id")
+                  .map((column) => {
+                    return (
+                      <div className="item" key={column.field}>
+                        {(() => {
+                          switch (column.control) {
                           case "text":
                             return (
                               <input
@@ -550,7 +558,7 @@ const Add: React.FC<IProps> = ({
                                 )}
                               </div>
                             )
-                          case "select":
+                          case "select": {
                             if (column.field === "storeName") {
                               return (
                                 <CreatableSelect<{ value: string; label: string }, false>
@@ -712,19 +720,23 @@ const Add: React.FC<IProps> = ({
                             }
 
                             return null
+                          }
                           default:
                             return null
-                        }
-                      })()}
-                    </div>
-                  )
-                })}
+                          }
+                        })()}
+                      </div>
+                    )
+                  })}
+              </div>
             </div>
 
-            {errorMessage && (
-              <div className="error-message">{errorMessage}</div>
-            )}
-            <Button type="submit" text={editData ? "Update" : "Create"} disabled={submitBtnDisabled} />
+            <div className="form-actions">
+              {errorMessage && (
+                <div className="error-message">{errorMessage}</div>
+              )}
+              <Button type="submit" text={submitButtonText} disabled={submitBtnDisabled} />
+            </div>
           </form>
         </div>
       </div>
