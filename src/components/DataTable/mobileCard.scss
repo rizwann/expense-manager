@@ -1,25 +1,22 @@
-@import "../../styles/responsive.scss";
-
 .card-container {
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  padding: 10px;
+  gap: 16px;
   color: var(--color-text);
 
   .search-container {
-    margin-bottom: 15px;
     position: relative;
 
     input {
       width: 100%;
-      padding: 10px 14px;
+      min-height: 50px;
+      padding: 0 42px 0 16px;
       border: 1px solid var(--color-inputBorder);
-      border-radius: 12px;
-      font-size: 1rem;
+      border-radius: 18px;
+      font-size: 0.96rem;
       background-color: var(--color-inputBg);
       color: var(--color-text);
-      box-shadow: 0 4px 12px var(--color-inputShadow);
+      box-shadow: 0 8px 20px var(--color-inputShadow);
 
       &::placeholder {
         color: var(--color-muted);
@@ -27,13 +24,14 @@
 
       &:focus {
         border-color: var(--color-primary);
-        box-shadow: 0 0 0 3px rgba(0, 106, 220, 0.25);
+        box-shadow: 0 0 0 4px rgba(31, 111, 235, 0.14);
         outline: none;
       }
     }
 
     .clear-search {
       color: var(--color-muted);
+
       &:hover {
         color: var(--color-primary);
       }
@@ -43,48 +41,54 @@
 
 .card {
   display: flex;
-  background-color: var(--color-card);
-  border-radius: 14px;
   overflow: hidden;
+  border-radius: 22px;
   border: 1px solid var(--color-border);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 26%),
+    var(--color-card);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.16);
 
   .card-left-border {
-    width: 5px;
-    background: linear-gradient(180deg, var(--color-primary) 0%, rgba(0, 0, 0, 0.2) 100%);
+    width: 6px;
+    background: linear-gradient(180deg, var(--color-primary) 0%, rgba(255, 255, 255, 0.08) 100%);
   }
 
   .card-content {
     flex: 1;
-    padding: 16px;
+    padding: 18px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 14px;
 
     .card-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
+      gap: 12px;
 
       h3 {
         margin: 0;
-        font-size: 1.1rem;
+        font-size: 1.08rem;
+        line-height: 1.2;
         color: var(--color-text);
       }
 
       .card-actions {
         display: flex;
         gap: 10px;
+        align-items: center;
 
         img {
           width: 20px;
           height: 20px;
           cursor: pointer;
-          filter: invert(55%);
-          transition: filter 0.2s ease;
+          filter: invert(76%) sepia(11%) saturate(517%) hue-rotate(179deg) brightness(87%) contrast(86%);
+          transition: transform 0.2s ease, filter 0.2s ease;
 
           &:hover {
-            filter: invert(30%) sepia(80%) saturate(250%);
+            transform: translateY(-1px);
+            filter: invert(49%) sepia(79%) saturate(1590%) hue-rotate(198deg) brightness(98%) contrast(101%);
           }
         }
       }
@@ -92,38 +96,44 @@
 
     .card-body {
       display: grid;
-      gap: 10px;
+      gap: 12px;
+    }
 
-      .card-item {
+    .card-item {
+      display: grid;
+      gap: 6px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid var(--color-border);
+      background: color-mix(in srgb, var(--color-surface) 72%, transparent);
+
+      .card-item-header {
         display: flex;
-        gap: 4px;
+        align-items: center;
+        gap: 8px;
 
-        .card-item-header {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-
-          img {
-            width: 16px;
-            height: 16px;
-            filter: invert(55%);
-          }
-
-          span {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--color-muted);
-          }
+        img {
+          width: 16px;
+          height: 16px;
+          filter: invert(55%);
         }
 
-        .card-item-value {
-          font-size: 0.95rem;
-          color: var(--color-text);
+        span {
+          font-size: 0.8rem;
+          font-weight: 700;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          color: var(--color-muted);
+        }
+      }
 
-          .boolean-icon {
-            width: 20px;
-            height: 20px;
-          }
+      .card-item-value {
+        font-size: 0.95rem;
+        color: var(--color-text);
+
+        .boolean-icon {
+          width: 20px;
+          height: 20px;
         }
       }
     }
@@ -131,8 +141,9 @@
 }
 
 .rows-select {
-  padding: 6px 10px;
-  border-radius: 10px;
+  min-height: 42px;
+  padding: 0 12px;
+  border-radius: 12px;
   border: 1px solid var(--color-inputBorder);
   background: var(--color-inputBg);
   color: var(--color-text);
@@ -141,8 +152,9 @@
 }
 
 .pagination-btn {
-  padding: 6px 12px;
-  border-radius: 10px;
+  min-width: 40px;
+  min-height: 40px;
+  border-radius: 12px;
   border: none;
   background: var(--color-primary);
   color: var(--color-button-text);
@@ -155,6 +167,24 @@
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+}
+
+.card-container__empty {
+  display: grid;
+  gap: 8px;
+  place-items: center;
+  padding: 40px 16px;
+  border-radius: 22px;
+  border: 1px solid var(--color-border);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 26%),
+    var(--color-card);
+  text-align: center;
+
+  span {
+    color: var(--color-muted);
+    font-size: 0.9rem;
   }
 }
 

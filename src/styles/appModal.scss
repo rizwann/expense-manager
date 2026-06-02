@@ -1,0 +1,648 @@
+.app-modal {
+  --app-modal-width: 640px;
+  --app-modal-max-height: min(880px, calc(100dvh - 32px));
+  --app-modal-radius: 28px;
+  --app-modal-surface-top: rgba(255, 255, 255, 0.05);
+  --app-modal-surface-bottom: rgba(255, 255, 255, 0.015);
+  --app-modal-radial-glow: rgba(31, 111, 235, 0.18);
+  --app-modal-backdrop: rgba(7, 10, 18, 0.78);
+  --app-modal-shell-border: rgba(255, 255, 255, 0.08);
+  --app-modal-shell-bg:
+    linear-gradient(180deg, var(--app-modal-surface-top), transparent 14%),
+    linear-gradient(180deg, rgba(17, 19, 29, 0.98), rgba(14, 16, 24, 0.98));
+  --app-modal-header-bg:
+    linear-gradient(140deg, rgba(31, 111, 235, 0.18), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 100%);
+  --app-modal-card-border: rgba(255, 255, 255, 0.06);
+  --app-modal-card-bg:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 100%),
+    rgba(255, 255, 255, 0.02);
+  --app-modal-soft-border: rgba(255, 255, 255, 0.07);
+  --app-modal-soft-bg: rgba(255, 255, 255, 0.03);
+  --app-modal-footer-border: rgba(255, 255, 255, 0.08);
+  --app-modal-footer-bg:
+    linear-gradient(180deg, rgba(14, 16, 24, 0.72), rgba(14, 16, 24, 0.98)),
+    var(--app-modal-surface-bottom);
+  --app-modal-close-border: rgba(255, 255, 255, 0.12);
+  --app-modal-close-bg: rgba(255, 255, 255, 0.06);
+  --app-modal-close-hover-border: rgba(88, 166, 255, 0.45);
+  --app-modal-close-hover-bg: rgba(88, 166, 255, 0.12);
+  --app-modal-eyebrow-border: rgba(88, 166, 255, 0.18);
+  --app-modal-eyebrow-bg: rgba(88, 166, 255, 0.1);
+  --app-modal-eyebrow-text: #d7e7ff;
+  --app-modal-file-border: rgba(88, 166, 255, 0.28);
+  --app-modal-file-bg:
+    linear-gradient(180deg, rgba(31, 111, 235, 0.14), transparent 100%),
+    rgba(31, 111, 235, 0.05);
+  --app-modal-file-hover-border: rgba(88, 166, 255, 0.48);
+  --app-modal-file-hover-bg:
+    linear-gradient(180deg, rgba(31, 111, 235, 0.18), transparent 100%),
+    rgba(31, 111, 235, 0.08);
+  --app-modal-file-eyebrow-text: #d7e7ff;
+  --app-modal-submit-bg:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.14), transparent),
+    linear-gradient(135deg, #8f7af0, #7d63e6 62%, #6447d1);
+  --app-modal-submit-text: #ffffff;
+  --app-modal-submit-shadow: 0 20px 34px rgba(125, 99, 230, 0.34);
+  --app-modal-submit-hover-shadow: 0 24px 36px rgba(125, 99, 230, 0.42);
+  --app-modal-alt-border: rgba(138, 113, 230, 0.28);
+  --app-modal-alt-bg:
+    linear-gradient(180deg, rgba(138, 113, 230, 0.18), rgba(138, 113, 230, 0.1)),
+    rgba(255, 255, 255, 0.05);
+  --app-modal-alt-text: #f5f2ff;
+  --app-modal-alt-hover-border: rgba(177, 158, 247, 0.52);
+  --app-modal-alt-hover-shadow: 0 10px 24px rgba(125, 99, 230, 0.2);
+
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  min-height: 100dvh;
+  padding:
+    max(16px, env(safe-area-inset-top))
+    max(16px, env(safe-area-inset-right))
+    max(16px, env(safe-area-inset-bottom))
+    max(16px, env(safe-area-inset-left));
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top, var(--app-modal-radial-glow), transparent 38%),
+    var(--app-modal-backdrop);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.app-modal__dialog {
+  position: relative;
+  width: min(var(--app-modal-width), 100%);
+  max-height: var(--app-modal-max-height);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--app-modal-shell-border);
+  border-radius: var(--app-modal-radius);
+  background: var(--app-modal-shell-bg);
+  box-shadow:
+    0 28px 60px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  color: var(--color-text);
+}
+
+.app-modal__dialog--compact {
+  --app-modal-width: 560px;
+}
+
+.app-modal__dialog--medium {
+  --app-modal-width: 680px;
+}
+
+.app-modal__dialog--wide {
+  --app-modal-width: 760px;
+}
+
+.app-modal__close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--app-modal-close-border);
+  border-radius: 999px;
+  background: var(--app-modal-close-bg);
+  color: var(--color-text);
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    border-color: var(--app-modal-close-hover-border);
+    background: var(--app-modal-close-hover-bg);
+  }
+}
+
+.app-modal__header {
+  padding: 28px 76px 20px 28px;
+  border-bottom: 1px solid var(--app-modal-footer-border);
+  background: var(--app-modal-header-bg);
+
+  h1 {
+    margin: 0;
+    font-size: clamp(1.7rem, 2vw, 2.2rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  p {
+    max-width: 52ch;
+    margin-top: 10px;
+    color: var(--color-muted);
+    font-size: 0.98rem;
+    line-height: 1.55;
+  }
+}
+
+.app-modal__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 12px;
+  margin-bottom: 14px;
+  border: 1px solid var(--app-modal-eyebrow-border);
+  border-radius: 999px;
+  background: var(--app-modal-eyebrow-bg);
+  color: var(--app-modal-eyebrow-text);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.app-modal__body {
+  flex: 1;
+  min-height: 0;
+  padding: 24px 28px 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable both-edges;
+}
+
+.app-modal__body::-webkit-scrollbar {
+  width: 10px;
+}
+
+.app-modal__body::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  background-clip: padding-box;
+}
+
+.app-modal__form {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.app-modal__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  align-items: start;
+  padding-bottom: 28px;
+}
+
+.app-modal__grid--single {
+  grid-template-columns: 1fr;
+}
+
+.app-modal__field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid var(--app-modal-card-border);
+  border-radius: 22px;
+  background: var(--app-modal-card-bg);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.app-modal__field--wide,
+.app-modal__card--wide {
+  grid-column: 1 / -1;
+}
+
+.app-modal__label {
+  color: var(--color-text);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.app-modal__hint {
+  margin: -4px 0 2px;
+  color: var(--color-muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.app-modal__field input,
+.app-modal__field select,
+.app-modal__field textarea,
+.app-modal__control {
+  width: 100%;
+  min-width: 0;
+  padding: 14px 16px;
+  border: 1px solid var(--color-inputBorder);
+  border-radius: 16px;
+  background: var(--color-inputBg);
+  color: var(--color-text);
+  outline: none;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.app-modal__field input::placeholder,
+.app-modal__field textarea::placeholder,
+.app-modal__control::placeholder {
+  color: var(--color-muted);
+}
+
+.app-modal__field input:focus,
+.app-modal__field select:focus,
+.app-modal__field textarea:focus,
+.app-modal__control:focus {
+  border-color: rgba(88, 166, 255, 0.8);
+  box-shadow: 0 0 0 4px rgba(31, 111, 235, 0.14);
+  transform: translateY(-1px);
+}
+
+.app-modal__field textarea {
+  min-height: 124px;
+  resize: vertical;
+  font: inherit;
+  line-height: 1.5;
+}
+
+.app-modal__field select {
+  appearance: none;
+  background:
+    linear-gradient(45deg, transparent 50%, var(--color-muted) 50%),
+    linear-gradient(135deg, var(--color-muted) 50%, transparent 50%),
+    var(--color-inputBg);
+  background-position:
+    calc(100% - 22px) calc(50% - 2px),
+    calc(100% - 16px) calc(50% - 2px),
+    0 0;
+  background-size:
+    6px 6px,
+    6px 6px,
+    100% 100%;
+  background-repeat: no-repeat;
+
+  &:required:invalid {
+    color: var(--color-muted);
+  }
+}
+
+.app-modal__card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid var(--app-modal-soft-border);
+  border-radius: 20px;
+  background: var(--app-modal-soft-bg);
+}
+
+.app-modal__stack {
+  display: grid;
+  gap: 14px;
+}
+
+.app-modal__file {
+  display: grid;
+  gap: 14px;
+  justify-items: start;
+}
+
+.app-modal__file-input {
+  display: none;
+}
+
+.app-modal__file-label {
+  display: grid;
+  gap: 6px;
+  width: 100%;
+  padding: 18px;
+  border: 1px dashed var(--app-modal-file-border);
+  border-radius: 20px;
+  background: var(--app-modal-file-bg);
+  color: var(--color-text);
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    border-color: var(--app-modal-file-hover-border);
+    background: var(--app-modal-file-hover-bg);
+  }
+}
+
+.app-modal__file-eyebrow {
+  color: var(--app-modal-file-eyebrow-text);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.app-modal__file-caption {
+  color: var(--color-muted);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.app-modal__preview {
+  width: min(100%, 260px);
+  max-width: 100%;
+  max-height: min(320px, 42vh);
+  aspect-ratio: 4 / 5;
+  justify-self: start;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.24);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.app-modal__footer {
+  position: relative;
+  display: grid;
+  gap: 12px;
+  flex-shrink: 0;
+  padding: 18px 28px calc(20px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--app-modal-footer-border);
+  background: var(--app-modal-footer-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.app-modal__actions {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.app-modal__actions > * {
+  flex: 1 1 0;
+}
+
+.app-modal__error {
+  color: #ffd6dc;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  text-align: center;
+  background: rgba(255, 94, 126, 0.12);
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 94, 126, 0.24);
+}
+
+.app-modal__submit,
+.app-modal__ghost,
+.app-modal__secondary {
+  width: 100%;
+  min-height: 56px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: none;
+  border-radius: 18px;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.app-modal__submit {
+  background: var(--app-modal-submit-bg);
+  color: var(--app-modal-submit-text);
+  box-shadow: var(--app-modal-submit-shadow);
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: var(--app-modal-submit-hover-shadow);
+  }
+}
+
+.app-modal__ghost,
+.app-modal__secondary {
+  border: 1px solid var(--app-modal-alt-border);
+  background: var(--app-modal-alt-bg);
+  color: var(--app-modal-alt-text);
+}
+
+.app-modal__ghost:hover:not(:disabled),
+.app-modal__secondary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  border-color: var(--app-modal-alt-hover-border);
+  box-shadow: var(--app-modal-alt-hover-shadow);
+}
+
+.app-modal__submit:disabled,
+.app-modal__ghost:disabled,
+.app-modal__secondary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+@media (max-width: 900px) {
+  .app-modal__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .app-modal__field--wide,
+  .app-modal__card--wide {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .app-modal {
+    align-items: flex-end;
+    justify-content: stretch;
+    padding:
+      max(12px, env(safe-area-inset-top))
+      max(12px, env(safe-area-inset-right))
+      max(0px, env(safe-area-inset-bottom))
+      max(12px, env(safe-area-inset-left));
+  }
+
+  .app-modal__dialog {
+    width: 100%;
+    max-height: min(100svh, 100dvh);
+    border-right: none;
+    border-bottom: none;
+    border-left: none;
+    border-radius: 28px 28px 0 0;
+  }
+
+  .app-modal__header {
+    padding: 22px 68px 18px 20px;
+
+    h1 {
+      font-size: 1.55rem;
+    }
+
+    p {
+      font-size: 0.92rem;
+    }
+  }
+
+  .app-modal__close {
+    top: 14px;
+    right: 14px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .app-modal__body {
+    padding: 18px 20px 0;
+  }
+
+  .app-modal__field,
+  .app-modal__card {
+    padding: 16px;
+    border-radius: 20px;
+  }
+
+  .app-modal__footer {
+    padding: 16px 20px calc(18px + env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-width: 420px) {
+  .app-modal__header {
+    padding-right: 56px;
+  }
+
+  .app-modal__field input,
+  .app-modal__field select,
+  .app-modal__field textarea,
+  .app-modal__control {
+    padding: 13px 14px;
+    border-radius: 14px;
+    font-size: 0.95rem;
+  }
+
+  .app-modal__submit,
+  .app-modal__ghost,
+  .app-modal__secondary {
+    min-height: 52px;
+    border-radius: 16px;
+  }
+
+  .app-modal__actions {
+    flex-direction: column;
+  }
+}
+
+[data-theme="normal"] .app-modal {
+  --app-modal-radial-glow: rgba(0, 106, 220, 0.16);
+  --app-modal-backdrop: rgba(215, 223, 237, 0.78);
+  --app-modal-shell-border: rgba(15, 23, 42, 0.1);
+  --app-modal-shell-bg:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.94)),
+    linear-gradient(180deg, rgba(247, 249, 253, 0.98), rgba(240, 244, 251, 0.98));
+  --app-modal-header-bg:
+    linear-gradient(135deg, rgba(0, 106, 220, 0.12), rgba(255, 255, 255, 0.94) 40%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(242, 246, 252, 0.96));
+  --app-modal-card-border: rgba(15, 23, 42, 0.08);
+  --app-modal-card-bg:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 249, 253, 0.96)),
+    rgba(255, 255, 255, 0.94);
+  --app-modal-soft-border: rgba(15, 23, 42, 0.08);
+  --app-modal-soft-bg:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(242, 246, 252, 0.92));
+  --app-modal-footer-border: rgba(15, 23, 42, 0.08);
+  --app-modal-footer-bg:
+    linear-gradient(180deg, rgba(248, 250, 255, 0.88), rgba(238, 243, 250, 0.96));
+  --app-modal-close-border: rgba(15, 23, 42, 0.1);
+  --app-modal-close-bg: rgba(255, 255, 255, 0.8);
+  --app-modal-close-hover-border: rgba(0, 106, 220, 0.24);
+  --app-modal-close-hover-bg: rgba(0, 106, 220, 0.1);
+  --app-modal-eyebrow-border: rgba(0, 106, 220, 0.16);
+  --app-modal-eyebrow-bg: rgba(0, 106, 220, 0.08);
+  --app-modal-eyebrow-text: #0c4e9c;
+  --app-modal-file-border: rgba(0, 106, 220, 0.2);
+  --app-modal-file-bg:
+    linear-gradient(180deg, rgba(0, 106, 220, 0.08), rgba(255, 255, 255, 0.88)),
+    rgba(245, 248, 253, 0.98);
+  --app-modal-file-hover-border: rgba(0, 106, 220, 0.34);
+  --app-modal-file-hover-bg:
+    linear-gradient(180deg, rgba(0, 106, 220, 0.12), rgba(255, 255, 255, 0.92)),
+    rgba(241, 246, 253, 0.98);
+  --app-modal-file-eyebrow-text: #0c4e9c;
+  --app-modal-submit-bg:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22), transparent),
+    linear-gradient(135deg, #2684ff, #006adc 62%, #0052b0);
+  --app-modal-submit-text: #062f63;
+  --app-modal-submit-shadow: 0 20px 34px rgba(0, 106, 220, 0.24);
+  --app-modal-submit-hover-shadow: 0 24px 36px rgba(0, 106, 220, 0.32);
+  --app-modal-alt-border: rgba(0, 106, 220, 0.18);
+  --app-modal-alt-bg:
+    linear-gradient(180deg, rgba(0, 106, 220, 0.1), rgba(255, 255, 255, 0.92)),
+    rgba(255, 255, 255, 0.94);
+  --app-modal-alt-text: #0c4e9c;
+  --app-modal-alt-hover-border: rgba(0, 106, 220, 0.34);
+  --app-modal-alt-hover-shadow: 0 10px 24px rgba(0, 106, 220, 0.14);
+
+  .app-modal__dialog {
+    box-shadow:
+      0 28px 60px rgba(15, 23, 42, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  }
+
+  .app-modal__field,
+  .app-modal__card {
+    box-shadow:
+      0 10px 30px rgba(15, 23, 42, 0.06),
+      inset 0 1px 0 rgba(255, 255, 255, 0.88);
+  }
+
+  .app-modal__preview {
+    background: #f5f7fb;
+    border-color: rgba(15, 23, 42, 0.08);
+    box-shadow: 0 18px 38px rgba(15, 23, 42, 0.1);
+  }
+}
+
+[data-theme="contrast"] .app-modal {
+  --app-modal-eyebrow-border: #ffff00;
+  --app-modal-eyebrow-bg: #000000;
+  --app-modal-eyebrow-text: #ffff00;
+  --app-modal-file-eyebrow-text: #ffff00;
+  --app-modal-submit-bg: #ff0000;
+  --app-modal-submit-text: #ffff00;
+  --app-modal-submit-shadow: none;
+  --app-modal-submit-hover-shadow: none;
+  --app-modal-alt-border: #ffff00;
+  --app-modal-alt-bg: #000000;
+  --app-modal-alt-text: #ffff00;
+  --app-modal-alt-hover-border: #00ffff;
+  --app-modal-alt-hover-shadow: none;
+}

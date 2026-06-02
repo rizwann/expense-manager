@@ -3,7 +3,6 @@ import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 import ConfirmationModal from '../Modal/Confirmation';
 import './dataTable.scss';
-import Button from '../../pages/components/Button';
 import { useAuth } from '../../hooks/useAuth';
 
 type Props = {
@@ -22,6 +21,9 @@ const DesktopDataTable: React.FC<Props> = ({ columns, rows, slug, handleDelete, 
   const [leaveHouseName, setLeaveHouseName] = useState<string>('');
   const [isLeaveHouseModalOpen, setIsLeaveHouseModalOpen] = useState(false);
   const {user} = useAuth()
+  const normalizedSlug = slug.toLowerCase()
+  const routeSlug = normalizedSlug
+  const isHouseTable = normalizedSlug === 'houses'
 
   const actionColumns: GridColDef = {
     field: 'actions',
@@ -30,29 +32,35 @@ const DesktopDataTable: React.FC<Props> = ({ columns, rows, slug, handleDelete, 
     renderCell: (params) => {
       return (
         <div className="action">
-          <Link to={`/${slug}/${params.row._id}`}>
+          <Link to={`/${routeSlug}/${params.row._id}`}>
             <img src="/view.svg" alt="View" />
           </Link>
           <div
             className="delete"
             onClick={() => {
               setDeleteId(params.row._id);
-              if (slug === 'Houses'){
+              if (isHouseTable){
                 setName(params.row.description);
               } else {
-              setName(params.row.name);
+                setName(params.row.name || params.row.description || params.row.storeName);
               }
               setIsModalOpen(true);
             }}
           >
             <img src="/delete.svg" alt="Delete" />
           </div>
-          { slug === 'Houses' && user?.houseCodes.includes(params.row.code) &&
-            <Button size='sm' onClick={() => {
+          { isHouseTable && user?.houseCodes.includes(params.row.code) &&
+            <button
+              type="button"
+              className="data-table__leave-btn"
+              onClick={() => {
               setLeaveHouseId(params.row.code);
               setLeaveHouseName(params.row.description);
               setIsLeaveHouseModalOpen(true);
-            }} text='Leave House' />
+            }}
+            >
+              Leave
+            </button>
           }
         </div>
       );
@@ -88,7 +96,7 @@ const DesktopDataTable: React.FC<Props> = ({ columns, rows, slug, handleDelete, 
   }
 
   return (
-    <div className="data-table">
+    <div className={`data-table data-table--${normalizedSlug}`}>
       {
         rows.length > 0 ? (
           <DataGrid
@@ -120,10 +128,13 @@ const DesktopDataTable: React.FC<Props> = ({ columns, rows, slug, handleDelete, 
             disableColumnFilter
             disableColumnSelector
             disableDensitySelector
-            rowHeight={slug === 'users' ? 70 : 53}
+            rowHeight={normalizedSlug === 'users' ? 70 : 58}
           />
         ) : (
-          <p>No records found</p>
+          <div className="data-table__empty">
+            <p>No records found</p>
+            <span>Adjust the filters or add a new record to get started.</span>
+          </div>
         )
       }
       <ConfirmationModal
