@@ -1,26 +1,5 @@
-.houses {
-  .info {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 20px;
-    margin-top: 10px;
-    justify-content: space-between;
-     .title {
-      display: flex;
-      align-items: center;
-    gap: 20px;
-     }
-    button {
-      padding: 5px;
-      cursor: pointer;
-    }
+@use "../../styles/dataPages";
 
-  }
-  .users {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    font-size: 10px;
-  }
+.houses__empty-cell {
+  color: var(--color-muted);
 }

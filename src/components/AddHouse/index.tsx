@@ -3,7 +3,6 @@ import "./addHouse.scss"
 import axios from "axios"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
-import { Button } from "../Button"
 import { CloseRounded } from "@mui/icons-material"
 import { Modal } from "@mui/material"
 import { useAuth } from "../../hooks/useAuth"
@@ -26,7 +25,7 @@ const AddHouse: React.FC<IProps> = ({
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [formData, setFormData] = useState<{ [key: string]: any }>({})
   const [imagePreview, setImagePreview] = useState<string | null>(null)
- const { getToken } = useAuth()
+  const { getToken } = useAuth()
 
   useEffect(() => {
     if (editData) {
@@ -40,9 +39,14 @@ const AddHouse: React.FC<IProps> = ({
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
+      if (imagePreview?.startsWith("blob:")) {
+        URL.revokeObjectURL(imagePreview)
+      }
       setFormData((prev) => ({ ...prev, image: file }))
       setImagePreview(URL.createObjectURL(file))
     }
+
+    e.target.blur()
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -99,168 +103,212 @@ const AddHouse: React.FC<IProps> = ({
 
   const handleClose = () => {
     setModalOpen(false)
-   if (!editData) {
-    setFormData({})
-    setImagePreview(null)
+    if (!editData) {
+      setFormData({})
+      setImagePreview(null)
     }
   }
 
   return (
     <Modal open={modalOpen} onClose={handleClose}>
-      <div className="add-house">
-        <div className="modal-house">
-          <span className="close" onClick={handleClose}>
+      <div className="app-modal add-house">
+        <div className="app-modal__dialog app-modal__dialog--medium">
+          <button
+            type="button"
+            className="app-modal__close"
+            onClick={handleClose}
+            aria-label="Close add house modal"
+          >
             <CloseRounded />
-          </span>
-          <h1>{editData ? "Edit House" : "Add New House"}</h1>
-          <form onSubmit={handleSubmit}>
-            {columns
-              .filter((item) => item.field !== "id")
-              .map((column) => (
-                <div className="item" key={column.field}>
-                  {(() => {
-                    switch (column.control) {
-                      case "text":
-                        return (
-                          <>
-                            <label htmlFor={column.field}>
-                              {column.headerName}
-                            </label>
-                            <input
-                              id={column.field}
-                              type={
-                                column.type === "number" ? "number" : "text"
-                              }
-                              placeholder={column.headerName}
-                              name={column.field}
-                              value={formData[column.field] || ""}
-                              onChange={(e) =>
-                                setFormData((prev) => ({
-                                  ...prev,
-                                  [column.field]: e.target.value,
-                                }))
-                              }
-                              required
-                            />
-                          </>
-                        )
-                      case "file":
-                        return (
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              flexDirection: "column",
-                            }}
-                          >
-                            <input
-                              type="file"
-                              name={column.field}
-                              onChange={handleImageChange}
-                              id="imageUpload"
-                            />
-                            <label
-                              style={{ marginTop: "10px" }}
-                              htmlFor="imageUpload"
-                            >
-                              Upload Image
-                            </label>
+          </button>
+          <div className="app-modal__header">
+            <div className="app-modal__eyebrow">
+              {editData ? "House settings" : "New house"}
+            </div>
+            <h1>{editData ? "Edit House" : "Add New House"}</h1>
+            <p>
+              Set house details
+            </p>
+          </div>
+          <form onSubmit={handleSubmit} className="app-modal__form">
+            <div className="app-modal__body">
+              <div className="app-modal__grid">
+                {columns
+                  .filter((item) => item.field !== "id")
+                  .map((column) => {
+                    const isWide =
+                      column.field === "description" || column.control === "file"
 
-                            {(imagePreview || editData?.image) && (
-                              <div className="image-preview">
-                                <img
-                                  src={
-                                    imagePreview
-                                      ? imagePreview
-                                      : editData?.image
-                                      ? editData?.image
-                                      : "/app.svg"
+                    return (
+                      <div
+                        className={`app-modal__field ${isWide ? "app-modal__field--wide" : ""}`}
+                        key={column.field}
+                      >
+                        {(() => {
+                          switch (column.control) {
+                          case "text":
+                            return (
+                              <>
+                                <label className="app-modal__label" htmlFor={column.field}>
+                                  {column.headerName}
+                                </label>
+                                <input
+                                  id={column.field}
+                                  type={
+                                    column.type === "number" ? "number" : "text"
                                   }
-                                  alt="Image Preview"
-                                  onError={(
-                                    e: React.SyntheticEvent<
-                                      HTMLImageElement,
-                                      Event
-                                    >
-                                  ) => (e.currentTarget.src = "/app.svg")}
+                                  placeholder={column.headerName}
+                                  name={column.field}
+                                  value={formData[column.field] || ""}
+                                  onChange={(e) =>
+                                    setFormData((prev) => ({
+                                      ...prev,
+                                      [column.field]: e.target.value,
+                                    }))
+                                  }
+                                  required
                                 />
-                              </div>
-                            )}
-                          </div>
-                        )
-                      case "select":
-                        if (column.field === "timeZone") {
-                          return (
-                            <>
-                              <label htmlFor={column.field}>
-                                {column.headerName}
-                              </label>
-                              <select
-                                id={column.field}
-                                name={column.field}
-                                value={formData[column.field] || ""}
-                                onChange={(e) =>
-                                  setFormData((prev) => ({
-                                    ...prev,
-                                    [column.field]: e.target.value,
-                                  }))
-                                }
-                                required
-                              >
-                                <option value="">Select Timezone</option>
-                                {column.options.map((option) => (
-                                  <option
-                                    key={option.value}
-                                    value={option.value}
+                              </>
+                            )
+                          case "file":
+                            return (
+                              <>
+                                <label className="app-modal__label" htmlFor="house-image">
+                                  {column.headerName}
+                                </label>
+                                <p className="app-modal__hint">
+                                  Optional. Add a house image that makes it easy
+                                  to recognize in the app.
+                                </p>
+                                <div className="app-modal__file">
+                                  <input
+                                    className="app-modal__file-input"
+                                    type="file"
+                                    name={column.field}
+                                    onChange={handleImageChange}
+                                    id="house-image"
+                                    accept="image/*"
+                                  />
+                                  <label
+                                    className="app-modal__file-label"
+                                    htmlFor="house-image"
                                   >
-                                    {option.label}
-                                  </option>
-                                ))}
-                              </select>
-                            </>
-                          )
-                        } else if (column.field === "currency") {
-                          return (
-                            <>
-                              <label htmlFor={column.field}>
-                                {column.headerName}
-                              </label>
-                              <select
-                                id={column.field}
-                                name={column.field}
-                                value={formData[column.field] || ""}
-                                onChange={(e) =>
-                                  setFormData((prev) => ({
-                                    ...prev,
-                                    [column.field]: e.target.value,
-                                  }))
-                                }
-                                required
-                              >
-                                <option value="">Select Currency</option>
-                                {column.options.map((option) => (
-                                  <option
-                                    key={option.value}
-                                    value={option.value}
+                                    <span className="app-modal__file-eyebrow">
+                                      House image
+                                    </span>
+                                    <strong>Choose image</strong>
+                                    <span className="app-modal__file-caption">
+                                      Upload a cover or icon for the house.
+                                    </span>
+                                  </label>
+
+                                  {(imagePreview || editData?.image) && (
+                                    <div className="app-modal__preview">
+                                      <img
+                                        src={
+                                          imagePreview
+                                            ? imagePreview
+                                            : editData?.image
+                                            ? editData?.image
+                                            : "/app.svg"
+                                        }
+                                        alt="House preview"
+                                        onError={(
+                                          e: React.SyntheticEvent<
+                                            HTMLImageElement,
+                                            Event
+                                          >
+                                        ) => (e.currentTarget.src = "/app.svg")}
+                                      />
+                                    </div>
+                                  )}
+                                </div>
+                              </>
+                            )
+                          case "select":
+                            if (column.field === "timeZone") {
+                              return (
+                                <>
+                                  <label className="app-modal__label" htmlFor={column.field}>
+                                    {column.headerName}
+                                  </label>
+                                  <select
+                                    id={column.field}
+                                    name={column.field}
+                                    value={formData[column.field] || ""}
+                                    onChange={(e) =>
+                                      setFormData((prev) => ({
+                                        ...prev,
+                                        [column.field]: e.target.value,
+                                      }))
+                                    }
+                                    required
                                   >
-                                    {option.symbol} {option.label}
-                                  </option>
-                                ))}
-                              </select>
-                            </>
-                          )
-                        } else {
-                          return null
-                        }
-                      default:
-                        return null
-                    }
-                  })()}
-                </div>
-              ))}
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
-            <Button type="submit" text={editData ? "Update" : "Create"} />
+                                    <option value="">Select timezone</option>
+                                    {column.options.map((option: any) => (
+                                      <option
+                                        key={option.value}
+                                        value={option.value}
+                                      >
+                                        {option.label}
+                                      </option>
+                                    ))}
+                                  </select>
+                                </>
+                              )
+                            }
+
+                            if (column.field === "currency") {
+                              return (
+                                <>
+                                  <label className="app-modal__label" htmlFor={column.field}>
+                                    {column.headerName}
+                                  </label>
+                                  <select
+                                    id={column.field}
+                                    name={column.field}
+                                    value={formData[column.field] || ""}
+                                    onChange={(e) =>
+                                      setFormData((prev) => ({
+                                        ...prev,
+                                        [column.field]: e.target.value,
+                                      }))
+                                    }
+                                    required
+                                  >
+                                    <option value="">Select currency</option>
+                                    {column.options.map((option: any) => (
+                                      <option
+                                        key={option.value}
+                                        value={option.value}
+                                      >
+                                        {option.symbol} {option.label}
+                                      </option>
+                                    ))}
+                                  </select>
+                                </>
+                              )
+                            }
+
+                            return null
+                          default:
+                            return null
+                          }
+                        })()}
+                      </div>
+                    )
+                  })}
+              </div>
+            </div>
+
+            <div className="app-modal__footer">
+              {errorMessage && (
+                <p className="app-modal__error">{errorMessage}</p>
+              )}
+              <button type="submit" className="app-modal__submit">
+                {editData ? "Update House" : "Create House"}
+              </button>
+            </div>
           </form>
         </div>
       </div>

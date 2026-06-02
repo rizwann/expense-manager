@@ -12,7 +12,6 @@ import {
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { useAuth } from "../../hooks/useAuth"
-import Button from "../../pages/components/Button"
 import { Close } from "@mui/icons-material"
 import CreatableSelect from "react-select/creatable"
 import Select, { components as selectComponents } from "react-select"
@@ -67,9 +66,9 @@ const Add: React.FC<IProps> = ({
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [submitBtnDisabled, setSubmitBtnDisabled] = useState(false)
 
-
   const { user, getToken, setRecall } = useAuth()
   const userId = user?._id
+  const modalTitle = editData ? `Edit ${slug}` : `Add New ${slug}`
   const submitButtonText = submitBtnDisabled
     ? editData
       ? "Updating..."
@@ -77,7 +76,9 @@ const Add: React.FC<IProps> = ({
     : editData
     ? "Update"
     : "Create"
-  const selectThemeStyles = useMemo<StylesConfig<{ value: string; label: string }, boolean>>(
+  const selectThemeStyles = useMemo<
+    StylesConfig<{ value: string; label: string }, boolean>
+  >(
     () => ({
       control: (styles, state) => ({
         ...styles,
@@ -86,10 +87,12 @@ const Add: React.FC<IProps> = ({
           ? "var(--color-primary)"
           : "var(--color-inputBorder)",
         color: "var(--color-text)",
+        borderRadius: 16,
         boxShadow: state.isFocused
-          ? `0 0 0 1px var(--color-primary)`
+          ? `0 0 0 4px rgba(31, 111, 235, 0.14)`
           : styles.boxShadow,
-        minHeight: 44,
+        minHeight: 52,
+        paddingInline: 4,
         "&:hover": {
           borderColor: "var(--color-primary)",
         },
@@ -98,7 +101,10 @@ const Add: React.FC<IProps> = ({
         ...styles,
         backgroundColor: "var(--color-surface)",
         color: "var(--color-text)",
-        border: `1px solid var(--color-border)`
+        border: `1px solid var(--color-border)`,
+        borderRadius: 18,
+        overflow: "hidden",
+        boxShadow: "0 22px 48px rgba(0, 0, 0, 0.35)",
       }),
       option: (styles, { isFocused, isSelected }) => ({
         ...styles,
@@ -113,6 +119,10 @@ const Add: React.FC<IProps> = ({
         ...styles,
         color: "var(--color-muted)",
       }),
+      menuPortal: (styles) => ({
+        ...styles,
+        zIndex: 1600,
+      }),
       singleValue: (styles) => ({
         ...styles,
         color: "var(--color-text)",
@@ -125,8 +135,8 @@ const Add: React.FC<IProps> = ({
         ...styles,
         backgroundColor: "var(--color-primary)",
         color: "var(--color-button-text)",
-        borderRadius: 12,
-        paddingInline: 4,
+        borderRadius: 999,
+        paddingInline: 6,
       }),
       multiValueLabel: (styles) => ({
         ...styles,
@@ -161,15 +171,18 @@ const Add: React.FC<IProps> = ({
       }),
       valueContainer: (styles) => ({
         ...styles,
-        padding: "2px 8px",
+        padding: "4px 10px",
       }),
       menuList: (styles) => ({
         ...styles,
         backgroundColor: "var(--color-surface)",
+        paddingBlock: 6,
       }),
     }),
     []
   )
+  const menuPortalTarget =
+    typeof window !== "undefined" ? document.body : undefined
 
 
   useEffect(() => {
@@ -358,9 +371,14 @@ const Add: React.FC<IProps> = ({
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
+      if (imagePreview?.startsWith("blob:")) {
+        URL.revokeObjectURL(imagePreview)
+      }
       setFormData((prev) => ({ ...prev, receipt: file }))
       setImagePreview(URL.createObjectURL(file))
     }
+
+    e.target.blur()
   }
   const handleCloseModal = () => {
     setModalOpen(false)
@@ -377,7 +395,374 @@ const Add: React.FC<IProps> = ({
       setErrorMessage(null)
     }
   }
-  
+  const getFieldId = (field: string) => `expense-${field}`
+  const getFieldLabel = (column: any) => {
+    if (column.field === "storeName") return "Store"
+    if (column.field === "house") return "House"
+    if (column.field === "involvedUsers") return "Split with"
+    if (column.control === "date") return "Payment details"
+    if (column.control === "file") return "Receipt"
+    return column.headerName || column.field
+  }
+  const getFieldHint = (column: any) => {
+    if (column.field === "involvedUsers") {
+      return "Choose everyone who should share this expense."
+    }
+
+    if (column.control === "date") {
+      return "Set a custom timestamp or mark who paid."
+    }
+
+    if (column.control === "file") {
+      return "Optional, but useful for records and verification."
+    }
+
+    return null
+  }
+  const isWideField = (column: any) =>
+    column.field === "description" ||
+    column.field === "storeName" ||
+    column.field === "involvedUsers" ||
+    column.control === "date" ||
+    column.control === "file"
+  const renderFieldControl = (column: any) => {
+    const fieldId = getFieldId(column.field)
+
+    switch (column.control) {
+    case "text":
+      if (column.field === "description") {
+        return (
+          <textarea
+            id={fieldId}
+            placeholder={column.headerName}
+            name={column.field}
+            value={formData[column.field] || ""}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                [column.field]: e.target.value,
+              }))
+            }
+            rows={4}
+            required
+          />
+        )
+      }
+
+      return (
+        <input
+          id={fieldId}
+          type={column.type === "number" ? "number" : "text"}
+          inputMode={column.type === "number" ? "decimal" : undefined}
+          placeholder={column.headerName}
+          name={column.field}
+          value={formData[column.field] || ""}
+          onChange={(e) =>
+            setFormData((prev) => ({
+              ...prev,
+              [column.field]: e.target.value,
+            }))
+          }
+          required={
+            column.field === "cost" || column.field === "description"
+          }
+        />
+      )
+    case "date":
+      return (
+        <div className="switch-grid">
+          <div className="switch-card">
+            {!editData ? (
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={selectCustomTime}
+                    onChange={() => setSelectCustomTime(!selectCustomTime)}
+                    inputProps={{
+                      "aria-label": "Toggle custom time",
+                    }}
+                  />
+                }
+                label="Use custom time"
+              />
+            ) : (
+              <p className="switch-card__title">Edit the saved date and time</p>
+            )}
+            <Collapse
+              in={editData ? true : selectCustomTime}
+              style={{ marginTop: "10px" }}
+            >
+              <input
+                id={fieldId}
+                type="datetime-local"
+                placeholder={column.headerName}
+                name={column.field}
+                value={
+                  formData[column.field]
+                    ? formatToLocalDatetime(formData[column.field])
+                    : ""
+                }
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    [column.field]: e.target.value,
+                  }))
+                }
+              />
+            </Collapse>
+          </div>
+
+          {!editData && (
+            <div className="switch-card">
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={paidByMe}
+                    onChange={() => setPaidByMe(!paidByMe)}
+                    inputProps={{
+                      "aria-label": "Toggle paid by me",
+                    }}
+                  />
+                }
+                label="I paid for this"
+              />
+              <Collapse in={!paidByMe} style={{ marginTop: "10px" }}>
+                <select
+                  id="expense-payment-person"
+                  name="paymentPerson"
+                  value={selectedPayer || ""}
+                  onChange={(e) => setSelectedPayer(e.target.value)}
+                  required={!paidByMe}
+                >
+                  <option value="" disabled>
+                    Select payer
+                  </option>
+                  {houseUsers
+                    .filter((u) => u._id !== userId)
+                    .map((user) => (
+                      <option key={user._id} value={user._id}>
+                        {user.username}
+                      </option>
+                    ))}
+                </select>
+              </Collapse>
+            </div>
+          )}
+        </div>
+      )
+    case "file":
+      return (
+        <div className="receipt-upload">
+          <input
+            id={fieldId}
+            className="receipt-upload__input"
+            type="file"
+            name={column.field}
+            onChange={handleImageChange}
+            accept="image/*"
+            aria-label="Upload Receipt"
+          />
+          <label className="receipt-upload__label" htmlFor={fieldId}>
+            <span className="receipt-upload__eyebrow">Attach image</span>
+            <strong>Choose receipt photo</strong>
+            <span className="receipt-upload__caption">
+              JPG, PNG, HEIC and other mobile image formats are supported.
+            </span>
+          </label>
+
+          {(imagePreview || editData?.receipt) && (
+            <div className="image-preview">
+              <img
+                src={
+                  imagePreview
+                    ? imagePreview
+                    : editData?.receipt
+                    ? editData?.receipt
+                    : "/app.svg"
+                }
+                alt="Receipt preview"
+                onError={(
+                  e: React.SyntheticEvent<HTMLImageElement, Event>
+                ) => (e.currentTarget.src = "/app.svg")}
+              />
+            </div>
+          )}
+        </div>
+      )
+    case "select":
+      if (column.field === "storeName") {
+        return (
+          <CreatableSelect<{ value: string; label: string }, false>
+            inputId={fieldId}
+            required
+            options={storeOptions}
+            onChange={(selectedOption) => {
+              if (selectedOption) {
+                setStoreName(selectedOption.value)
+              } else {
+                setStoreName("")
+              }
+            }}
+            onCreateOption={(inputValue) => {
+              const newOption = {
+                value: inputValue,
+                label: inputValue,
+              }
+              setStoreOptions((prevOptions) => [...prevOptions, newOption])
+              setStoreName(inputValue)
+            }}
+            components={{
+              DropdownIndicator: () => null,
+              IndicatorSeparator: () => null,
+            }}
+            placeholder="Select or create a store"
+            value={
+              storeName
+                ? storeOptions.find((option) => option.value === storeName) || {
+                    value: storeName,
+                    label: storeName,
+                  }
+                : null
+            }
+            styles={selectThemeStyles}
+            classNamePrefix="expense-select"
+            formatCreateLabel={(inputValue) => `Add Store "${inputValue}"`}
+            menuPortalTarget={menuPortalTarget}
+            menuPosition="fixed"
+          />
+        )
+      }
+
+      if (column.field === "involvedUsers") {
+        const OptionComponent = selectComponents.Option
+        return (
+          <Select<{ value: string; label: string }, true>
+            inputId={fieldId}
+            isMulti
+            closeMenuOnSelect={false}
+            hideSelectedOptions={false}
+            options={houseUsers.map((member) => ({
+              value: member.username,
+              label: member.username,
+            }))}
+            value={selectedUsers.map((username) => ({
+              value: username,
+              label: username,
+            }))}
+            onChange={(selected) => {
+              const values = Array.isArray(selected)
+                ? selected.map((option) => option.value)
+                : []
+              setSelectedUsers(values)
+            }}
+            placeholder="Select members"
+            styles={selectThemeStyles}
+            classNamePrefix="expense-select"
+            menuPortalTarget={menuPortalTarget}
+            menuPosition="fixed"
+            components={{
+              Option: (props) => (
+                <OptionComponent {...props}>
+                  <div className="multi-option">
+                    <input
+                      type="checkbox"
+                      readOnly
+                      checked={props.isSelected}
+                      tabIndex={-1}
+                      style={{ marginRight: 8 }}
+                    />
+                    <span>{props.label}</span>
+                  </div>
+                </OptionComponent>
+              ),
+            }}
+          />
+        )
+      }
+
+      if (column.field === "category") {
+        return (
+          <select
+            id={fieldId}
+            name={column.field}
+            value={formData.category || ""}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                category: e.target.value,
+              }))
+            }
+            required
+          >
+            <option value="" disabled>
+              Select category
+            </option>
+            {Object.values(CategoryName).map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+        )
+      }
+
+      if (column.field === "house") {
+        return (
+          <select
+            id={fieldId}
+            name="houseCode"
+            value={selectedHouse?.code || ""}
+            onChange={(e) => {
+              const nextHouse = houses.find(
+                (house) => house.code === e.target.value
+              )
+              setSelectedHouse(nextHouse || null)
+            }}
+            required
+          >
+            <option value="" disabled>
+              Select house
+            </option>
+            {houses.map((house) => (
+              <option key={house._id} value={house.code}>
+                {house.description}
+              </option>
+            ))}
+          </select>
+        )
+      }
+
+      if (column.options?.length) {
+        return (
+          <select
+            id={fieldId}
+            name={column.field}
+            value={formData[column.field] || ""}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                [column.field]: e.target.value,
+              }))
+            }
+            required
+          >
+            <option value="" disabled>
+              Select {column.headerName}
+            </option>
+            {column.options.map((option: any) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        )
+      }
+
+      return null
+    default:
+      return null
+    }
+  }
 
   return (
     <Modal
@@ -388,10 +773,23 @@ const Add: React.FC<IProps> = ({
     >
       <div className="add-expense">
         <div className="modal-expense">
-          <span className="close" onClick={handleCloseModal}>
+          <button
+            type="button"
+            className="close"
+            onClick={handleCloseModal}
+            aria-label="Close add expense modal"
+          >
             <Close />
-          </span>
-          <h1>{editData ? `Edit ${slug}` : `Add New ${slug}`}</h1>
+          </button>
+          <div className="modal-expense__header">
+            <div className="modal-expense__eyebrow">
+              {editData ? "Expense editor" : "New expense"}
+            </div>
+            <h1 id="modal-modal-title">{modalTitle}</h1>
+            <p id="modal-modal-description">
+              Capture the amount, split, payment source, and receipt
+            </p>
+          </div>
           <form onSubmit={handleSubmit}>
             <div className="form-content">
               <div className="item-container">
@@ -399,332 +797,17 @@ const Add: React.FC<IProps> = ({
                   .filter((item) => item.field !== "id")
                   .map((column) => {
                     return (
-                      <div className="item" key={column.field}>
-                        {(() => {
-                          switch (column.control) {
-                          case "text":
-                            return (
-                              <input
-                                type={
-                                  column.type === "number" ? "number" : "text"
-                                }
-                                placeholder={column.headerName}
-                                name={column.field}
-                                value={formData[column.field] || ""}
-                                onChange={(e) =>
-                                  setFormData((prev) => ({
-                                    ...prev,
-                                    [column.field]: e.target.value,
-                                  }))
-                                }
-                                required={
-                                  column.field === "cost" ||
-                                  column.field === "description"
-                                }
-                              />
-                            )
-                          case "date":
-                            return (
-                              <div className="switch-container">
-                                <div>
-                                  {!editData && <FormControlLabel
-                                    control={
-                                      <Switch
-                                        checked={selectCustomTime}
-                                        onChange={() =>
-                                          setSelectCustomTime(!selectCustomTime)
-                                        }
-                                        inputProps={{
-                                          "aria-label": "controlled",
-                                        }}
-                                      />
-                                    }
-                                    label="Custom Time"
-                                  />}
-                                  <Collapse
-                                    in={selectCustomTime}
-                                    style={{ marginTop: "10px" }}
-                                  >
-                                    <input
-                                      type="datetime-local"
-                                      placeholder={column.headerName}
-                                      name={column.field}
-                                      value={
-                                        formData[column.field]
-                                          ? formatToLocalDatetime(
-                                              formData[column.field]
-                                            )
-                                          : ""
-                                      }
-                                      onChange={(e) =>
-                                        setFormData((prev) => ({
-                                          ...prev,
-                                          [column.field]: e.target.value,
-                                        }))
-                                      }
-                                    />
-                                  </Collapse>
-                                </div>
-
-                                  {!editData && (
-                                    <div className="item">
-                                      <FormControlLabel
-                                        control={
-                                          <Checkbox
-                                            checked={paidByMe}
-                                            onChange={() =>
-                                              setPaidByMe(!paidByMe)
-                                            }
-                                            inputProps={{
-                                              "aria-label": "controlled",
-                                            }}
-                                          />
-                                        }
-                                        label="Paid by me"
-                                      />
-                                      <Collapse in={!paidByMe}>
-                                        <select
-                                          name="paymentPerson"
-                                          value={selectedPayer || ""}
-                                          onChange={(e) =>
-                                            setSelectedPayer(e.target.value)
-                                          }
-                                          required={!paidByMe}
-                                        >
-                                          <option value="" disabled>
-                                            Select Payer
-                                          </option>
-                                          {houseUsers
-                                            .filter((u) => u._id !== userId)
-                                            .map((user) => (
-                                              <option
-                                                key={user._id}
-                                                value={user._id}
-                                              >
-                                                {user.username}
-                                              </option>
-                                            ))}
-                                        </select>
-                                      </Collapse>
-                                    </div>
-                                  )}
-                              </div>
-                            )
-                          case "file":
-                            return (
-                              <div
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  flexDirection: "column",
-                                }}
-                              >
-                                <input
-                                  type="file"
-                                  name={column.field}
-                                  onChange={handleImageChange}
-                                  id="imageUpload"
-                                  //only image
-                                  accept="image/*"
-                                  aria-label="Upload Receipt"
-                                />
-                                <label
-                                  style={{ marginTop: "10px" }}
-                                  htmlFor="imageUpload"
-                                >
-                                  Upload Receipt
-                                </label>
-
-                                {(imagePreview || editData?.receipt) && (
-                                  <div className="image-preview">
-                                    <img
-                                      src={
-                                        imagePreview
-                                          ? imagePreview
-                                          : editData?.receipt
-                                          ? editData?.receipt
-                                          : "/app.svg"
-                                      }
-                                      alt="Image Preview"
-                                      onError={(
-                                        e: React.SyntheticEvent<
-                                          HTMLImageElement,
-                                          Event
-                                        >
-                                      ) => (e.currentTarget.src = "/app.svg")}
-                                    />
-                                  </div>
-                                )}
-                              </div>
-                            )
-                          case "select": {
-                            if (column.field === "storeName") {
-                              return (
-                                <CreatableSelect<{ value: string; label: string }, false>
-                                  required
-                                  options={storeOptions}
-                                  onChange={(selectedOption) => {
-                                    if (selectedOption) {
-                                      setStoreName(selectedOption.value)
-                                    } else {
-                                      setStoreName("")
-                                    }
-                                  }}
-                                  onCreateOption={(inputValue) => {
-                                    const newOption = {
-                                      value: inputValue,
-                                      label: inputValue,
-                                    }
-                                    setStoreOptions((prevOptions) => [
-                                      ...prevOptions,
-                                      newOption,
-                                    ])
-                                    setStoreName(inputValue)
-                                  }}
-                                  components={{
-                                    DropdownIndicator: () => null,
-                                    IndicatorSeparator: () => null,
-                                  }}
-                                  placeholder="Store Name"
-                                  value={
-                                    storeName
-                                      ? storeOptions.find((option) => option.value === storeName) || {
-                                          value: storeName,
-                                          label: storeName,
-                                        }
-                                      : null
-                                  }
-                                  styles={selectThemeStyles}
-                                  classNamePrefix="themed-select"
-                                  formatCreateLabel={(inputValue) => `Add Store "${inputValue}"`}
-                                />
-                              )
-                            }
-
-                            if (column.field === "involvedUsers") {
-                              const OptionComponent = selectComponents.Option
-                              return (
-                                <Select<{ value: string; label: string }, true>
-                                  isMulti
-                                  closeMenuOnSelect={false}
-                                  hideSelectedOptions={false}
-                                  options={houseUsers.map((member) => ({
-                                    value: member.username,
-                                    label: member.username,
-                                  }))}
-                                  value={selectedUsers.map((username) => ({
-                                    value: username,
-                                    label: username,
-                                  }))}
-                                  onChange={(selected) => {
-                                    const values = Array.isArray(selected)
-                                      ? selected.map((option) => option.value)
-                                      : []
-                                    setSelectedUsers(values)
-                                  }}
-                                  placeholder="Select members"
-                                  styles={selectThemeStyles}
-                                  classNamePrefix="themed-select"
-                                  components={{
-                                    Option: (props) => (
-                                      <OptionComponent {...props}>
-                                        <div className="multi-option">
-                                          <input
-                                            type="checkbox"
-                                            readOnly
-                                            checked={props.isSelected}
-                                            tabIndex={-1}
-                                            style={{ marginRight: 8 }}
-                                          />
-                                          <span>{props.label}</span>
-                                        </div>
-                                      </OptionComponent>
-                                    ),
-                                  }}
-                                />
-                              )
-                            }
-
-                            if (column.field === "category") {
-                              return (
-                                <select
-                                  name={column.field}
-                                  value={formData.category || ""}
-                                  onChange={(e) =>
-                                    setFormData((prev) => ({
-                                      ...prev,
-                                      category: e.target.value,
-                                    }))
-                                  }
-                                  required
-                                >
-                                  <option value="" disabled>
-                                    Select Category
-                                  </option>
-                                  {Object.values(CategoryName).map((category) => (
-                                    <option key={category} value={category}>
-                                      {category}
-                                    </option>
-                                  ))}
-                                </select>
-                              )
-                            }
-
-                            if (column.field === "house") {
-                              return (
-                                <select
-                                  name="houseCode"
-                                  value={selectedHouse?.code || ""}
-                                  onChange={(e) => {
-                                    const nextHouse = houses.find((house) => house.code === e.target.value)
-                                    setSelectedHouse(nextHouse || null)
-                                  }}
-                                  required
-                                >
-                                  <option value="" disabled>
-                                    Select House
-                                  </option>
-                                  {houses.map((house) => (
-                                    <option key={house._id} value={house.code}>
-                                      {house.description}
-                                    </option>
-                                  ))}
-                                </select>
-                              )
-                            }
-
-                            if (column.options?.length) {
-                              return (
-                                <select
-                                  name={column.field}
-                                  value={formData[column.field] || ""}
-                                  onChange={(e) =>
-                                    setFormData((prev) => ({
-                                      ...prev,
-                                      [column.field]: e.target.value,
-                                    }))
-                                  }
-                                  required
-                                >
-                                  <option value="" disabled>
-                                    Select {column.headerName}
-                                  </option>
-                                  {column.options.map((option: any) => (
-                                    <option key={option.value} value={option.value}>
-                                      {option.label}
-                                    </option>
-                                  ))}
-                                </select>
-                              )
-                            }
-
-                            return null
-                          }
-                          default:
-                            return null
-                          }
-                        })()}
+                      <div
+                        className={`item ${isWideField(column) ? "item--wide" : ""}`}
+                        key={column.field}
+                      >
+                        <label className="item__label" htmlFor={getFieldId(column.field)}>
+                          {getFieldLabel(column)}
+                        </label>
+                        {getFieldHint(column) && (
+                          <p className="item__hint">{getFieldHint(column)}</p>
+                        )}
+                        {renderFieldControl(column)}
                       </div>
                     )
                   })}
@@ -735,7 +818,13 @@ const Add: React.FC<IProps> = ({
               {errorMessage && (
                 <div className="error-message">{errorMessage}</div>
               )}
-              <Button type="submit" text={submitButtonText} disabled={submitBtnDisabled} />
+              <button
+                type="submit"
+                className="submit-button"
+                disabled={submitBtnDisabled}
+              >
+                {submitButtonText}
+              </button>
             </div>
           </form>
         </div>

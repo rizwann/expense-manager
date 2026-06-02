@@ -3,7 +3,6 @@ import "./addUser.scss"
 import axios from "axios"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
-import { Button } from "../Button"
 import { Close } from "@mui/icons-material"
 import { Modal } from "@mui/material"
 import { useAuth } from "../../hooks/useAuth"
@@ -80,9 +79,14 @@ const AddUser: React.FC<IProps> = ({
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
+      if (imagePreview?.startsWith("blob:")) {
+        URL.revokeObjectURL(imagePreview)
+      }
       setFormData((prev) => ({ ...prev, image: file }))
       setImagePreview(URL.createObjectURL(file))
     }
+
+    e.target.blur()
   }
 
   // Separate effect to validate passwords whenever they change
@@ -239,239 +243,309 @@ const AddUser: React.FC<IProps> = ({
   return (
     <>
       <Modal open={modalOpen} onClose={handleClose}>
-        <div className="add-user">
-          <div className="modal-user">
-            <span className="close" onClick={handleClose}>
+        <div className="app-modal add-user">
+          <div className="app-modal__dialog app-modal__dialog--wide">
+            <button
+              type="button"
+              className="app-modal__close"
+              onClick={handleClose}
+              aria-label="Close user modal"
+            >
               <Close />
-            </span>
-            <h1>{editData ? "Edit User" : "Add New User"}</h1>
-            <form onSubmit={handleSubmit}>
-              {updatedColumns
-                .filter((item) => item.field !== "id")
-                .map((column) => (
-                  <div className="item" key={column.field}>
-                    {(() => {
-                      switch (column.control) {
-                        case "text":
-                          return (
-                            <>
-                              <label htmlFor={column.field}>
-                                {column.headerName}
-                              </label>
-                              <input
-                                id={column.field}
-                                type={
-                                  column.type === "number" ? "number" : "text"
-                                }
-                                placeholder={column.headerName}
-                                name={column.field}
-                                value={formData[column.field] || ""}
-                                onChange={(e) =>
-                                  setFormData((prev) => ({
-                                    ...prev,
-                                    [column.field]: e.target.value,
-                                  }))
-                                }
-                                required
-                              />
-                            </>
-                          )
-                        case "file":
-                          return (
-                            <div
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                flexDirection: "column",
-                              }}
-                            >
-                              <input
-                                type="file"
-                                name={column.field}
-                                onChange={handleImageChange}
-                                id="imageUpload"
-                              />
-                              <label
-                                style={{ marginTop: "10px" }}
-                                htmlFor="imageUpload"
-                              >
-                                Upload Image
-                              </label>
+            </button>
+            <div className="app-modal__header">
+              <div className="app-modal__eyebrow">
+                {editData ? "User settings" : "New user"}
+              </div>
+              <h1>{editData ? "Edit User" : "Add New User"}</h1>
+            </div>
+            <form onSubmit={handleSubmit} className="app-modal__form">
+              <div className="app-modal__body">
+                <div className="app-modal__grid">
+                  {updatedColumns
+                    .filter((item) => item.field !== "id")
+                    .map((column) => {
+                      const isWide = column.control === "file"
 
-                              {(imagePreview || editData?.image) && (
-                                <div className="image-preview">
-                                  <img
-                                    src={
-                                      imagePreview
-                                        ? imagePreview
-                                        : editData?.image
-                                          ? editData?.image
-                                          : "/app.svg"
+                      return (
+                        <div
+                          className={`app-modal__field ${isWide ? "app-modal__field--wide" : ""}`}
+                          key={column.field}
+                        >
+                          {(() => {
+                            switch (column.control) {
+                            case "text":
+                              return (
+                                <>
+                                  <label className="app-modal__label" htmlFor={column.field}>
+                                    {column.headerName}
+                                  </label>
+                                  <input
+                                    id={column.field}
+                                    type={
+                                      column.type === "number" ? "number" : "text"
                                     }
-                                    alt="Image Preview"
-                                    onError={(
-                                      e: React.SyntheticEvent<
-                                        HTMLImageElement,
-                                        Event
-                                      >
-                                    ) => (e.currentTarget.src = "/app.svg")}
+                                    placeholder={column.headerName}
+                                    name={column.field}
+                                    value={formData[column.field] || ""}
+                                    onChange={(e) =>
+                                      setFormData((prev) => ({
+                                        ...prev,
+                                        [column.field]: e.target.value,
+                                      }))
+                                    }
+                                    required
                                   />
-                                </div>
-                              )}
-                            </div>
-                          )
-                        case "password":
-                          return (
-                            <>
-                              <label htmlFor={column.field}>
-                                {column.headerName}
-                              </label>
-                              <input
-                                id={column.field}
-                                type="password"
-                                placeholder={column.headerName}
-                                name={column.field}
-                                value={formData[column.field] || ""}
-                                onChange={(e) =>
-                                  setFormData((prev) => ({
-                                    ...prev,
-                                    [column.field]: e.target.value,
-                                  }))
-                                }
-                                required
-                              />
-                              {column.field === "password" && passwordError && (
-                                <p className="error-message">{passwordError}</p>
-                              )}
-                              {column.field === "confirmPassword" &&
-                                confirmPasswordError && (
-                                  <p className="error-message">
-                                    {confirmPasswordError}
+                                </>
+                              )
+                            case "file":
+                              return (
+                                <>
+                                  <label className="app-modal__label" htmlFor="user-image">
+                                    Upload Image
+                                  </label>
+                                  <p className="app-modal__hint">
+                                    Optional profile image for the user card and
+                                    admin views.
                                   </p>
-                                )}
-                            </>
-                          )
-                        case "select":
-                          return (
-                            <>
-                              <label htmlFor={column.field}>
-                                {column.headerName}
-                              </label>
-                              <select
-                                id={column.field}
-                                name={column.field}
-                                value={formData[column.field] || ""}
-                                onChange={(e) =>
-                                  setFormData((prev) => ({
-                                    ...prev,
-                                    [column.field]: e.target.value,
-                                  }))
-                                }
-                                required
-                              >
-                                <option value="">Gender</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                              </select>
-                            </>
-                          )
-                        default:
-                          return null
-                      }
-                    })()}
-                  </div>
-                ))}
-              {errorMessage && <p className="error-message">{errorMessage}</p>}
-              {editData && (
-                <div className="modal-user__secondary-action">
+                                  <div className="app-modal__file">
+                                    <input
+                                      className="app-modal__file-input"
+                                      type="file"
+                                      name={column.field}
+                                      onChange={handleImageChange}
+                                      id="user-image"
+                                      accept="image/*"
+                                    />
+                                    <label
+                                      className="app-modal__file-label"
+                                      htmlFor="user-image"
+                                    >
+                                      <span className="app-modal__file-eyebrow">
+                                        User image
+                                      </span>
+                                      <strong>Choose image</strong>
+                                      <span className="app-modal__file-caption">
+                                        Pick a clear profile picture or avatar.
+                                      </span>
+                                    </label>
+
+                                    {(imagePreview || editData?.image) && (
+                                      <div className="app-modal__preview">
+                                        <img
+                                          src={
+                                            imagePreview
+                                              ? imagePreview
+                                              : editData?.image
+                                              ? editData?.image
+                                              : "/app.svg"
+                                          }
+                                          alt="User preview"
+                                          onError={(
+                                            e: React.SyntheticEvent<
+                                              HTMLImageElement,
+                                              Event
+                                            >
+                                          ) => (e.currentTarget.src = "/app.svg")}
+                                        />
+                                      </div>
+                                    )}
+                                  </div>
+                                </>
+                              )
+                            case "password":
+                              return (
+                                <>
+                                  <label className="app-modal__label" htmlFor={column.field}>
+                                    {column.headerName}
+                                  </label>
+                                  <input
+                                    id={column.field}
+                                    type="password"
+                                    placeholder={column.headerName}
+                                    name={column.field}
+                                    value={formData[column.field] || ""}
+                                    onChange={(e) =>
+                                      setFormData((prev) => ({
+                                        ...prev,
+                                        [column.field]: e.target.value,
+                                      }))
+                                    }
+                                    required
+                                  />
+                                  {column.field === "password" && passwordError && (
+                                    <p className="add-user__inline-error">
+                                      {passwordError}
+                                    </p>
+                                  )}
+                                  {column.field === "confirmPassword" &&
+                                    confirmPasswordError && (
+                                      <p className="add-user__inline-error">
+                                        {confirmPasswordError}
+                                      </p>
+                                    )}
+                                </>
+                              )
+                            case "select":
+                              return (
+                                <>
+                                  <label className="app-modal__label" htmlFor={column.field}>
+                                    {column.headerName}
+                                  </label>
+                                  <select
+                                    id={column.field}
+                                    name={column.field}
+                                    value={formData[column.field] || ""}
+                                    onChange={(e) =>
+                                      setFormData((prev) => ({
+                                        ...prev,
+                                        [column.field]: e.target.value,
+                                      }))
+                                    }
+                                    required
+                                  >
+                                    <option value="">Gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                  </select>
+                                </>
+                              )
+                            default:
+                              return null
+                            }
+                          })()}
+                        </div>
+                      )
+                    })}
+                </div>
+              </div>
+
+              <div className="app-modal__footer">
+                {errorMessage && (
+                  <p className="app-modal__error">{errorMessage}</p>
+                )}
+                <div className="app-modal__actions add-user__actions">
+                  {editData && (
+                    <button
+                      type="button"
+                      className="app-modal__ghost"
+                      onClick={() => setPasswordModalOpen(true)}
+                    >
+                      Change Password
+                    </button>
+                  )}
                   <button
-                    type="button"
-                    className="modal-user__ghost-button"
-                    onClick={() => setPasswordModalOpen(true)}
+                    type="submit"
+                    className="app-modal__submit"
+                    disabled={
+                      !editData
+                        ? !!passwordError ||
+                          !!confirmPasswordError ||
+                          !formData.password ||
+                          !formData.confirmPassword
+                        : false
+                    }
                   >
-                    Change Password
+                    {editData ? "Update User" : "Create User"}
                   </button>
                 </div>
-              )}
-              <Button
-                type="submit"
-                text={editData ? "Update" : "Create"}
-                disabled={
-                  !editData
-                    ? !!passwordError ||
-                      !!confirmPasswordError ||
-                      !formData.password ||
-                      !formData.confirmPassword
-                    : false
-                }
-              />
+              </div>
             </form>
           </div>
         </div>
       </Modal>
 
       <Modal open={passwordModalOpen} onClose={handlePasswordModalClose}>
-        <div className="add-user add-user--password">
-          <div className="modal-user modal-user--password">
-            <span className="close" onClick={handlePasswordModalClose}>
+        <div className="app-modal add-user add-user--password">
+          <div className="app-modal__dialog app-modal__dialog--compact">
+            <button
+              type="button"
+              className="app-modal__close"
+              onClick={handlePasswordModalClose}
+              aria-label="Close password modal"
+            >
               <Close />
-            </span>
-            <h1>Change Password</h1>
-            <form onSubmit={handlePasswordUpdate} className="password-form">
-              <div className="item item--full">
-                <label htmlFor="oldPassword">Old Password</label>
-                <input
-                  id="oldPassword"
-                  type="password"
-                  name="oldPassword"
-                  placeholder="Enter old password"
-                  value={passwordFormData.oldPassword}
-                  onChange={handlePasswordInputChange}
-                  required
-                />
+            </button>
+            <div className="app-modal__header">
+              <div className="app-modal__eyebrow">Security</div>
+              <h1>Change Password</h1>
+              <p>
+                Update the user password securely. The current password is
+                required before the new one can be saved.
+              </p>
+            </div>
+            <form onSubmit={handlePasswordUpdate} className="app-modal__form">
+              <div className="app-modal__body">
+                <div className="app-modal__grid app-modal__grid--single">
+                  <div className="app-modal__field app-modal__field--wide">
+                    <label className="app-modal__label" htmlFor="oldPassword">
+                      Old Password
+                    </label>
+                    <input
+                      id="oldPassword"
+                      type="password"
+                      name="oldPassword"
+                      placeholder="Enter old password"
+                      value={passwordFormData.oldPassword}
+                      onChange={handlePasswordInputChange}
+                      required
+                    />
+                  </div>
+                  <div className="app-modal__field app-modal__field--wide">
+                    <label className="app-modal__label" htmlFor="newPassword">
+                      New Password
+                    </label>
+                    <input
+                      id="newPassword"
+                      type="password"
+                      name="newPassword"
+                      placeholder="Enter new password"
+                      value={passwordFormData.newPassword}
+                      onChange={handlePasswordInputChange}
+                      required
+                    />
+                  </div>
+                  <div className="app-modal__field app-modal__field--wide">
+                    <label
+                      className="app-modal__label"
+                      htmlFor="confirmNewPassword"
+                    >
+                      Confirm New Password
+                    </label>
+                    <input
+                      id="confirmNewPassword"
+                      type="password"
+                      name="confirmNewPassword"
+                      placeholder="Confirm new password"
+                      value={passwordFormData.confirmNewPassword}
+                      onChange={handlePasswordInputChange}
+                      required
+                    />
+                  </div>
+                </div>
               </div>
-              <div className="item item--full">
-                <label htmlFor="newPassword">New Password</label>
-                <input
-                  id="newPassword"
-                  type="password"
-                  name="newPassword"
-                  placeholder="Enter new password"
-                  value={passwordFormData.newPassword}
-                  onChange={handlePasswordInputChange}
-                  required
-                />
+
+              <div className="app-modal__footer">
+                {passwordValidationError && (
+                  <p className="app-modal__error">{passwordValidationError}</p>
+                )}
+                {passwordModalError && (
+                  <p className="app-modal__error">{passwordModalError}</p>
+                )}
+                <button
+                  type="submit"
+                  className="app-modal__submit"
+                  disabled={
+                    isUpdatingPassword ||
+                    !!passwordValidationError ||
+                    !passwordFormData.oldPassword ||
+                    !passwordFormData.newPassword ||
+                    !passwordFormData.confirmNewPassword
+                  }
+                >
+                  {isUpdatingPassword ? "Updating..." : "Update Password"}
+                </button>
               </div>
-              <div className="item item--full">
-                <label htmlFor="confirmNewPassword">Confirm New Password</label>
-                <input
-                  id="confirmNewPassword"
-                  type="password"
-                  name="confirmNewPassword"
-                  placeholder="Confirm new password"
-                  value={passwordFormData.confirmNewPassword}
-                  onChange={handlePasswordInputChange}
-                  required
-                />
-              </div>
-              {passwordValidationError && (
-                <p className="error-message">{passwordValidationError}</p>
-              )}
-              {passwordModalError && (
-                <p className="error-message">{passwordModalError}</p>
-              )}
-              <Button
-                type="submit"
-                text={isUpdatingPassword ? "Updating..." : "Update Password"}
-                disabled={
-                  isUpdatingPassword ||
-                  !!passwordValidationError ||
-                  !passwordFormData.oldPassword ||
-                  !passwordFormData.newPassword ||
-                  !passwordFormData.confirmNewPassword
-                }
-              />
             </form>
           </div>
         </div>

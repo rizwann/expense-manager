@@ -34,6 +34,9 @@ const MobileDataTable: React.FC<Props> = ({
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1)
   const [rowsPerPage, setRowsPerPage] = useState(10)
+  const normalizedSlug = slug.toLowerCase()
+  const routeSlug = normalizedSlug
+  const isHouseTable = normalizedSlug === "houses"
 
   // Calculate the total number of pages
   const totalPages = Math.ceil(filteredRows.length / rowsPerPage)
@@ -200,26 +203,26 @@ const MobileDataTable: React.FC<Props> = ({
               <div className="card-left-border"></div>
               <div className="card-content">
                 <div className="card-header">
-                  <h3>{row.description || row.name || "No Name"}</h3>
+                  <h3>{row.storeName || row.description || row.name || "No Name"}</h3>
                   <div className="card-actions">
-                    <Link to={`/${slug}/${row._id}`}>
+                    <Link to={`/${routeSlug}/${row._id}`}>
                       <img src="/view.svg" alt="View" />
                     </Link>
                     <div
                       className="delete"
                       onClick={() => {
                         setDeleteId(row._id)
-                        if (slug === "Houses") {
+                        if (isHouseTable) {
                           setName(row.description)
                         } else {
-                          setName(row.name)
+                          setName(row.name || row.description || row.storeName)
                         }
                         setIsModalOpen(true)
                       }}
                     >
                       <img src="/delete.svg" alt="Delete" />
                     </div>
-                    {slug === "Houses" && (
+                    {isHouseTable && (
                       <div
                         className="leave"
                         onClick={() => {
@@ -311,7 +314,10 @@ const MobileDataTable: React.FC<Props> = ({
           </div>
         </>
       ) : (
-        <p>No records found</p>
+        <div className="card-container__empty">
+          <p>No records found</p>
+          <span>Try a different search or add a new record.</span>
+        </div>
       )}
 
       <ConfirmationModal
