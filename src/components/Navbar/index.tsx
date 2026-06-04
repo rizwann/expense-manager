@@ -255,15 +255,15 @@ const Navbar: React.FC<IProps> = ({ setIsOpen }) => {
             >
               <li>Profile</li>
             </NavLink>
-            <NavLink to="/about" onClick={handlePreferenceItemClick}>
-              <li>About</li>
-            </NavLink>
             {showDownloadApp && (
               <NavLink to="/app-download" onClick={handlePreferenceItemClick}>
                 <li>Download App</li>
               </NavLink>
             )}
             {user?.username === "RizwanKabir" &&<li onClick={handleScrapClick}>Scrap (Dr)</li>}
+           <NavLink to="/about" onClick={handlePreferenceItemClick}>
+              <li>About</li>
+            </NavLink>
             <li onClick={handleLogout}>Sign Out</li>
           </ul>
         </div>

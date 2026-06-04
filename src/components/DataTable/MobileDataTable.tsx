@@ -203,7 +203,7 @@ const MobileDataTable: React.FC<Props> = ({
               <div className="card-left-border"></div>
               <div className="card-content">
                 <div className="card-header">
-                  <h3>{row.storeName || row.description || row.name || "No Name"}</h3>
+                  <h3>{ row.description || row.storeName || row.name || "No Name"}</h3>
                   <div className="card-actions">
                     <Link to={`/${routeSlug}/${row._id}`}>
                       <img src="/view.svg" alt="View" />

@@ -16,7 +16,10 @@ import { Close } from "@mui/icons-material"
 import CreatableSelect from "react-select/creatable"
 import Select, { components as selectComponents } from "react-select"
 import { StylesConfig } from "react-select"
-import { formatToLocalDatetime } from "../../utils/utils"
+import {
+  formatToLocalDatetime,
+  normalizeCurrencyValue,
+} from "../../utils/utils"
 
 interface IProps {
   slug: string
@@ -65,6 +68,7 @@ const Add: React.FC<IProps> = ({
   const [storeName, setStoreName] = useState("")
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [submitBtnDisabled, setSubmitBtnDisabled] = useState(false)
+  const [useInlineSelectMenu, setUseInlineSelectMenu] = useState(false)
 
   const { user, getToken, setRecall } = useAuth()
   const userId = user?._id
@@ -182,7 +186,35 @@ const Add: React.FC<IProps> = ({
     []
   )
   const menuPortalTarget =
-    typeof window !== "undefined" ? document.body : undefined
+    typeof window !== "undefined" && !useInlineSelectMenu
+      ? document.body
+      : undefined
+
+  useEffect(() => {
+    if (typeof window === "undefined") return
+
+    const updateMenuBehavior = () => {
+      const visualViewport = window.visualViewport
+      const viewportHeight = visualViewport?.height ?? window.innerHeight
+      const layoutHeight = window.innerHeight
+      const isMobileViewport = window.matchMedia("(max-width: 820px)").matches
+      const isKeyboardOpen = layoutHeight - viewportHeight > 120
+
+      setUseInlineSelectMenu(isMobileViewport && isKeyboardOpen)
+    }
+
+    updateMenuBehavior()
+
+    window.addEventListener("resize", updateMenuBehavior)
+    window.visualViewport?.addEventListener("resize", updateMenuBehavior)
+    window.visualViewport?.addEventListener("scroll", updateMenuBehavior)
+
+    return () => {
+      window.removeEventListener("resize", updateMenuBehavior)
+      window.visualViewport?.removeEventListener("resize", updateMenuBehavior)
+      window.visualViewport?.removeEventListener("scroll", updateMenuBehavior)
+    }
+  }, [])
 
 
   useEffect(() => {
@@ -299,9 +331,20 @@ const Add: React.FC<IProps> = ({
     const formDataToSend = new FormData(e.currentTarget)
     const data: any = {}
     const token = await getToken()
+    let costValidationError: string | null = null
 
     formDataToSend.forEach((value, key) => {
-      if (key === "date") {
+      if (key === "cost") {
+        const normalizedCost = normalizeCurrencyValue(String(value))
+
+        if (!normalizedCost) {
+          costValidationError =
+            "Enter a valid cost. Examples: 12,50 or 17,212."
+          return
+        }
+
+        data[key] = normalizedCost
+      } else if (key === "date") {
         if (selectCustomTime) {
           const localDateTime = new Date(value as string)
           const utcDateTime = localDateTime.toISOString()
@@ -311,6 +354,13 @@ const Add: React.FC<IProps> = ({
         data[key] = value
       }
     })
+
+    if (costValidationError) {
+      setErrorMessage(costValidationError)
+      toast.error(costValidationError)
+      setSubmitBtnDisabled(false)
+      return
+    }
 
     data.involvedUsers = selectedUsers
     data.storeName = storeName
@@ -452,16 +502,40 @@ const Add: React.FC<IProps> = ({
       return (
         <input
           id={fieldId}
-          type={column.type === "number" ? "number" : "text"}
-          inputMode={column.type === "number" ? "decimal" : undefined}
+          type={
+            column.field === "cost"
+              ? "text"
+              : column.type === "number"
+              ? "number"
+              : "text"
+          }
+          inputMode={
+            column.field === "cost"
+              ? "decimal"
+              : column.type === "number"
+              ? "decimal"
+              : undefined
+          }
           placeholder={column.headerName}
           name={column.field}
           value={formData[column.field] || ""}
           onChange={(e) =>
-            setFormData((prev) => ({
-              ...prev,
-              [column.field]: e.target.value,
-            }))
+            setFormData((prev) => {
+              if (column.field === "cost") {
+                const nextValue = e.target.value
+                const sanitizedValue = nextValue.replace(/[^\d.,\s\u00A0]/g, "")
+
+                return {
+                  ...prev,
+                  [column.field]: sanitizedValue,
+                }
+              }
+
+              return {
+                ...prev,
+                [column.field]: e.target.value,
+              }
+            })
           }
           required={
             column.field === "cost" || column.field === "description"
@@ -628,7 +702,9 @@ const Add: React.FC<IProps> = ({
             classNamePrefix="expense-select"
             formatCreateLabel={(inputValue) => `Add Store "${inputValue}"`}
             menuPortalTarget={menuPortalTarget}
-            menuPosition="fixed"
+            menuPosition={useInlineSelectMenu ? "absolute" : "fixed"}
+            menuPlacement="auto"
+            menuShouldScrollIntoView={!useInlineSelectMenu}
           />
         )
       }
@@ -659,7 +735,9 @@ const Add: React.FC<IProps> = ({
             styles={selectThemeStyles}
             classNamePrefix="expense-select"
             menuPortalTarget={menuPortalTarget}
-            menuPosition="fixed"
+            menuPosition={useInlineSelectMenu ? "absolute" : "fixed"}
+            menuPlacement="auto"
+            menuShouldScrollIntoView={!useInlineSelectMenu}
             components={{
               Option: (props) => (
                 <OptionComponent {...props}>

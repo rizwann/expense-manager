@@ -89,3 +89,82 @@ export const formatToLocalDatetime = (utcString: string) => {
     console.log("UTC String:", utcString, localISOTime)
   return localISOTime
 }
+
+const stripGroupSeparators = (value: string, separator: "," | ".") =>
+  value.split(separator).join("")
+
+const isGroupedThousands = (value: string, separator: "," | ".") => {
+  const parts = value.split(separator)
+  if (parts.length <= 1) return false
+
+  const [first, ...rest] = parts
+  if (!/^\d{1,3}$/.test(first)) return false
+
+  return rest.every((part) => /^\d{3}$/.test(part))
+}
+
+export const normalizeCurrencyValue = (rawValue: string) => {
+  const compactValue = rawValue.replace(/\s+/g, "").replace(/\u00A0/g, "")
+
+  if (!compactValue) return null
+  if (!/^[\d.,]+$/.test(compactValue)) return null
+
+  const lastComma = compactValue.lastIndexOf(",")
+  const lastDot = compactValue.lastIndexOf(".")
+  const hasComma = lastComma !== -1
+  const hasDot = lastDot !== -1
+
+  const toDecimal = (value: string, separator: "," | ".") => {
+    const lastSeparatorIndex = value.lastIndexOf(separator)
+    const integerPart = stripGroupSeparators(
+      value.slice(0, lastSeparatorIndex),
+      separator
+    )
+    const fractionPart = value.slice(lastSeparatorIndex + 1)
+
+    if (!/^\d+$/.test(integerPart) || !/^\d{1,2}$/.test(fractionPart)) {
+      return null
+    }
+
+    return `${integerPart}.${fractionPart}`
+  }
+
+  if (hasComma && hasDot) {
+    const decimalSeparator = lastComma > lastDot ? "," : "."
+    const groupSeparator = decimalSeparator === "," ? "." : ","
+    const withoutGroups = stripGroupSeparators(compactValue, groupSeparator)
+    return toDecimal(withoutGroups, decimalSeparator)
+  }
+
+  if (hasComma) {
+    const commaCount = compactValue.split(",").length - 1
+    const fractionLength = compactValue.length - lastComma - 1
+
+    if (commaCount === 1 && fractionLength <= 2) {
+      return toDecimal(compactValue, ",")
+    }
+
+    if (isGroupedThousands(compactValue, ",")) {
+      return stripGroupSeparators(compactValue, ",")
+    }
+
+    return null
+  }
+
+  if (hasDot) {
+    const dotCount = compactValue.split(".").length - 1
+    const fractionLength = compactValue.length - lastDot - 1
+
+    if (dotCount === 1 && fractionLength <= 2) {
+      return toDecimal(compactValue, ".")
+    }
+
+    if (isGroupedThousands(compactValue, ".")) {
+      return stripGroupSeparators(compactValue, ".")
+    }
+
+    return null
+  }
+
+  return /^\d+$/.test(compactValue) ? compactValue : null
+}

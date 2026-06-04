@@ -280,22 +280,23 @@ const AddUser: React.FC<IProps> = ({
                                   <label className="app-modal__label" htmlFor={column.field}>
                                     {column.headerName}
                                   </label>
-                                  <input
-                                    id={column.field}
-                                    type={
-                                      column.type === "number" ? "number" : "text"
-                                    }
-                                    placeholder={column.headerName}
-                                    name={column.field}
-                                    value={formData[column.field] || ""}
-                                    onChange={(e) =>
-                                      setFormData((prev) => ({
-                                        ...prev,
-                                        [column.field]: e.target.value,
-                                      }))
-                                    }
-                                    required
-                                  />
+                                <input
+                                  id={column.field}
+                                  type={
+                                    column.type === "number" ? "number" : "text"
+                                  }
+                                  placeholder={column.headerName}
+                                  name={column.field}
+                                  value={formData[column.field] || ""}
+                                  onChange={(e) =>
+                                    setFormData((prev) => ({
+                                      ...prev,
+                                      [column.field]: e.target.value,
+                                    }))
+                                  }
+                                  disabled={!!editData && column.field === "username"}
+                                  required
+                                />
                                 </>
                               )
                             case "file":

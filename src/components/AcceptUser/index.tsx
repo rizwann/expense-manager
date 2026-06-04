@@ -51,7 +51,7 @@ const AcceptUser: React.FC<AcceptUserProps> = ({ id, houseCode, ownId }) => {
         );
         setTimeout(() => {
           clearInterval(countdown);
-          navigate("/houses");
+          navigate("/");
         }, 3000);
       } else {
         setError(response.data.message || "Acceptation failed. Please try again.");
