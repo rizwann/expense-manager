@@ -274,12 +274,22 @@
     border: 1px solid var(--modal-switch-border);
     border-radius: 18px;
     background: var(--modal-switch-bg);
+    overflow: hidden;
   }
 
   .switch-card__title {
     color: var(--color-muted);
     font-size: 0.9rem;
     line-height: 1.45;
+  }
+
+  .switch-card input[type="datetime-local"] {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    -webkit-appearance: none;
+    appearance: none;
   }
 
   .MuiFormControlLabel-root {
@@ -524,6 +534,10 @@
       padding: 13px 14px;
       border-radius: 14px;
       font-size: 0.95rem;
+    }
+
+    .switch-card input[type="datetime-local"] {
+      font-size: 16px;
     }
 
     .submit-button {
