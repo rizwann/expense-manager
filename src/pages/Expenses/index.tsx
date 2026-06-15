@@ -333,12 +333,6 @@ const Expenses = () => {
         <div className="data-page__heading-row">
           <div className="data-page__title-block">
             <div className="data-page__eyebrow">Expense ledger</div>
-            <h1 className="data-page__title">Expenses</h1>
-            <p className="data-page__subtitle">
-              Review household spending across stores, categories, payers, and
-              shared splits. The filters below reshape the whole ledger without
-              leaving the page.
-            </p>
           </div>
 
           <div className="data-page__actions">
@@ -429,7 +423,7 @@ const Expenses = () => {
         </div>
 
         <div className="data-page__filter-grid">
-          <div className="data-page__toggle">
+          <div className="data-page__toggle expenses__filter-participation">
             <span className="data-page__filter-label">Participation</span>
             <label className="data-page__toggle-card">
               <input
@@ -446,7 +440,7 @@ const Expenses = () => {
             </label>
           </div>
 
-          <div className="data-page__filter">
+          <div className="data-page__filter expenses__filter-house">
             <label className="data-page__filter-label" htmlFor="expense-house-filter">
               House
             </label>

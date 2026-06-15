@@ -37,6 +37,7 @@ const MobileDataTable: React.FC<Props> = ({
   const normalizedSlug = slug.toLowerCase()
   const routeSlug = normalizedSlug
   const isHouseTable = normalizedSlug === "houses"
+  const isExpenseTable = normalizedSlug === "expenses"
 
   // Calculate the total number of pages
   const totalPages = Math.ceil(filteredRows.length / rowsPerPage)
@@ -199,7 +200,10 @@ const MobileDataTable: React.FC<Props> = ({
       {filteredRows.length > 0 ? (
         <>
           {paginatedRows.map((row) => (
-            <div className="card" key={row._id}>
+            <div
+              className={`card${isExpenseTable ? " card--compact" : ""}`}
+              key={row._id}
+            >
               <div className="card-left-border"></div>
               <div className="card-content">
                 <div className="card-header">
@@ -236,7 +240,9 @@ const MobileDataTable: React.FC<Props> = ({
                     )}
                   </div>
                 </div>
-                <div className="card-body">
+                <div
+                  className={`card-body${isExpenseTable ? " card-body--compact" : ""}`}
+                >
                   {columns.map(
                     (col) =>
                       col.field !== "name" &&
@@ -244,7 +250,14 @@ const MobileDataTable: React.FC<Props> = ({
                       col.field !== "image" &&
                       col.field !== "id" &&
                       col.field !== "houseNames" && (
-                        <div key={col.field} className="card-item">
+                        <div
+                          key={col.field}
+                          className={`card-item${
+                            isExpenseTable && col.type === "array"
+                              ? " card-item--wide"
+                              : ""
+                          }`}
+                        >
                           <div className="card-item-header">
                             <img
                               src={`/${col.field}.svg`}

@@ -7,3 +7,86 @@
 .expenses__empty-cell {
   color: var(--color-muted);
 }
+
+@media (max-width: 560px) {
+  .expenses {
+    .data-page__stats,
+    .data-page__filter-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .data-page__toolbar {
+      gap: 14px;
+      padding: 18px;
+    }
+
+    .data-page__toolbar-top {
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .data-page__stat,
+    .data-page__filter,
+    .data-page__toggle {
+      padding: 14px;
+    }
+
+    .data-page__filter-label {
+      font-size: 0.74rem;
+      letter-spacing: 0.03em;
+    }
+
+    .data-page__control {
+      min-height: 42px;
+      padding: 0 12px;
+      border-radius: 12px;
+      font-size: 0.88rem;
+    }
+
+    select.data-page__control {
+      background-position:
+        calc(100% - 18px) calc(50% - 2px),
+        calc(100% - 12px) calc(50% - 2px),
+        0 0;
+      padding-right: 30px;
+    }
+
+    .expenses__filter-participation,
+    .expenses__filter-house {
+      gap: 6px;
+      padding: 12px;
+      border-radius: 16px;
+    }
+
+    .expenses__filter-participation .data-page__toggle-card {
+      min-height: 42px;
+      padding: 8px 10px;
+      gap: 8px;
+      border-radius: 12px;
+      align-items: flex-start;
+    }
+
+    .expenses__filter-participation .data-page__toggle-card input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      margin-top: 1px;
+      flex-shrink: 0;
+    }
+
+    .expenses__filter-participation .data-page__toggle-copy {
+      gap: 0;
+    }
+
+    .expenses__filter-participation .data-page__toggle-title {
+      font-size: 0.88rem;
+      line-height: 1.2;
+    }
+
+    .expenses__filter-participation .data-page__toggle-meta {
+      display: none;
+    }
+  }
+}
